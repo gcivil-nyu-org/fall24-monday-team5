@@ -25,7 +25,9 @@ When creating a new branch on your local machine, please use the following namin
 - `<issue_no>`: The issue number corresponding to the task you are working on. This can be obtained from the Zenhub list of issues.
 - `<yourname>`: The name of the person primarily working on this branch.
 
-Example: `23-johndoe`
+Example: `1-xyz`
+1 - the issue number
+xyz - Name of person working on the branch
 
 ### Notes:
 - All local branches must be branched from the `develop` branch.
