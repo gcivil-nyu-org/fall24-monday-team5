@@ -32,3 +32,47 @@ xyz - Name of person working on the branch
 ### Notes:
 - All local branches must be branched from the `develop` branch.
 - Create pull requests to merge your feature branches into `develop` after completing your work and ensuring it passes all necessary tests.
+
+
+## How to setup a pre-commit hook
+
+**NOTE:** All of the steps down below are assuming that you're in the root directory of the repository.
+
+- create a file called `pre-commit`
+
+```sh
+
+$ touch ./.git/hooks/pre-commit
+
+```
+
+- add the following code to it:
+
+you can use `vim` or `nano` (preferred) to add the code
+
+```sh
+
+#!/bin/sh
+
+ROOT_DIR=$(git rev-parse --show-toplevel)
+source $ROOT_DIR/myvenv/bin/activate
+
+black . # this is the code formatter (very opinionated)
+
+pylint $ROOT_DIR/calmseek/calmseek/
+# we'll need to keep adding all of the modules that we
+# want linted to the command above
+
+deactivate
+
+```
+
+- make the `pre-commit` file executable
+
+```sh
+
+$ chmod +x ./.git/hooks/pre-commit
+
+```
+
+- start making your commits!
