@@ -49,6 +49,7 @@ $ touch ./.git/hooks/pre-commit
 - add the following code to it:
 
 you can use `vim` or `nano` (preferred) to add the code
+replace the `myvenv` with the environment name you have created
 
 ```sh
 
