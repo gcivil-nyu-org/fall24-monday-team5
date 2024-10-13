@@ -10,10 +10,10 @@ Welcome to the project repository! Please follow the guidelines below to maintai
 - The `master` branch contains the code that is deployed to **production**.
 - **No one** can push to this branch directly from their local environment.
 - All production-ready code must pass through a pull request and be reviewed before being merged into `master`.
+- This branch will be used primarily for **demo purposes**.
 
 ### Develop Branch
 - The `develop` branch contains code that will be deployed to the **staging** environment.
-- This branch will be used primarily for **demo purposes**.
 - All feature branches should be merged into `develop` through a pull request after testing and approval.
 
 ## Branch Naming Convention on Local
@@ -77,6 +77,18 @@ $ chmod +x ./.git/hooks/pre-commit
 ```
 
 - start making your commits!
+
+
+## Working with dummy data on local
+
+Django provides something known as fixtures, which we can use to insert dummy data into our database for the models we have prepared.
+
+The dummy data for appointments app is in the: `BASE_DIR/appointments/fixtures/`, in the `dummy_data.json` file.
+
+To load this dummy data into your database, use:
+```sh
+$ python manage.py loaddata appointments/fixtures/dummy_data.json
+```
 
 ## Django Superuser Info
 
