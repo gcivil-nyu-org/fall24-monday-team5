@@ -77,3 +77,8 @@ $ chmod +x ./.git/hooks/pre-commit
 ```
 
 - start making your commits!
+
+## Django Superuser Info
+
+- username: `calmseek-admin`
+- password: ask me (@aryanprasad7)

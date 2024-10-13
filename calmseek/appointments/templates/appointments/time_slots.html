@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Available Time Slots</h2>
+<ul>
+    {% for slot in time_slots %}
+        <li>
+            {{ slot.start_time }} to {{ slot.end_time }} - 
+            <a href="{% url 'appointments:book_appointment' slot.id %}">Book Now</a>
+        </li>
+    {% empty %}
+        <p>No available time slots at the moment.</p>
+    {% endfor %}
+</ul>
+{% endblock %}
