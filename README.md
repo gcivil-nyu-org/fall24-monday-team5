@@ -83,7 +83,7 @@ $ chmod +x ./.git/hooks/pre-commit
 
 Django provides something known as fixtures, which we can use to insert dummy data into our database for the models we have prepared.
 
-The dummy data for appointments app is in the: **BASE_DIR/appointments/fixtures/**, in the *dummy_data.json* file.
+The dummy data for appointments app is in the: `BASE_DIR/appointments/fixtures/`, in the `*dummy_data.json*` file.
 
 To load this dummy data into your database, use:
 ```sh
