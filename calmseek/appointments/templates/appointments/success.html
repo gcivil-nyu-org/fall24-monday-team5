@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>Appointment successfully booked!</h2>
-<a href="{% url 'appointments:time_slots' %}">View More Slots</a>
+<div class="container success-card">
+    <h2>Appointment Confirmed!</h2>
+    <p>Your appointment has been successfully booked.</p>
+</div>
 {% endblock %}
