@@ -1,4 +1,7 @@
-/* Reset some default browser styles */
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,83 +9,617 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Inter', sans-serif;
+    background: #f7f9fc;
     color: #333;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 1rem 0;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: #297194; /* Soft green color */
+    padding: 20px 0;
 }
 
 header h1 {
-    margin: 0;
-    font-size: 2rem;
+    text-align: center;
+    color: #161f36; /* Darker green for contrast */
 }
 
-nav {
-    margin: 10px 0;
+header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 nav a {
-    margin: 0 15px;
     text-decoration: none;
-    color: white;
-    font-weight: bold;
+    margin: 0 15px;
+    font-weight: 600;
 }
 
 nav a:hover {
     text-decoration: underline;
 }
 
-.container {
-    max-width: 1000px;
-    margin: 20px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    color: #4CAF50;
-    margin-bottom: 20px;
-}
-
-input, textarea, select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-button {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
+main {
+    flex: 1;
 }
 
 footer {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 0;
     text-align: center;
-    position: fixed;
-    bottom: 0;
+    padding: 20px 0;
+    background: #297194; /* Match header color */
+    color: #393e46; /* Darker green */
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Container Styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #d1e1f7;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.slots-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+.heading {
+    color: #161f36;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form and Button Styles */
+.appointment-form .form-group input, 
+.appointment-form .form-group select, 
+.appointment-form .form-group textarea {
     width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.appointment-form .form-group input:focus, 
+.appointment-form .form-group select:focus, 
+.appointment-form .form-group textarea:focus {
+    border-color: #297194;
+    outline: none;
+}
+
+.nav-title{
+    color: #393e46;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+    color: #fff;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background-color: #297194;
+}
+
+.btn-primary:hover {
+    background-color: #d1e1f7;
+    transform: translateY(-2px); /* Add slight lift on hover */
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Card Styles for Time Slots */
+.slots-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.slot-card {
+    background-color: #f0f4f8;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: background-color 0.3s;
+    flex: 1 1 200px; /* Makes the card responsive */
+}
+
+.slot-card:hover {
+    background-color: #e8eff5;
+}
+
+/* Success Card Styling */
+.success-card {
+    text-align: center;
+}
+
+.success-card p {
+    font-size: 1.1rem;
+    margin: 15px 0;
+    color: #444;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #393e46; /* Darker green */
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f7f9fc;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background: #297194;
+    padding: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 2.5rem;
+}
+
+header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+    color: #fff;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #4CAF50; /* Lighter green on hover */
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0;
+    background: #297194;
+    color: #fff;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Container Styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #d1e1f7;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Time Slots Wrapper */
+.time-slots-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* Calendar Section */
+.calendar-section {
+    flex: 1 1 300px;
+    padding: 20px;
+    background-color: #d1e1f7;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-section h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #161f36;
+}
+
+.date-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.date-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.date-input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    outline: none;
+}
+
+/* Slots Section */
+.slots-section {
+    flex: 2 1 500px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.slots-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.slots-section .sub-heading {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #161f36;
+}
+
+.slots-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.slot-card {
+    background-color: #f0f4f8;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+    flex: 1 1 200px;
+}
+
+.slot-card:hover {
+    background-color: #e8eff5;
+    transform: translateY(-5px);
+}
+
+.slot-card p {
+    margin-bottom: 10px;
+}
+
+.no-slots {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #a1a1a1;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .time-slots-wrapper {
+        flex-direction: column;
+    }
+
+    .calendar-section,
+    .slots-section {
+        max-width: 100%;
+    }
+
+    .slot-card {
+        flex: 1 1 100%;
+    }
+}
+
+/* Smooth Transitions for Main Content */
+main {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f7f9fc;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background: #297194;
+    padding: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 2.5rem;
+}
+
+header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+    color: #fff;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #4CAF50; /* Lighter green on hover */
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0;
+    background: #297194;
+    color: #fff;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Container Styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #d1e1f7;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Time Slots Wrapper */
+.time-slots-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* Selection Section */
+.selection-section {
+    flex: 1 1 300px;
+    padding: 20px;
+    background-color: #d1e1f7;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.selection-section h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #161f36;
+}
+
+.selection-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.select-provider, .date-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.select-provider:focus, .date-input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    outline: none;
+}
+
+/* Slots Section */
+.slots-section {
+    flex: 2 1 500px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.slots-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.slots-section .sub-heading {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #161f36;
+}
+
+.slots-section .sub-sub-heading {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #555;
+    font-size: 1.1rem;
+}
+
+.slots-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.slot-card {
+    background-color: #f0f4f8;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+    flex: 1 1 200px;
+}
+
+.slot-card:hover {
+    background-color: #e8eff5;
+    transform: translateY(-5px);
+}
+
+.slot-card p {
+    margin-bottom: 10px;
+}
+
+.no-slots {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #a1a1a1;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+    color: #fff;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .time-slots-wrapper {
+        flex-direction: column;
+    }
+
+    .selection-section,
+    .slots-section {
+        max-width: 100%;
+    }
+
+    .slot-card {
+        flex: 1 1 100%;
+    }
 }
