@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="slots-container">
+    <div class="filter-card">
+        <h2 class="heading">Filter Time Slots</h2>
+        
+        <!-- Date and Provider Selection Form -->
+        <form method="get" action="{% url 'appointments:time_slots' %}" class="filter-form mb-4">
+            <div class="filter-container">
+                <!-- Date Selection -->
+                <div class="form-group">
+                    <label for="date">Choose Date:</label>
+                    <input type="date" id="date" name="date" value="{{ selected_date }}" class="date-input" 
+                           min="{{ today|date:'Y-m-d' }}">
+                </div>
+
+                <!-- Provider Selection -->
+                <div class="form-group">
+                    <label for="provider">Choose Provider:</label>
+                    <select id="provider" name="provider" class="provider-select">
+                        <option value="">All Providers</option>
+                        {% for provider in providers %}
+                            <option value="{{ provider.id }}" 
+                                {% if provider.id == selected_provider_id %} selected {% endif %}>
+                                {{ provider.get_full_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Time Slots Display -->
+    <div class="slots-list">
+        <h2 class="heading">Available Time Slots</h2>
+        {% if time_slots %}
+            {% for slot in time_slots %}
+                <div class="slot-card">
+                    <p><strong>Provider: {{ slot.provider.get_full_name }}</strong></p>
+                    <p>{{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
+                    <a href="{% url 'appointments:book_appointment' slot.id %}" class="btn btn-primary">Book Now</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-slots">No available time slots for the selected date and provider.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
