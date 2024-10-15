@@ -1,0 +1,60 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "provider1",
+      "password": "pbkdf2_sha256$150000$G4G4L5X0EMHz$zZL74pLQXclbrb3T8BYH9/5clZsmOWweJ/62kMQF5fU=",
+      "is_superuser": false,
+      "is_staff": false,
+      "is_active": true
+    }
+  },
+  {
+    "model": "appointments.timeslot",
+    "pk": 1,
+    "fields": {
+      "provider": "Michelle Truglio",
+      "start_time": "2024-10-15T09:00:00Z",
+      "end_time": "2024-10-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "appointments.timeslot",
+    "pk": 2,
+    "fields": {
+      "provider": "Susan Wilkinson",
+      "start_time": "2024-10-15T09:00:00Z",
+      "end_time": "2024-10-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "appointments.timeslot",
+    "pk": 3,
+    "fields": {
+      "provider": "Michelle Truglio",
+      "start_time": "2024-10-15T11:00:00Z",
+      "end_time": "2024-10-15T12:00:00Z"
+    }
+  },
+  {
+    "model": "appointments.timeslot",
+    "pk": 4,
+    "fields": {
+      "provider": "Susan Wilkinson",
+      "start_time": "2024-10-16T09:00:00Z",
+      "end_time": "2024-10-16T10:00:00Z"
+    }
+  },
+  {
+    "model": "appointments.appointment",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "time_slot": 1,
+      "appointment_type": "Checkup",
+      "comments": "Looking forward to it!",
+      "booked_on": "2024-10-12T08:00:00Z"
+    }
+  }
+]
