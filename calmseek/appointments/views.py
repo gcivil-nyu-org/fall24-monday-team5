@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.utils.dateparse import parse_date
+from django.utils import timezone  # Import timezone
 
 User = get_user_model()
 
@@ -13,6 +14,9 @@ User = get_user_model()
 def time_slots(request):
     selected_provider_id = request.GET.get("provider")
     selected_date = request.GET.get("date")
+
+    # Get today's date
+    today = timezone.now().date()  # Get today's date in YYYY-MM-DD format
 
     # Filter providers
     providers = User.objects.filter(is_staff=False)  # Assuming providers have 'is_staff' attribute set to True
@@ -35,6 +39,7 @@ def time_slots(request):
         'providers': providers,
         'selected_provider_id': int(selected_provider_id) if selected_provider_id else None,
         'selected_date': selected_date,
+        'today': today,  # Pass today's date to the template
     }
     return render(request, 'appointments/time_slots.html', context)
 
