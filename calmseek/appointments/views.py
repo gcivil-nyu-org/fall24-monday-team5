@@ -1,11 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import TimeSlot, Appointment
-from .forms import AppointmentForm
+from .forms import AppointmentForm, TimeSlotForm
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.utils.dateparse import parse_date
-from .forms import TimeSlotForm
 
 User = get_user_model()
 
