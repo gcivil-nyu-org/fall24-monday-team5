@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.utils.dateparse import parse_date
+from .forms import TimeSlotForm
 
 User = get_user_model()
 
@@ -15,12 +16,12 @@ def time_slots(request):
     selected_date = request.GET.get("date")
 
     # Filter providers
-    providers = User.objects.filter(is_staff=False)  # Assuming providers have 'is_staff' attribute set to True
+    providers = User.objects.filter(is_staff=True)  # Assuming providers have 'is_staff' attribute set to True
     time_slots = TimeSlot.objects.filter(is_available=True)
 
     # Filter by provider if selected
     if selected_provider_id:
-        time_slots = time_slots.filter(provider_id=selected_provider_id)
+        time_slots = time_slots.filter(provider__id=selected_provider_id, provider__is_staff=True)
     
     # Filter by date if selected
     if selected_date:
@@ -65,3 +66,31 @@ def book_appointment(request, slot_id):
 @login_required
 def appointment_success(request):
     return render(request, 'appointments/success.html')
+
+@login_required
+def create_time_slot(request):
+    if not request.user.is_staff:  # Assuming providers have 'is_staff' set to True
+        return redirect('home')  # Redirect non-providers to home or appropriate page
+
+    if request.method == 'POST':
+        form = TimeSlotForm(request.POST)
+        if form.is_valid():
+            time_slot = form.save(commit=False)
+            time_slot.provider = request.user  # Set the provider to the logged-in user
+            time_slot.save()
+            return redirect('appointments:provider_dashboard')  # Redirect to provider's dashboard
+    else:
+        form = TimeSlotForm()
+
+    return render(request, 'appointments/create_time_slot.html', {'form': form})
+
+@login_required
+def provider_dashboard(request):
+    if not request.user.is_staff:  # Check if the user is a provider
+        return redirect('home')
+
+    # Fetch time slots associated with the logged-in provider
+    time_slots = TimeSlot.objects.filter(provider=request.user)
+
+    return render(request, 'appointments/provider_dashboard.html', {'time_slots': time_slots})
+

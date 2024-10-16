@@ -26,3 +26,8 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"Appointment for {self.user.username} on {self.time_slot.start_time}"
+
+# Extending the user model with a profile that marks providers
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_provider = models.BooleanField(default=False)
