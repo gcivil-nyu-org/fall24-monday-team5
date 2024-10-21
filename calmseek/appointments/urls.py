@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'appointments'
 
@@ -13,3 +15,5 @@ urlpatterns = [
     path('reschedule_time_slots/<int:appointment_id>/', views.reschedule_time_slots, name='reschedule_time_slots'),
     path('update_appointment/<int:appointment_id>/<int:slot_id>/', views.update_appointment, name='update_appointment'),
 ]
+
++ static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS) + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
