@@ -316,7 +316,7 @@ nav ul li a {
 
 .filter-card {
     background-color: #f8f9fa;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 300px; /* Fixed width for the card */
@@ -387,6 +387,11 @@ h2.heading {
     width: 100%;
     padding: 10px;
     border-radius: 5px;
+}
+
+.cancel-btn{
+    background-color: #297194;
+    color: white;
 }
 
 /* Responsive Design */

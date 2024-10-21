@@ -26,7 +26,6 @@ SECRET_KEY = 'django-insecure-pg4z6@qrv-zckxl=j0y$%@s3j%=d^(fj6i07+j)(lhf=^)uex^
 DEBUG = True
 
 ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ["django-env2.eba-hv2zpdfp.us-east-1.elasticbeanstalk.com"]
 
 # temporarily redirecting to booking appointments page after login, later on this will be updated
 LOGIN_REDIRECT_URL = '/appointments/time_slots'
@@ -52,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
 ROOT_URLCONF = 'calmseek.urls'

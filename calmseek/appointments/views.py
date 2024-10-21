@@ -1,15 +1,16 @@
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils.dateparse import parse_date, parse_datetime
 from .models import TimeSlot, Appointment
 from .forms import AppointmentForm
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from django.urls import reverse
 from django.contrib.auth import get_user_model
-
+from django.utils.dateparse import parse_date
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from .models import Appointment, TimeSlot
 User = get_user_model()
-
 
 # View to display available time slots by date and provider
 @login_required
@@ -39,9 +40,7 @@ def time_slots(request):
         'selected_provider_id': int(selected_provider_id) if selected_provider_id else None,
         'selected_date': selected_date,
     }
-
     return render(request, 'appointments/time_slots.html', context)
-
 
 # View to handle appointment booking
 @login_required
@@ -67,11 +66,9 @@ def book_appointment(request, slot_id):
 
     return render(request, 'appointments/book_appointment.html', {'form': form, 'time_slot': time_slot})
 
-
 @login_required
 def appointment_success(request):
     return render(request, 'appointments/success.html')
-
 
 @login_required
 def my_appointments(request):
