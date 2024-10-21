@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-pg4z6@qrv-zckxl=j0y$%@s3j%=d^(fj6i07+j)(lhf=^)uex^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['django-env2.eba-hv2zpdfp.us-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['django-env2.eba-hv2zpdfp.us-east-1.elasticbeanstalk.com','127.0.0.1']
 
 # temporarily redirecting to booking appointments page after login, later on this will be updated
 LOGIN_REDIRECT_URL = '/appointments/time_slots'
@@ -121,13 +121,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     BASE_DIR / "calmseek/static/css",  # Ensure this points to your static files directory
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

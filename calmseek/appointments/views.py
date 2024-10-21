@@ -140,29 +140,18 @@ def reschedule_time_slots(request, appointment_id):
 
 @login_required
 def update_appointment(request, appointment_id, slot_id):
-    print("-------------------- start --------------------------")
-    print(appointment_id, slot_id)
     appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
     user = appointment.user
-    print(user)
-    print(request.user)
-    print(appointment)
     new_time_slot = get_object_or_404(TimeSlot, id=slot_id, is_available=True)
-    print(new_time_slot)
     form = AppointmentForm()
 
     if request.method == 'POST':
-        print("-------------------- POST --------------------------")
         form = AppointmentForm(request.POST, instance=appointment)
-        print(form)
         old_time_slot = appointment.time_slot
         old_time_slot.is_available = True
         old_time_slot.save()
         if form.is_valid():
-            print("-------------------- form --------------------------")
-            print(appointment)
             appointment = form.save(commit=False)
-            print(appointment)
             appointment.user = request.user
             appointment.time_slot = new_time_slot
             appointment.save()
