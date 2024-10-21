@@ -1,4 +1,5 @@
 .idea/*
 calmseek/.ebextensions/*
 calmseek/requirements.txt
-
+appointments/__pycache__/*
+calmseek/__pycache__/*
