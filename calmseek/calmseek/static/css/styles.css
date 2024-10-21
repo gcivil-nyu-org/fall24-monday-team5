@@ -389,6 +389,11 @@ h2.heading {
     border-radius: 5px;
 }
 
+.cancel-btn{
+    background-color: #297194;
+    color: white;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .time-slots-wrapper {
