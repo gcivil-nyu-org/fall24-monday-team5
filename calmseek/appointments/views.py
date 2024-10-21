@@ -5,8 +5,11 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.utils.dateparse import parse_date
-from django.utils import timezone  # Import timezone
-
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from .models import Appointment, TimeSlot
 User = get_user_model()
 
 # View to display available time slots by date and provider
@@ -14,9 +17,6 @@ User = get_user_model()
 def time_slots(request):
     selected_provider_id = request.GET.get("provider")
     selected_date = request.GET.get("date")
-
-    # Get today's date
-    today = timezone.now().date()  # Get today's date in YYYY-MM-DD format
 
     # Filter providers
     providers = User.objects.filter(is_staff=False)  # Assuming providers have 'is_staff' attribute set to True
@@ -39,7 +39,6 @@ def time_slots(request):
         'providers': providers,
         'selected_provider_id': int(selected_provider_id) if selected_provider_id else None,
         'selected_date': selected_date,
-        'today': today,  # Pass today's date to the template
     }
     return render(request, 'appointments/time_slots.html', context)
 
@@ -70,3 +69,31 @@ def book_appointment(request, slot_id):
 @login_required
 def appointment_success(request):
     return render(request, 'appointments/success.html')
+
+@login_required
+def my_appointments(request):
+    # Fetch all appointments for the logged-in user
+    user_appointments = Appointment.objects.filter(user=request.user).select_related('time_slot')
+
+    context = {
+        'appointments': user_appointments
+    }
+    return render(request, 'appointments/my_appointments.html', context)
+
+
+@login_required
+def cancel_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+
+    if request.method == 'POST':
+        # Mark the related time slot as available again
+        time_slot = appointment.time_slot
+        time_slot.is_available = True
+        time_slot.save()
+
+        # Delete the appointment
+        appointment.delete()
+
+        return HttpResponseRedirect(reverse('appointments:my_appointments'))
+
+    return HttpResponseRedirect(reverse('appointments:my_appointments'))
