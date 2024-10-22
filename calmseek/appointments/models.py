@@ -1,8 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+class Profile(models.Model):
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    bio = models.TextField()
 
 # Model for Time Slots set by the provider
 class TimeSlot(models.Model):
+    user = request.user
+    provider_user = User.objects.get(user=user)
+    role = provider_user.role
     provider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='provider_time_slots')
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -26,8 +33,3 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"Appointment for {self.user.username} on {self.time_slot.start_time}"
-
-# Extending the user model with a profile that marks providers
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    is_provider = models.BooleanField(default=False)

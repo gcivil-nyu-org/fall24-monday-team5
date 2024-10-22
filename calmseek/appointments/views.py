@@ -69,7 +69,7 @@ def appointment_success(request):
 @login_required
 def create_time_slot(request):
     if not request.user.is_staff:  # Assuming providers have 'is_staff' set to True
-        return redirect('home')  # Redirect non-providers to home or appropriate page
+        return redirect('appointments:book_appointment')  # Redirect non-providers to home or appropriate page
 
     if request.method == 'POST':
         form = TimeSlotForm(request.POST)
@@ -86,7 +86,7 @@ def create_time_slot(request):
 @login_required
 def provider_dashboard(request):
     if not request.user.is_staff:  # Check if the user is a provider
-        return redirect('home')
+        return redirect('appointments:book_appointment')
 
     # Fetch time slots associated with the logged-in provider
     time_slots = TimeSlot.objects.filter(provider=request.user)
