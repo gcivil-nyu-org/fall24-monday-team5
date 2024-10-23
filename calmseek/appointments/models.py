@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
@@ -7,9 +8,6 @@ class Profile(models.Model):
 
 # Model for Time Slots set by the provider
 class TimeSlot(models.Model):
-    user = request.user
-    provider_user = User.objects.get(user=user)
-    role = provider_user.role
     provider = models.ForeignKey(User, on_delete=models.CASCADE, related_name='provider_time_slots')
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
