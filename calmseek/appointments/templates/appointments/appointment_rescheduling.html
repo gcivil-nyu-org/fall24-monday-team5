@@ -63,35 +63,5 @@
             {% endif %}
         </div>
 
-        {#        <div class="filter-card">#}
-        {#            <!-- Comments field -->#}
-        {#            <div class="form-group">#}
-        {#                <label for="comments">Comments:</label>#}
-        {#                <textarea id="comments" name="comments" rows="4"#}
-        {#                          placeholder="Enter any comments for the provider"></textarea>#}
-        {#            </div>#}
-        {##}
-        {#            <!-- Appointment Type field -->#}
-        {#            <div class="form-group">#}
-        {#                <label for="appointment_type">Appointment Type:</label>#}
-        {#                <select id="appointment_type" name="appointment_type">#}
-        {#                    <option value="Checkup">------------</option>#}
-        {#                    <option value="Checkup">Checkup</option>#}
-        {#                    <option value="Consultation">Consultation</option>#}
-        {#                    <option value="Emergency">Emergency</option>#}
-        {#                </select>#}
-        {#            </div>#}
-        {##}
-        {#            <form method="post" action="{% url 'appointments:appointment_rescheduling' appointment.id %}" class="appointment-form">#}
-        {#                {% csrf_token %}#}
-        {#                <div class="form-group">#}
-        {#                    {{ form.as_p }}#}
-        {#                </div>#}
-        {#                <button type="submit" class="btn btn-primary">Reschedule Appointment</button>#}
-        {#                <a href="{% url 'appointments:my_appointments' %}">Back to list</a>#}
-        {#            </form>#}
-        {#            #}
-        {#        </div>#}
-
     </div>
 {% endblock %}
