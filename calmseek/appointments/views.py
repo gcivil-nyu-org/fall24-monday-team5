@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Appointment, TimeSlot
+from .models import Appointment, TimeSlot, Profile
 User = get_user_model()
 
 # View to display available time slots by date and provider
@@ -72,6 +72,11 @@ def appointment_success(request):
 
 @login_required
 def create_time_slot(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    if profile.role != 'Provider':
+        # redirect to a error
+        pass
     if not request.user.is_staff:  # Assuming providers have 'is_staff' set to True
         return redirect('appointments:book_appointment')  # Redirect non-providers to home or appropriate page
 
