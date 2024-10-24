@@ -100,12 +100,6 @@ def cancel_appointment(request, appointment_id):
 
 
 @login_required
-def reschedule_appointment(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
-    return render(request, 'appointments/appointment_rescheduling.html', {'appointment': appointment})
-
-
-@login_required
 def reschedule_time_slots(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
     selected_provider_id = request.GET.get("provider")

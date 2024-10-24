@@ -23,7 +23,7 @@
                         </form>
 
                         <!-- Reschedule Button -->
-                        <form method="post" action="{% url 'appointments:appointment_rescheduling' appointment.id %}"
+                        <form method="post" action="{% url 'appointments:reschedule_time_slots' appointment.id %}"
                               class="cancel-form" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger cancel-btn">Reschedule</button>
