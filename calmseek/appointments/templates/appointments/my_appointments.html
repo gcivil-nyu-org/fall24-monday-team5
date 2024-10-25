@@ -7,39 +7,159 @@
             <div class="slots-list">
                 {% for appointment in appointments %}
                     <div class="slot-card">
-                        <p><strong>Provider: {{ appointment.time_slot.provider.get_full_name }}</strong></p>
-                        <p>Appointment Type: {{ appointment.get_appointment_type_display }}</p>
-                        <p>Start Time: {{ appointment.time_slot.start_time|date:"Y-m-d H:i" }}</p>
-                        <p>End Time: {{ appointment.time_slot.end_time|date:"Y-m-d H:i" }}</p>
-                        <p>Comments: {{ appointment.comments|default:"None" }}</p>
+                        <div class="slot-details">
+                            <!-- If current user is the provider, show the user info -->
+                            {% if appointment.time_slot.provider == request.user %}
+                                <p><strong>User: {{ appointment.user.get_full_name }}</strong></p>
+                            {% else %}
+                                <p><strong>Provider: {{ appointment.time_slot.provider.get_full_name }}</strong></p>
+                            {% endif %}
 
-                        <!-- Cancel Button -->
-                        <form method="post" action="{% url 'appointments:cancel_appointment' appointment.id %}"
-                              class="cancel-form">
-                            {% csrf_token %}
-                            <button type="button" class="btn btn-danger cancel-btn"
-                                    onclick="confirmCancel({{ appointment.id }})">Cancel
-                            </button>
-                        </form>
+                            <p>Appointment Type: {{ appointment.get_appointment_type_display }}</p>
+                            <p>Start Time: {{ appointment.time_slot.start_time|date:"Y-m-d H:i" }}</p>
+                            <p>End Time: {{ appointment.time_slot.end_time|date:"Y-m-d H:i" }}</p>
+                            <p>Comments: {{ appointment.comments|default:"None" }}</p>
+                        </div>
 
-                        <!-- Reschedule Button -->
-                        <form method="post" action="{% url 'appointments:reschedule_time_slots' appointment.id %}"
-                              class="cancel-form" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger cancel-btn">Reschedule</button>
-                        </form>
+                        <div class="slot-actions">
+                            <!-- Cancel Button -->
+                            <form method="post" action="{% url 'appointments:cancel_appointment' appointment.id %}" class="cancel-form">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-black" onclick="confirmCancel({{ appointment.id }})">Cancel</button>
+                            </form>
+
+                            <!-- Reschedule Button -->
+                            <form method="post" action="{% url 'appointments:appointment_rescheduling' appointment.id %}" class="cancel-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-grey">Reschedule</button>
+                            </form>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-            <p class="no-appointments">You have not booked any appointments yet.</p>
+            <p class="no-appointments">You have no appointments at the moment.</p>
         {% endif %}
     </div>
+
+    <style>
+        /* Container for the appointment list */
+        .appointments-list {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Heading for appointments */
+        .appointments-list h2.heading {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        /* Slot card similar to the Uber Eats style */
+        .slot-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .slot-details {
+            flex: 3;
+        }
+
+        .slot-details p {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .slot-details p strong {
+            color: #000;
+        }
+
+        .slot-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        /* Cancel button in black */
+        .btn-black {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .btn-black:hover {
+            background-color: #333;
+        }
+
+        /* Reschedule button in grey */
+        .btn-grey {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .btn-grey:hover {
+            background-color: #d0d0d0;
+        }
+
+        /* No appointments message */
+        .no-appointments {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #999;
+            margin-top: 20px;
+        }
+
+        /* Inline form for buttons */
+        .cancel-form {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .slot-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .slot-actions {
+                width: 100%;
+                margin-top: 15px;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+    </style>
 
     <script>
         function confirmCancel(appointmentId) {
             if (confirm("Are you sure you want to cancel this appointment?")) {
-                // Submit the form to cancel the appointment
                 document.querySelector(`form[action*="${appointmentId}"]`).submit();
             }
         }
