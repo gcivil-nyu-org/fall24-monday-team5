@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import TimeSlot, Appointment
 from .forms import AppointmentForm, TimeSlotForm
@@ -10,7 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Appointment, TimeSlot, Profile
+
 User = get_user_model()
+
 
 # View to display available time slots by date and provider
 @login_required
@@ -43,6 +46,8 @@ def time_slots(request):
         'selected_date': selected_date,
     }
     return render(request, 'appointments/time_slots.html', context)
+
+
 # View to handle appointment booking
 @login_required
 def book_appointment(request, slot_id):
@@ -72,9 +77,12 @@ def book_appointment(request, slot_id):
         form = AppointmentForm()
 
     return render(request, 'appointments/book_appointment.html', {'form': form, 'time_slot': time_slot})
+
+
 @login_required
 def appointment_success(request):
     return render(request, 'appointments/success.html')
+
 
 @login_required
 def create_time_slot(request):
@@ -98,6 +106,7 @@ def create_time_slot(request):
 
     return render(request, 'appointments/create_time_slot.html', {'form': form})
 
+
 @login_required
 def provider_dashboard(request):
     if not request.user.is_staff:  # Check if the user is a provider
@@ -107,6 +116,7 @@ def provider_dashboard(request):
     time_slots = TimeSlot.objects.filter(provider=request.user)
 
     return render(request, 'appointments/provider_dashboard.html', {'time_slots': time_slots})
+
 
 @login_required
 def my_appointments(request):
@@ -126,6 +136,7 @@ def my_appointments(request):
         }
 
     return render(request, 'appointments/my_appointments.html', context)
+
 
 @login_required
 def cancel_appointment(request, appointment_id):
@@ -149,17 +160,26 @@ def cancel_appointment(request, appointment_id):
 
 @login_required
 def reschedule_time_slots(request, appointment_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
-    selected_provider_id = request.GET.get("provider")
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    profile = Profile.objects.get(user=request.user)
+    selected_provider_id=0
+    providers: QuerySet[Profile] = Profile.objects.none()
+    if profile.role == 'User':
+        selected_provider_id = request.GET.get("provider")
+        # Filter providers based on Profile role 'Provider'
+        providers = Profile.objects.filter(role='Provider').select_related('user')
+    if profile.role == 'Provider':
+        selected_provider_id = appointment.time_slot.provider.id
+        providers = Profile.objects.filter(id=selected_provider_id)
+
     selected_date = request.GET.get("date")
 
-    # Filter providers
-    providers = User.objects.filter(is_staff=False)  # Assuming providers have 'is_staff' attribute set to True
+    # Filter available time slots
     time_slots = TimeSlot.objects.filter(is_available=True)
 
     # Filter by provider if selected
     if selected_provider_id:
-        time_slots = time_slots.filter(provider_id=selected_provider_id)
+        time_slots = time_slots.filter(provider__id=selected_provider_id)
 
     # Filter by date if selected
     if selected_date:
@@ -182,7 +202,7 @@ def reschedule_time_slots(request, appointment_id):
 
 @login_required
 def update_appointment(request, appointment_id, slot_id):
-    appointment = get_object_or_404(Appointment, id=appointment_id, user=request.user)
+    appointment = get_object_or_404(Appointment, id=appointment_id)
     user = appointment.user
     new_time_slot = get_object_or_404(TimeSlot, id=slot_id, is_available=True)
     form = AppointmentForm()
