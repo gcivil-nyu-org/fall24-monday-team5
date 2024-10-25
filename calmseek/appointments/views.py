@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import TimeSlot, Appointment
-from .forms import AppointmentForm
+from .forms import AppointmentForm, TimeSlotForm
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.contrib.auth import get_user_model
@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Appointment, TimeSlot
+from .models import Appointment, TimeSlot, Profile
 User = get_user_model()
 
 # View to display available time slots by date and provider
@@ -19,7 +19,7 @@ def time_slots(request):
     selected_date = request.GET.get("date")
 
     # Filter providers
-    providers = User.objects.filter(is_staff=False)  # Assuming providers have 'is_staff' attribute set to True
+    providers = User.objects.filter(is_staff=True)  # Assuming providers have 'is_staff' attribute set to True
     time_slots = TimeSlot.objects.filter(is_available=True)
 
     # Filter by provider if selected
@@ -69,6 +69,38 @@ def book_appointment(request, slot_id):
 @login_required
 def appointment_success(request):
     return render(request, 'appointments/success.html')
+
+@login_required
+def create_time_slot(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    if profile.role != 'Provider':
+        # redirect to a error
+        pass
+    if not request.user.is_staff:  # Assuming providers have 'is_staff' set to True
+        return redirect('appointments:book_appointment')  # Redirect non-providers to home or appropriate page
+
+    if request.method == 'POST':
+        form = TimeSlotForm(request.POST)
+        if form.is_valid():
+            time_slot = form.save(commit=False)
+            time_slot.provider = request.user  # Set the provider to the logged-in user
+            time_slot.save()
+            return redirect('appointments:provider_dashboard')  # Redirect to provider's dashboard
+    else:
+        form = TimeSlotForm()
+
+    return render(request, 'appointments/create_time_slot.html', {'form': form})
+
+@login_required
+def provider_dashboard(request):
+    if not request.user.is_staff:  # Check if the user is a provider
+        return redirect('appointments:book_appointment')
+
+    # Fetch time slots associated with the logged-in provider
+    time_slots = TimeSlot.objects.filter(provider=request.user)
+
+    return render(request, 'appointments/provider_dashboard.html', {'time_slots': time_slots})
 
 @login_required
 def my_appointments(request):
