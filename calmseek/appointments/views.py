@@ -1,15 +1,15 @@
-from django.db.models import QuerySet
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import TimeSlot, Appointment
-from .forms import AppointmentForm, TimeSlotForm
-from django.contrib.auth.decorators import login_required
 from datetime import datetime
+
 from django.contrib.auth import get_user_model
-from django.utils.dateparse import parse_date
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.dateparse import parse_date
+
+from .forms import AppointmentForm, TimeSlotForm
 from .models import Appointment, TimeSlot, Profile
 
 User = get_user_model()

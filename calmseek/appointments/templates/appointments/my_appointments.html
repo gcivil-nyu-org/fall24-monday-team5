@@ -23,9 +23,12 @@
 
                         <div class="slot-actions">
                             <!-- Cancel Button -->
-                            <form method="post" action="{% url 'appointments:cancel_appointment' appointment.id %}" class="cancel-form">
+                            <form method="post" action="{% url 'appointments:cancel_appointment' appointment.id %}"
+                                  class="cancel-form">
                                 {% csrf_token %}
-                                <button type="button" class="btn btn-black" onclick="confirmCancel({{ appointment.id }})">Cancel</button>
+                                <button type="button" class="btn btn-black"
+                                        onclick="confirmCancel({{ appointment.id }})">Cancel
+                                </button>
                             </form>
 
                             <!-- Reschedule Button -->
