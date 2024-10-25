@@ -1,0 +1,6 @@
+<h2>Create Time Slot</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Time Slot</button>
+</form>

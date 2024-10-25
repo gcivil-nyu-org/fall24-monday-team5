@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container booking-card">
+    <h2 class="heading">Book Your Appointment</h2>
+
+    <div class="time-slot">
+        <p><strong>Selected Slot:</strong> {{ time_slot.start_time|date:"H:i" }} to {{ time_slot.end_time|date:"H:i" }}</p>
+    </div>
+
+    <form method="post" class="appointment-form">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-primary">Confirm Appointment</button>
+    </form>
+</div>
+{% endblock %}
