@@ -1,6 +1,7 @@
 from django import forms
 from .models import Appointment, TimeSlot
 
+
 class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
@@ -11,6 +12,7 @@ class AppointmentForm(forms.ModelForm):
             'comments': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Enter any comments for the provider'}),
             'appointment_type': forms.Select(),
         }
+
 
 # Form for Providers to set Time Slots
 class TimeSlotForm(forms.ModelForm):

@@ -10,7 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Appointment, TimeSlot, Profile
+
 User = get_user_model()
+
 
 # View to display available time slots by date and provider
 @login_required
@@ -43,6 +45,8 @@ def time_slots(request):
         'selected_date': selected_date,
     }
     return render(request, 'appointments/time_slots.html', context)
+
+
 # View to handle appointment booking
 @login_required
 def book_appointment(request, slot_id):
@@ -72,9 +76,12 @@ def book_appointment(request, slot_id):
         form = AppointmentForm()
 
     return render(request, 'appointments/book_appointment.html', {'form': form, 'time_slot': time_slot})
+
+
 @login_required
 def appointment_success(request):
     return render(request, 'appointments/success.html')
+
 
 @login_required
 def create_time_slot(request):
@@ -98,6 +105,7 @@ def create_time_slot(request):
 
     return render(request, 'appointments/create_time_slot.html', {'form': form})
 
+
 @login_required
 def provider_dashboard(request):
     if not request.user.is_staff:  # Check if the user is a provider
@@ -107,6 +115,7 @@ def provider_dashboard(request):
     time_slots = TimeSlot.objects.filter(provider=request.user)
 
     return render(request, 'appointments/provider_dashboard.html', {'time_slots': time_slots})
+
 
 @login_required
 def my_appointments(request):
@@ -126,6 +135,7 @@ def my_appointments(request):
         }
 
     return render(request, 'appointments/my_appointments.html', context)
+
 
 @login_required
 def cancel_appointment(request, appointment_id):

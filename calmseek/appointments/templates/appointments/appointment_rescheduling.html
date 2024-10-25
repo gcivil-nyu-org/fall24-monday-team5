@@ -21,7 +21,8 @@
             <div class="filter-card">
                 <h2 class="heading">Filter Time Slots</h2>
                 <!-- Date and Provider Selection Form -->
-                <form method="get" action="{% url 'appointments:reschedule_time_slots' appointment.id %}" class="filter-form mb-4">
+                <form method="get" action="{% url 'appointments:reschedule_time_slots' appointment.id %}"
+                      class="filter-form mb-4">
                     <div class="filter-container">
                         <!-- Date Selection -->
                         <div class="form-group">
@@ -58,7 +59,8 @@
                                 <p><strong>Provider: {{ slot.provider.get_full_name }}</strong></p>
                                 <p>{{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
                             </div>
-                            <a href="{% url 'appointments:update_appointment' appointment.id slot.id %}" class="btn btn-black">Reschedule Now</a>
+                            <a href="{% url 'appointments:update_appointment' appointment.id slot.id %}"
+                               class="btn btn-black">Reschedule Now</a>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -68,182 +70,182 @@
         </div>
     </div>
 
-<!-- Add the necessary CSS here -->
-<style>
-/* Main container that wraps everything */
-.container {
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
+    <!-- Add the necessary CSS here -->
+    <style>
+        /* Main container that wraps everything */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
 
-/* Original Time Slot (Full Width) */
-.original-slot-container {
-    width: 100%;
-    margin-bottom: 20px;
-}
+        /* Original Time Slot (Full Width) */
+        .original-slot-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
 
-.original-slot-card {
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease-in-out;
-}
+        .original-slot-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
 
-.original-slot-card:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-}
+        .original-slot-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
 
-/* Slots Container (Wrapper for both Filter and Available Time Slots) */
-.slots-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    width: 100%;
-}
+        /* Slots Container (Wrapper for both Filter and Available Time Slots) */
+        .slots-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: 100%;
+        }
 
-/* Filter Card (Filter Time Slots) */
-.filter-card {
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    width: 30%; /* Set width to take 48% of the container for side by side view */
-    flex-shrink: 0;
-    transition: all 0.3s ease-in-out;
-}
+        /* Filter Card (Filter Time Slots) */
+        .filter-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            width: 30%; /* Set width to take 48% of the container for side by side view */
+            flex-shrink: 0;
+            transition: all 0.3s ease-in-out;
+        }
 
-.filter-card:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-}
+        .filter-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
 
-.heading {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    font-weight: bold;
-    color: #333;
-}
+        .heading {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #333;
+        }
 
-/* Form elements styling */
-.form-group {
-    margin-bottom: 15px;
-}
+        /* Form elements styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-label {
-    font-size: 1rem;
-    margin-bottom: 5px;
-    color: #555;
-}
+        label {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #555;
+        }
 
-.date-input, .provider-select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease;
-}
+        .date-input, .provider-select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
 
-.date-input:focus, .provider-select:focus {
-    border-color: #000; /* Focus border for inputs */
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
+        .date-input:focus, .provider-select:focus {
+            border-color: #000; /* Focus border for inputs */
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
 
-/* Button Styling */
-.btn-black {
-    background-color: #000;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
+        /* Button Styling */
+        .btn-black {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
 
-.btn-black:hover {
-    background-color: #333;
-}
+        .btn-black:hover {
+            background-color: #333;
+        }
 
-/* Available Time Slots Section */
-.slots-list {
-    width: 70%; /* Set width to take 48% of the container for side by side view */
-    padding: 25px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
+        /* Available Time Slots Section */
+        .slots-list {
+            width: 70%; /* Set width to take 48% of the container for side by side view */
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
 
-/* Slot Card Styling */
-.slot-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px; /* Smaller margin between cards */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+        /* Slot Card Styling */
+        .slot-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px; /* Smaller margin between cards */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-.slot-card:hover {
-    background-color: #f1f7fd;
-    transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
+        .slot-card:hover {
+            background-color: #f1f7fd;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
 
-.slot-info {
-    flex-grow: 1;
-}
+        .slot-info {
+            flex-grow: 1;
+        }
 
-.slot-info p {
-    margin-bottom: 10px;
-    color: #555;
-    font-size: 1.1rem;
-}
+        .slot-info p {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 1.1rem;
+        }
 
-/* No Slots Available Message */
-.no-slots {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #999;
-    margin-top: 20px;
-}
+        /* No Slots Available Message */
+        .no-slots {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #999;
+            margin-top: 20px;
+        }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .slots-container {
-        flex-direction: column;
-    }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slots-container {
+                flex-direction: column;
+            }
 
-    .filter-card, .slots-list {
-        width: 100%;
-    }
+            .filter-card, .slots-list {
+                width: 100%;
+            }
 
-    .slot-card {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+            .slot-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
-    .slot-info {
-        margin-bottom: 10px;
-    }
+            .slot-info {
+                margin-bottom: 10px;
+            }
 
-    .btn-black {
-        width: 100%;
-        text-align: center;
-    }
-}
-</style>
+            .btn-black {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
 
 {% endblock %}
