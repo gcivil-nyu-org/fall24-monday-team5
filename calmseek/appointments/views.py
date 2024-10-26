@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Subquery
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
@@ -22,7 +22,9 @@ def time_slots(request):
     selected_date = request.GET.get("date")
 
     # Filter providers based on Profile role 'Provider'
-    providers = Profile.objects.filter(role='Provider').select_related('user')
+    # providers = Profile.objects.filter(role='Provider').select_related('user')
+    provider_user_ids = Profile.objects.filter(role='Provider').values('user_id')
+    providers = User.objects.filter(id__in=Subquery(provider_user_ids))
 
     # Filter available time slots
     time_slots = TimeSlot.objects.filter(is_available=True)
@@ -163,14 +165,16 @@ def reschedule_time_slots(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
     profile = Profile.objects.get(user=request.user)
     selected_provider_id=0
-    providers: QuerySet[Profile] = Profile.objects.none()
+    providers = get_user_model()
     if profile.role == 'User':
         selected_provider_id = request.GET.get("provider")
         # Filter providers based on Profile role 'Provider'
-        providers = Profile.objects.filter(role='Provider').select_related('user')
+        # providers = Profile.objects.filter(role='Provider').select_related('user')
+        provider_user_ids = Profile.objects.filter(role='Provider').values('user_id')
+        providers = User.objects.filter(id__in=Subquery(provider_user_ids))
     if profile.role == 'Provider':
         selected_provider_id = appointment.time_slot.provider.id
-        providers = Profile.objects.filter(id=selected_provider_id)
+        providers = User.objects.filter(id = selected_provider_id)
 
     selected_date = request.GET.get("date")
 
