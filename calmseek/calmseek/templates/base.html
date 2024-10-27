@@ -9,27 +9,68 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="container">
+<header>
+    <div class="container">
+        <div class="header-left">
             <h1>CalmSeek</h1>
             <nav>
-                <a href="{% url 'appointments:time_slots' %}" class="nav-title">Available Slots</a>
-                <a href="{% url 'appointments:my_appointments' %}" class="nav-title">My Appointments</a>
-                <a href="#" class="nav-title">Profile</a>
-            <a href="{% url 'logout' %}" class="nav-title">Logout</a>
+                <a class="nav-title">Home</a>
+
+                {% if user.profile.role != 'Provider' %} <!-- Only show for non-providers -->
+                    <a href="{% url 'appointments:time_slots' %}" class="nav-title">Available Slots</a>
+                {% endif %}
+
+                <a class="nav-title">Service Finder</a>
+
             </nav>
         </div>
-    </header>
-
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; {{ current_year }} CalmSeek. All rights reserved.</p>
+        <!-- User dropdown menu with black oval button -->
+        <div class="user-menu" onclick="toggleDropdown()">
+            <div class="user-btn">
+                {{ user.first_name }}
+                <span class="arrow">&#9662;</span> <!-- Small arrow icon -->
+            </div>
+            <div class="dropdown" id="dropdownMenu">
+                <ul>
+                    <li><a href="{% url 'appointments:my_appointments' %}">My Appointments</a></li>
+                    <li><a href="#">Profile</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </div>
         </div>
-    </footer>
+
+    </div>
+</header>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer>
+    <div class="container">
+        <p>&copy; {{ current_year }} CalmSeek. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    function toggleDropdown() {
+        var dropdown = document.getElementById("dropdownMenu");
+        dropdown.classList.toggle("show");
+    }
+
+    // Close the dropdown if user clicks outside of it
+    window.onclick = function (event) {
+        if (!event.target.matches('.user-btn, .user-btn *')) {
+            var dropdowns = document.getElementsByClassName("dropdown");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
 </body>
 </html>
