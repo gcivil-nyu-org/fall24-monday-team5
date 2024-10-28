@@ -1,0 +1,105 @@
+{% block content %}
+    <!-- Black header with white text -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">CalmSeek</h1>
+        </div>
+    </header>
+
+    <div class="login-container">
+        <h2 class="login-heading">Welcome to CalmSeek</h2>
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-black">Login</button>
+        </form>
+    </div>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        .header {
+            background-color: #000;
+            padding: 15px 0;
+            position: fixed; /* Keep header fixed at the top */
+            width: 100%; /* Ensure it stretches across the page */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensures it stays above other elements */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .login-container {
+            max-width: 380px;
+            margin: 100px auto;
+            padding: 40px;
+            background-color: #ffffff00;
+            border-radius: 12px;
+
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .login-heading {
+            font-size: 1.8rem;
+            color: #111;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+
+        .btn-black {
+            width: 100%;
+            padding: 12px;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-black:hover {
+            background-color: #333;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+        .login-form input:focus {
+            background-color: #e5e5e5;
+            outline: none;
+        }
+    </style>
+{% endblock %}

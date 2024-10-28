@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="slots-container">
+        <div class="filter-card">
+            <h2 class="heading">Filter Time Slots</h2>
+
+            <!-- Date and Provider Selection Form -->
+            <form method="get" action="{% url 'appointments:time_slots' %}" class="filter-form mb-4">
+                <div class="filter-container">
+                    <!-- Date Selection -->
+                    <div class="form-group">
+                        <label for="date">Choose Date:</label>
+                        <input type="date" id="date" name="date" value="{{ selected_date }}" class="date-input">
+                    </div>
+
+                    <!-- Provider Selection -->
+                    <div class="form-group">
+                        <label for="provider">Choose Provider:</label>
+                        <select id="provider" name="provider" class="provider-select">
+                            <option value="">All Providers</option>
+                            {% for provider in providers %}
+                                <option value="{{ provider.id }}"
+                                        {% if provider.id == selected_provider_id %} selected {% endif %}>
+                                    {{ provider.get_full_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-black">Filter</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Time Slots Display -->
+        <div class="slots-list">
+            <h2 class="heading">Available Time Slots</h2>
+            {% if time_slots %}
+                {% for slot in time_slots %}
+                    <div class="slot-card">
+                        <div class="slot-info">
+                            <p><strong>Provider: {{ slot.provider.get_full_name }}</strong></p>
+                            <p>{{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
+                        </div>
+                        <a href="{% url 'appointments:book_appointment' slot.id %}" class="btn btn-black">Book Now</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-slots">No available time slots for the selected date and provider.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    
+    <style>
+        /* Slots Container (Wrapper for both Filter and Time Slots sections) */
+        .slots-container {
+            display: flex;
+            justify-content: space-between; /* Ensures space between filter and slots */
+            gap: 20px; /* Reduced space between the two sections */
+            max-width: 1200px; /* Max width for the overall wrapper */
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Filter Card (Filter Time Slots) */
+        .filter-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            width: 30%;
+            flex-shrink: 0; /* Prevent shrinking */
+            transition: all 0.3s ease-in-out;
+        }
+
+        .filter-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .heading {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Form elements styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .date-input, .provider-select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        .date-input:focus, .provider-select:focus {
+            border-color: #000; /* Focus border for inputs */
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Button Styling */
+        .btn-black {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-black:hover {
+            background-color: #333;
+        }
+
+        /* Slots Section */
+        .slots-list {
+            width: 70%;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Slot Card */
+        .slot-card {
+            display: flex;
+            justify-content: space-between; /* Place button on the right side */
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px; /* Smaller margin between cards */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .slot-card:hover {
+            background-color: #f1f7fd;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .slot-info {
+            flex-grow: 1;
+        }
+
+        .slot-info p {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .no-slots {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #999;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slots-container {
+                flex-direction: column;
+            }
+
+            .filter-card, .slots-list {
+                width: 100%;
+            }
+
+            .slot-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .slot-info {
+                margin-bottom: 10px;
+            }
+
+            .btn-black {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+
+{% endblock %}

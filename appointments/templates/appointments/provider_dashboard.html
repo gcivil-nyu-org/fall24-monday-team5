@@ -1,0 +1,8 @@
+<h2>Manage Your Time Slots</h2>
+<a href="{% url 'appointments:create_time_slot' %}">Create New Time Slot</a>
+
+<ul>
+    {% for slot in time_slots %}
+        <li>{{ slot.start_time }} - {{ slot.end_time }} ({{ slot.is_available }})</li>
+    {% endfor %}
+</ul>
