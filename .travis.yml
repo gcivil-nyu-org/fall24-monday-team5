@@ -1,0 +1,28 @@
+language: python
+
+install:
+  - pip install -r requirements.txt
+
+script:
+- black --check .
+- flake8 --max-line-length=88 .
+- coverage run manage.py test
+- coverage report
+- env
+
+after_scripts:
+- coveralls
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $DEV_AWS_ACCESS_KEY
+  secret_access_key: $DEV_AWS_SECRET_KEY
+  region: "us-west-2"
+  app: "django-tutorial"
+  env: "django-env"
+  bucket_name: "elasticbeanstalk-us-west-2-049461798922"
+  on:
+    repo: aryanprasad7/SE-Django-1
+    branch: main
+  skip_cleanup: 'true'
+
