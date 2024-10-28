@@ -125,7 +125,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR
-    / "calmseek/static/css",  # Ensure this points to your static files directory
+    / "static/css",  # Ensure this points to your static files directory
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
