@@ -18,8 +18,8 @@ deploy:
   access_key_id: $DEV_AWS_ACCESS_KEY
   secret_access_key: $DEV_AWS_SECRET_KEY
   region: "us-west-2"
-  app: "django-tutorial"
-  env: "django-env"
+  app: "calmseek-app"
+  env: "calmseek-app-env"
   bucket_name: "elasticbeanstalk-us-west-2-049461798922"
   on:
     all_branches: true
