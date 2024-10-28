@@ -22,7 +22,7 @@ deploy:
   env: "django-env"
   bucket_name: "elasticbeanstalk-us-west-2-049461798922"
   on:
-    repo: aryanprasad7/SE-Django-1
-    branch: main
+    all_branches: true
+    condition: "$CI_COMMIT_BRANCH == 'main' || $CI_COMMIT_BRANCH == 'develop'"
   skip_cleanup: 'true'
 
