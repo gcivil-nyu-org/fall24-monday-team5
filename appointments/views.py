@@ -282,30 +282,35 @@ def dashboard(request):
     }
     return render(request, "appointments/dashboard.html", context)
 
+
 @login_required
 def create_time_slot(request):
     user = request.user
     profile = Profile.objects.get(user=user)
 
     # Redirect if the user is not a provider
-    if profile.role != 'Provider':
-        return redirect('appointments:book_appointment')
+    if profile.role != "Provider":
+        return redirect("appointments:book_appointment")
 
     # Fetch the current user's existing time slots
-    current_slots = TimeSlot.objects.filter(provider=user).order_by('start_time')
+    current_slots = TimeSlot.objects.filter(provider=user).order_by("start_time")
 
     # Process the form submission
-    if request.method == 'POST':
+    if request.method == "POST":
         form = TimeSlotForm(request.POST)
         if form.is_valid():
             time_slot = form.save(commit=False)
             time_slot.provider = user  # Set the provider to the logged-in user
             time_slot.save()
-            return redirect('appointments:provider_dashboard')
+            return redirect("appointments:provider_dashboard")
     else:
         form = TimeSlotForm()
 
-    return render(request, 'appointments/create_time_slot.html', {
-        'form': form,
-        'current_slots': current_slots  # Pass the current time slots to the template
-    })
+    return render(
+        request,
+        "appointments/create_time_slot.html",
+        {
+            "form": form,
+            "current_slots": current_slots,  # Pass the current time slots to the template
+        },
+    )
