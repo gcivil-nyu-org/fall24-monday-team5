@@ -15,12 +15,12 @@ after_scripts:
 
 deploy:
   provider: elasticbeanstalk
-  access_key_id: $DEV_AWS_ACCESS_KEY
-  secret_access_key: $DEV_AWS_SECRET_KEY
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
   region: $AWS_REGION
   app: $DEV_APP_NAME
   env: $DEV_AWS_ENV_NAME
-  bucket_name: $DEV_AWS_BUCKET_NAME
+  bucket_name: $AWS_BUCKET_NAME
   on:
     all_branches: true
     condition: "$TRAVIS_BRANCH == 'main' || $TRAVIS_BRANCH == 'develop'"
