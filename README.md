@@ -1,5 +1,9 @@
 # fall24-monday-team5
+Build status (for main): [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=main)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
 
+Build status (for develop): [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=develop)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
+
+Coverage Report: [![Coverage Status](https://coveralls.io/repos/github/gcivil-nyu-org/fall24-monday-team5/badge.svg?branch=cicd-Aryan)](https://coveralls.io/github/gcivil-nyu-org/fall24-monday-team5?branch=cicd-Aryan)
 # Calm Seek
 
 Welcome to the project repository! Please follow the guidelines below to maintain consistency and ensure a smooth development process.
