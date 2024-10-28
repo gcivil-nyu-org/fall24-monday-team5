@@ -284,7 +284,7 @@ def dashboard(request):
 
 
 @login_required
-def create_time_slot(request):  # noqa: F811
+def create_time_slot(request):    # noqa: F811
     user = request.user
     profile = Profile.objects.get(user=user)
 
