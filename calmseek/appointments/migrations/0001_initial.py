@@ -15,32 +15,103 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.CharField(choices=[('Provider', 'Provider'), ('User', 'User'), ('Admin', 'Admin')], default=None, max_length=20)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "role",
+                    models.CharField(
+                        choices=[
+                            ("Provider", "Provider"),
+                            ("User", "User"),
+                            ("Admin", "Admin"),
+                        ],
+                        default=None,
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TimeSlot',
+            name="TimeSlot",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_time', models.DateTimeField()),
-                ('end_time', models.DateTimeField()),
-                ('is_available', models.BooleanField(default=True)),
-                ('provider', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='provider_time_slots', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
+                ("is_available", models.BooleanField(default=True)),
+                (
+                    "provider",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="provider_time_slots",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Appointment',
+            name="Appointment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comments', models.TextField(blank=True)),
-                ('appointment_type', models.CharField(choices=[('Checkup', 'Checkup'), ('Consultation', 'Consultation'), ('Emergency', 'Emergency')], max_length=20)),
-                ('booked_on', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='appointments', to=settings.AUTH_USER_MODEL)),
-                ('time_slot', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='appointments.timeslot')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("comments", models.TextField(blank=True)),
+                (
+                    "appointment_type",
+                    models.CharField(
+                        choices=[
+                            ("Checkup", "Checkup"),
+                            ("Consultation", "Consultation"),
+                            ("Emergency", "Emergency"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("booked_on", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="appointments",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "time_slot",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="appointments.timeslot",
+                    ),
+                ),
             ],
         ),
     ]
