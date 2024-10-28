@@ -17,10 +17,10 @@ deploy:
   provider: elasticbeanstalk
   access_key_id: $DEV_AWS_ACCESS_KEY
   secret_access_key: $DEV_AWS_SECRET_KEY
-  region: "us-west-2"
-  app: "calmseek-app"
-  env: "calmseek-app-env"
-  bucket_name: "elasticbeanstalk-us-west-2-049461798922"
+  region: $AWS_REGION
+  app: $DEV_APP_NAME
+  env: $DEV_AWS_ENV_NAME
+  bucket_name: $DEV_AWS_BUCKET_NAME
   on:
     all_branches: true
     condition: "$CI_COMMIT_BRANCH == 'main' || $CI_COMMIT_BRANCH == 'develop'"
