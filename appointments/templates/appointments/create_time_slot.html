@@ -1,6 +1,141 @@
-<h2>Create Time Slot</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Time Slot</button>
-</form>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="create-slot-container">
+    <!-- Form for Creating a New Time Slot -->
+    <div class="form-container">
+        <h2 class="heading">Create a New Time Slot</h2>
+        <form method="post" action="" class="create-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Save Time Slot</button>
+            <a href="{% url 'appointments:provider_dashboard' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+
+    <!-- List of Current Time Slots -->
+    <div class="current-slots-container">
+        <h2 class="heading">My Current Time Slots</h2>
+        <div class="slot-list">
+            {% if current_slots.exists %}
+                {% for slot in current_slots %}
+                    <div class="slot-card">
+                        <p><strong>Start:</strong> {{ slot.start_time|date:"Y-m-d H:i" }}</p>
+                        <p><strong>End:</strong> {{ slot.end_time|date:"Y-m-d H:i" }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No time slots available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Container for the entire layout */
+    .create-slot-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 40px auto;
+        gap: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Form container styling */
+    .form-container {
+        width: 45%;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Heading style */
+    .heading {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+    }
+
+    /* Form element styling */
+    .create-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Primary button styling */
+    .btn-primary {
+        padding: 12px;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-align: center;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background-color: #333;
+    }
+
+    /* Secondary button styling */
+    .btn-secondary {
+        padding: 12px;
+        background-color: #e0e0e0;
+        color: #333;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-align: center;
+        width: 100%;
+    }
+
+    .btn-secondary:hover {
+        background-color: #ccc;
+    }
+
+    /* Container for current time slots */
+    .current-slots-container {
+        width: 45%;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Slot list */
+    .slot-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Individual slot card styling */
+    .slot-card {
+        padding: 15px;
+        background-color: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .slot-card p {
+        margin: 0;
+        color: #555;
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}
+
