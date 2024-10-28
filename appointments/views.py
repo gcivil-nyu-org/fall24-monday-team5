@@ -284,7 +284,7 @@ def dashboard(request):
 
 
 @login_required
-def create_time_slot(request):
+def create_time_slot(request):  # noqa: F811
     user = request.user
     profile = Profile.objects.get(user=user)
 
@@ -311,6 +311,7 @@ def create_time_slot(request):
         "appointments/create_time_slot.html",
         {
             "form": form,
-            "current_slots": current_slots,  # Pass the current time slots to the template
+            # Pass the current time slots to the template
+            "current_slots": current_slots,
         },
     )
