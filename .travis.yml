@@ -23,6 +23,6 @@ deploy:
   bucket_name: $DEV_AWS_BUCKET_NAME
   on:
     all_branches: true
-    condition: "$CI_COMMIT_BRANCH == 'main' || $CI_COMMIT_BRANCH == 'develop'"
+    condition: "$TRAVIS_BRANCH == 'main' || $TRAVIS_BRANCH == 'develop'"
   skip_cleanup: 'true'
 
