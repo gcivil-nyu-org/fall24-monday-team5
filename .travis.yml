@@ -1,0 +1,28 @@
+language: python
+
+install:
+  - pip install -r requirements.txt
+
+script:
+- black --check .
+- flake8 --max-line-length=88 .
+- coverage run manage.py test
+- coverage report
+- env
+
+after_scripts:
+- coveralls
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $DEV_AWS_ACCESS_KEY
+  secret_access_key: $DEV_AWS_SECRET_KEY
+  region: $AWS_REGION
+  app: $DEV_APP_NAME
+  env: $DEV_AWS_ENV_NAME
+  bucket_name: $DEV_AWS_BUCKET_NAME
+  on:
+    all_branches: true
+    condition: "$CI_COMMIT_BRANCH == 'main' || $CI_COMMIT_BRANCH == 'develop'"
+  skip_cleanup: 'true'
+

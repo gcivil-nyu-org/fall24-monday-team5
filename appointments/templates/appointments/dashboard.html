@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Dashboard</h2>
+
+{% if is_provider %}
+  <!-- Provider Dashboard -->
+  <h3>Your Time Slots</h3>
+  {% if time_slots %}
+    <ul>
+      {% for time_slot in time_slots %}
+        <li>{{ time_slot.start_time }} - {{ time_slot.end_time }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No time slots available.</p>
+  {% endif %}
+
+  <h3>Your Appointments</h3>
+  {% if appointments %}
+    <ul>
+      {% for appointment in appointments %}
+        <li>
+          Appointment with {{ appointment.user.username }} on 
+          {{ appointment.time_slot.start_time }} - 
+          {{ appointment.time_slot.end_time }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No appointments booked yet.</p>
+  {% endif %}
+
+{% else %}
+  <!-- User Dashboard -->
+  <h3>Available Time Slots to Book</h3>
+  {% if time_slots %}
+    <ul>
+      {% for time_slot in time_slots %}
+        <li>
+          {{ time_slot.start_time }} - {{ time_slot.end_time }}
+          <a href="{% url 'appointments:book_appointment' time_slot.id %}">Book</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No time slots available for booking.</p>
+  {% endif %}
+
+  <h3>Your Appointments</h3>
+  {% if appointments %}
+    <ul>
+      {% for appointment in appointments %}
+        <li>
+          Appointment with {{ appointment.time_slot.provider.username }} on 
+          {{ appointment.time_slot.start_time }} - 
+          {{ appointment.time_slot.end_time }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven't booked any appointments yet.</p>
+  {% endif %}
+{% endif %}
+
+{% endblock %}

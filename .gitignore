@@ -1,3 +1,7 @@
 .idea/*
-calmseek/appointments/__pycache__/*
-calmseek/calmseek/__pycache__/*
+__pycache__/
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+.se-proj/
