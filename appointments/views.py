@@ -345,6 +345,7 @@ def create_time_slot(request):
         },
     )
 
+
 @login_required
 def delete_slot(request, slot_id):
     slot = get_object_or_404(TimeSlot, id=slot_id)
@@ -364,17 +365,17 @@ def delete_slot(request, slot_id):
     return redirect("appointments:create_time_slot")
 
 
-# appointments/views.py
-
-
 @login_required
 def browse_providers(request):
     # Query for all profiles with the role 'Provider'
-    providers = Profile.objects.filter(role='Provider')
-    return render(request, 'appointments/browse_providers.html', {'providers': providers})
+    providers = Profile.objects.filter(role="Provider")
+    return render(
+        request, "appointments/browse_providers.html", {"providers": providers}
+    )
+
 
 @login_required
 def provider_detail(request, provider_id):
     # Retrieve the provider's profile or return 404 if not found
-    provider = get_object_or_404(Profile, id=provider_id, role='Provider')
-    return render(request, 'appointments/provider_detail.html', {'provider': provider})
+    provider = get_object_or_404(Profile, id=provider_id, role="Provider")
+    return render(request, "appointments/provider_detail.html", {"provider": provider})
