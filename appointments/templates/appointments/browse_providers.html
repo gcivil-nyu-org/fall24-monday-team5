@@ -1,0 +1,59 @@
+<!-- appointments/templates/appointments/browse_providers.html -->
+
+{% extends "base.html" %}
+{% block content %}
+<div class="provider-container">
+    <h2 class="heading">Browse Providers</h2>
+    <div class="provider-cards">
+        {% for provider in providers %}
+            <a href="{% url 'appointments:provider_detail' provider.id %}" class="provider-link">
+                <div class="provider-card">
+                    <h3>{{ provider.user.get_full_name }}</h3>
+                    <p>Email: {{ provider.user.email }}</p>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .provider-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .heading {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .provider-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+    .provider-link {
+        text-decoration: none;
+        color: inherit;
+    }
+    .provider-card {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 100%;
+        max-width: 300px;
+    }
+    .provider-card h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #333;
+    }
+    .provider-card p {
+        margin: 10px 0 0;
+        color: #555;
+    }
+</style>
+{% endblock %}

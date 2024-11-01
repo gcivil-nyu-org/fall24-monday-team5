@@ -26,4 +26,6 @@ urlpatterns = [
         name="update_appointment",
     ),
     path("delete-slot/<int:slot_id>/", views.delete_slot, name="delete_slot"),
+    path('providers/', views.browse_providers, name='browse_providers'),
+    path('providers/<int:provider_id>/', views.provider_detail, name='provider_detail'),
 ]

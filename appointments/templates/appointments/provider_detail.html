@@ -1,0 +1,51 @@
+<!-- appointments/templates/appointments/provider_detail.html -->
+
+{% extends "base.html" %}
+{% block content %}
+<div class="provider-detail-container">
+    <h2 class="heading">{{ provider.user.get_full_name }}</h2>
+    <p><strong>Email:</strong> {{ provider.user.email }}</p>
+    <p><strong>Phone:</strong> {{ provider.phone_number }}</p> <!-- If phone is in Profile -->
+    <p><strong>Specialization:</strong> {{ provider.specialization }}</p> <!-- Add other details as needed -->
+    <p><strong>Biography:</strong> {{ provider.biography }}</p> <!-- If biography field exists -->
+
+    <!-- Back button to return to the Browse Providers page -->
+    <a href="{% url 'appointments:browse_providers' %}" class="btn btn-secondary back-btn">Back to Browse Providers</a>
+</div>
+
+<style>
+    .provider-detail-container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        font-family: 'Inter', sans-serif;
+    }
+    .heading {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #333;
+    }
+    p {
+        margin: 10px 0;
+        font-size: 1rem;
+        color: #555;
+    }
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: #555;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+    }
+    .back-btn:hover {
+        background-color: #333;
+    }
+</style>
+{% endblock %}

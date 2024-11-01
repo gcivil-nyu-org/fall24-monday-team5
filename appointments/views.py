@@ -9,8 +9,8 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from forms import AppointmentForm, TimeSlotForm
-from models import Appointment, TimeSlot, Profile
+from .forms import AppointmentForm, TimeSlotForm
+from .models import Appointment, TimeSlot, Profile
 import calendar
 
 User = get_user_model()
@@ -345,7 +345,6 @@ def create_time_slot(request):
         },
     )
 
-
 @login_required
 def delete_slot(request, slot_id):
     slot = get_object_or_404(TimeSlot, id=slot_id)
@@ -363,3 +362,19 @@ def delete_slot(request, slot_id):
     slot.delete()
     messages.success(request, "Time slot deleted successfully.")
     return redirect("appointments:create_time_slot")
+
+
+# appointments/views.py
+
+
+@login_required
+def browse_providers(request):
+    # Query for all profiles with the role 'Provider'
+    providers = Profile.objects.filter(role='Provider')
+    return render(request, 'appointments/browse_providers.html', {'providers': providers})
+
+@login_required
+def provider_detail(request, provider_id):
+    # Retrieve the provider's profile or return 404 if not found
+    provider = get_object_or_404(Profile, id=provider_id, role='Provider')
+    return render(request, 'appointments/provider_detail.html', {'provider': provider})
