@@ -378,4 +378,5 @@ def browse_providers(request):
 def provider_detail(request, provider_id):
     # Retrieve the provider's profile or return 404 if not found
     provider = get_object_or_404(Profile, id=provider_id, role="Provider")
-    return render(request, "appointments/provider_detail.html", {"provider": provider})
+    time_slots = TimeSlot.objects.filter(provider=provider.user)
+    return render(request, "appointments/provider_detail.html", {"provider": provider, "time_slots": time_slots})

@@ -29,7 +29,7 @@
     <div class="availability-section">
         <h3>Availability</h3>
         <ul>
-            {% for slot in provider.time_slots %}
+            {% for slot in time_slots %}
                 <li>
                     {{ slot.start_time|date:"l, F j, Y, g:i A" }} -
                     {{ slot.end_time|date:"g:i A" }}
