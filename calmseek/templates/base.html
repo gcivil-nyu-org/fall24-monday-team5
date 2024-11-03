@@ -16,7 +16,11 @@
             <nav>
                 <a class="nav-title">Home</a>
 
-                {% if user.profile.role != 'Provider' %} <!-- Only show for non-providers -->
+                {% if user.profile.role == 'User' %}
+                    <a href="{% url 'appointments:browse_providers' %}" class="nav-title">Browse Providers</a>
+                {% endif %}
+
+                {% if user.profile.role == 'User' %}
                     <a href="{% url 'appointments:time_slots' %}" class="nav-title">Available Slots</a>
                 {% endif %}
 

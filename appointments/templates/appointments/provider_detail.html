@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="provider-detail-container">
+    <!-- Back Button aligned with card -->
+    <div class="back-btn-container">
+        <a href="{% url 'appointments:browse_providers' %}" class="back-btn">Back</a>
+    </div>
+
+    <!-- Provider Info Card -->
+    <div class="provider-card">
+        <!-- Profile Photo (Square) -->
+        <div class="profile-photo">
+            <img src="{{ provider.profile_photo.url }}" alt="Profile Photo of {{ provider.user.get_full_name }}">
+        </div>
+
+        <!-- Provider Details -->
+        <div class="provider-info">
+            <h2 class="provider-name">{{ provider.user.get_full_name }}</h2>
+            <p class="provider-role">Role: {{ provider.role }}</p>
+            <p class="facility">Facility: {{ provider.facility|default:"Not Available" }}</p>
+            <p class="location">Location: {{ provider.location|default:"Not Available" }}</p>
+            <p class="contact-info">Contact: {{ provider.contact_info|default:"Not Available" }}</p>
+            <p class="bio">Bio: {{ provider.bio|default:"No bio available" }}</p>
+        </div>
+    </div>
+
+    <!-- Availability Section -->
+    <div class="availability-section">
+        <h3>Availability</h3>
+        <ul>
+            {% for slot in time_slots %}
+                <li>
+                    {{ slot.start_time|date:"l, F j, Y, g:i A" }} -
+                    {{ slot.end_time|date:"g:i A" }}
+                    <span class="status">{{ slot.is_available|yesno:"Available,Occupied" }}</span>
+                </li>
+            {% empty %}
+                <li>No available slots at the moment.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .back-btn-container {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .back-btn {
+        background-color: #000;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .back-btn:hover {
+        background-color: #333;
+    }
+
+    .provider-detail-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        font-family: 'Inter', sans-serif;
+    }
+
+    .provider-card {
+        display: flex;
+        gap: 20px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        align-items: center;
+    }
+
+    .profile-photo img {
+        width: 120px;
+        height: 100%; /* Full height to match card height */
+        border-radius: 12px;
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .provider-info {
+        flex: 1;
+    }
+
+    .provider-name {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+
+    .provider-role,
+    .facility,
+    .location,
+    .contact-info,
+    .bio {
+        font-size: 1.1rem;
+        color: #555;
+        margin: 8px 0;
+    }
+
+    .availability-section {
+        margin-top: 30px;
+    }
+
+    .availability-section h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .availability-section ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .availability-section li {
+        font-size: 1rem;
+        color: #555;
+        padding: 8px 0;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .status {
+        font-weight: 600;
+        color: #297194;
+    }
+</style>
+{% endblock %}
