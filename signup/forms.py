@@ -30,7 +30,9 @@ class ProviderSignUpForm(UserCreationForm):
         user.email = self.cleaned_data["email"]
         if commit:
             user.save()
-            Profile.objects.create(user=user, role="Provider") # the role 'Provider' is case sensitive (as of the moment)
+            Profile.objects.create(
+                user=user, role="Provider"
+            )  # the role 'Provider' is case sensitive (as of the moment)
         return user
 
 
@@ -58,5 +60,7 @@ class UserSignUpForm(UserCreationForm):
 
         if commit:
             user.save()
-            Profile.objects.create(user=user, role="User") # the role 'User' is case sensitive (as of the moment)
+            Profile.objects.create(
+                user=user, role="User"
+            )  # the role 'User' is case sensitive (as of the moment)
         return user
