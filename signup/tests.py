@@ -20,7 +20,7 @@ class ProviderSignUpFormTests(TestCase):
         self.assertTrue(form.is_valid())
         user = form.save()
         profile = Profile.objects.get(user=user)
-        self.assertEqual(profile.role, "provider")
+        self.assertEqual(profile.role, "Provider")
         self.assertEqual(user.first_name, "Provider")
         self.assertEqual(user.email, "provider@example.com")
 
@@ -70,7 +70,7 @@ class UserSignUpFormTests(TestCase):
         self.assertTrue(form.is_valid())
         user = form.save()
         profile = Profile.objects.get(user=user)
-        self.assertEqual(profile.role, "user")
+        self.assertEqual(profile.role, "User")
         self.assertEqual(user.first_name, "Regular")
         self.assertEqual(user.email, "user@example.com")
 
