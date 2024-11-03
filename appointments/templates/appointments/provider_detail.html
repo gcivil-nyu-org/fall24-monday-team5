@@ -5,6 +5,11 @@
     <!-- Back Button aligned with card -->
     <div class="back-btn-container">
         <a href="{% url 'appointments:browse_providers' %}" class="back-btn">Back</a>
+        {% if provider in request.user.profile.favorites.all %}
+            <button class="favorite-btn" disabled>Added to Favorites</button>
+        {% else %}
+            <a href="{% url 'appointments:add_to_favorites' provider.id %}" class="favorite-btn">Add to Favorites</a>
+        {% endif %}
     </div>
 
     <!-- Provider Info Card -->
