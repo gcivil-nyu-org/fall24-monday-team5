@@ -9,14 +9,21 @@ from appointments.models import Profile, TimeSlot, Appointment
 
 User = get_user_model()
 
+
 class AppointmentTests(TestCase):
     def setUp(self):
         # Create test users
-        self.provider_user = User.objects.create_user(username="provider", password="pass")
-        self.normal_user = User.objects.create_user(username="normal_user", password="pass")
+        self.provider_user = User.objects.create_user(
+            username="provider", password="pass"
+        )
+        self.normal_user = User.objects.create_user(
+            username="normal_user", password="pass"
+        )
 
         # Set up profiles
-        self.provider_profile = Profile.objects.create(user=self.provider_user, role="Provider")
+        self.provider_profile = Profile.objects.create(
+            user=self.provider_user, role="Provider"
+        )
         self.normal_profile = Profile.objects.create(user=self.normal_user, role="User")
 
         # Set up test time slots
@@ -24,7 +31,7 @@ class AppointmentTests(TestCase):
             provider=self.provider_user,
             start_time=timezone.now() + timedelta(days=1),
             end_time=timezone.now() + timedelta(days=1, hours=1),
-            is_available=True
+            is_available=True,
         )
 
     def test_time_slots_view(self):
@@ -48,8 +55,12 @@ class AppointmentTests(TestCase):
     def test_cancel_appointment_view(self):
         # Book an appointment first
         self.client.login(username="normal_user", password="pass")
-        appointment = Appointment.objects.create(user=self.normal_user, time_slot=self.time_slot)
-        response = self.client.post(reverse("appointments:cancel_appointment", args=[appointment.id]))
+        appointment = Appointment.objects.create(
+            user=self.normal_user, time_slot=self.time_slot
+        )
+        response = self.client.post(
+            reverse("appointments:cancel_appointment", args=[appointment.id])
+        )
         self.assertEqual(response.status_code, 302)
 
         # Ensure appointment is deleted and slot is available
@@ -61,11 +72,14 @@ class AppointmentTests(TestCase):
         self.client.login(username="provider", password="pass")
         start_time = timezone.now() + timedelta(days=3)
         end_time = start_time + timedelta(hours=1)
-        response = self.client.post(reverse("appointments:create_time_slot"), {
-            "form_type": "single",
-            "start_time": start_time.strftime("%H:%M"),
-            "end_time": end_time.strftime("%H:%M"),
-        })
+        response = self.client.post(
+            reverse("appointments:create_time_slot"),
+            {
+                "form_type": "single",
+                "start_time": start_time.strftime("%H:%M"),
+                "end_time": end_time.strftime("%H:%M"),
+            },
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_delete_slot_view(self):
@@ -74,7 +88,7 @@ class AppointmentTests(TestCase):
             provider=self.provider_user,
             start_time=timezone.now() + timedelta(days=2),
             end_time=timezone.now() + timedelta(days=2, hours=1),
-            is_available=True
+            is_available=True,
         )
         response = self.client.post(reverse("appointments:delete_slot", args=[slot.id]))
         self.assertEqual(response.status_code, 302)
@@ -88,6 +102,8 @@ class AppointmentTests(TestCase):
 
     def test_provider_detail_view(self):
         self.client.login(username="normal_user", password="pass")
-        response = self.client.get(reverse("appointments:provider_detail", args=[self.provider_profile.id]))
+        response = self.client.get(
+            reverse("appointments:provider_detail", args=[self.provider_profile.id])
+        )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "appointments/provider_detail.html")
