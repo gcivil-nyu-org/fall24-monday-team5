@@ -385,20 +385,30 @@ def provider_detail(request, provider_id):
         {"provider": provider, "time_slots": time_slots},
     )
 
+
 @login_required
 def add_to_favorites(request, provider_id):
     provider = get_object_or_404(Profile, id=provider_id, role="Provider")
     user_profile = request.user.profile
 
     if provider in user_profile.favorites.all():
-        messages.info(request, f"{provider.user.get_full_name()} is already in your favorites.")
+        messages.info(
+            request, f"{provider.user.get_full_name()} is already in your favorites."
+        )
     else:
         user_profile.favorites.add(provider)
-        messages.success(request, f"Added {provider.user.get_full_name()} to your favorites.")
+        messages.success(
+            request, f"Added {provider.user.get_full_name()} to your favorites."
+        )
 
-    return redirect('appointments:provider_detail', provider_id=provider_id)
+    return redirect("appointments:provider_detail", provider_id=provider_id)
+
 
 @login_required
 def favorite_providers(request):
     favorite_providers = request.user.profile.favorites.all()
-    return render(request, "appointments/favorite_providers.html", {"favorite_providers": favorite_providers})
+    return render(
+        request,
+        "appointments/favorite_providers.html",
+        {"favorite_providers": favorite_providers},
+    )

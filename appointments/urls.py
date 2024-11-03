@@ -29,5 +29,9 @@ urlpatterns = [
     path("delete-slot/<int:slot_id>/", views.delete_slot, name="delete_slot"),
     path("providers/", views.browse_providers, name="browse_providers"),
     path("providers/<int:provider_id>/", views.provider_detail, name="provider_detail"),
-    path("providers/<int:provider_id>/add_to_favorites/", views.add_to_favorites, name="add_to_favorites"),
+    path(
+        "providers/<int:provider_id>/add_to_favorites/",
+        views.add_to_favorites,
+        name="add_to_favorites",
+    ),
 ]
