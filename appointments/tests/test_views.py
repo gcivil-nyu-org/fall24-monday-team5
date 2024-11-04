@@ -136,7 +136,9 @@ class AppointmentTests(TestCase):
     def test_remove_from_favorites(self):
         self.normal_profile.favorites.add(self.provider_profile)
 
-        url = reverse("appointments:remove_from_favorites", args=[self.provider_profile.id])
+        url = reverse(
+            "appointments:remove_from_favorites", args=[self.provider_profile.id]
+        )
         response = self.client.post(url)
 
         # Confirm redirect to provider detail
@@ -151,7 +153,9 @@ class AppointmentTests(TestCase):
     def test_delete_favorite_provider(self):
         self.normal_profile.favorites.add(self.provider_profile)
 
-        url = reverse("appointments:delete_favorite_provider", args=[self.provider_profile.id])
+        url = reverse(
+            "appointments:delete_favorite_provider", args=[self.provider_profile.id]
+        )
         response = self.client.post(url)
 
         # Confirm redirect to provider detail
