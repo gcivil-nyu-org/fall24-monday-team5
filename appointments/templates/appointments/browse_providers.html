@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="provider-container">
+{#    <h2 class="heading">Meet with Providers</h2>#}
+    <div class="provider-cards">
+        {% for provider in providers %}
+            <a href="{% url 'appointments:provider_detail' provider.id %}" class="provider-link">
+                <div class="provider-card">
+                    <!-- Profile Photo on the left side -->
+                    <div class="profile-photo">
+                        <img src="{{ provider.profile_photo.url }}" alt="Photo of {{ provider.user.get_full_name }}">
+                    </div>
+                    <div class="provider-info">
+                        <h3>{{ provider.user.get_full_name }}</h3>
+                        <p>{{ provider.user.email }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .provider-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .heading {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 700;
+        color: #333;
+    }
+    .provider-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+    .provider-link {
+        text-decoration: none;
+        color: inherit;
+    }
+    .provider-card {
+        display: flex;
+        align-items: center;
+        background-color: #f9f9f9;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px; /* Card width remains the same */
+        height: 180px; /* Increased card height */
+        gap: 20px;
+        transition: box-shadow 0.3s ease;
+        text-align: left;
+    }
+    .provider-card:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .profile-photo {
+        flex: 0 0 130px; /* Fixed width for profile photo section */
+        height: 100%; /* Full height to match card height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .profile-photo img {
+        width: 100%; /* Fill the profile photo container */
+        height: 100%; /* Full height */
+        border-radius: 8px;
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .provider-info h3 {
+        margin: 0;
+        font-size: 1.8rem;
+        color: #333;
+    }
+    .provider-info p {
+        margin: 8px 0 0;
+        color: #555;
+        font-size: 1rem;
+    }
+</style>
+{% endblock %}

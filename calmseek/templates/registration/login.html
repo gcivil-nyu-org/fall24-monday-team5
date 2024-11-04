@@ -12,8 +12,10 @@
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-black">Login</button>
+            <button type="button" class="btn btn-black" onclick="window.location.href='{% url 'signup:select_role' %}'">Sign up</button>
         </form>
     </div>
+
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');

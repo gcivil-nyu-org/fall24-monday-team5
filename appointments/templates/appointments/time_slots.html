@@ -40,7 +40,8 @@
                     <div class="slot-card">
                         <div class="slot-info">
                             <p><strong>Provider: {{ slot.provider.get_full_name }}</strong></p>
-                            <p>{{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
+                            <p>Date: {{ slot.start_time|date:"m-d-Y" }}</p>
+                            <p>Time: {{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
                         </div>
                         <a href="{% url 'appointments:book_appointment' slot.id %}" class="btn btn-black">Book Now</a>
                     </div>
