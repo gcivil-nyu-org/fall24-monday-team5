@@ -132,3 +132,33 @@ class AppointmentTests(TestCase):
 
         # Confirm provider is in the favorites context
         self.assertIn(self.provider_profile, response.context["favorite_providers"])
+
+    def test_remove_from_favorites(self):
+        self.normal_profile.favorites.add(self.provider_profile)
+
+        url = reverse("appointments:remove_from_favorites", args=[self.provider_profile.id])
+        response = self.client.post(url)
+
+        # Confirm redirect to provider detail
+        self.assertRedirects(
+            response,
+            reverse("appointments:provider_detail", args=[self.provider_profile.id]),
+        )
+
+        # Check that provider is removed from favorites
+        self.assertNotIn(self.provider_profile, self.normal_profile.favorites.all())
+
+    def test_delete_favorite_provider(self):
+        self.normal_profile.favorites.add(self.provider_profile)
+
+        url = reverse("appointments:delete_favorite_provider", args=[self.provider_profile.id])
+        response = self.client.post(url)
+
+        # Confirm redirect to provider detail
+        self.assertRedirects(
+            response,
+            reverse("appointments:favorite_providers"),
+        )
+
+        # Check that provider is removed from favorites
+        self.assertNotIn(self.provider_profile, self.normal_profile.favorites.all())
