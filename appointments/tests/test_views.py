@@ -34,6 +34,9 @@ class AppointmentTests(TestCase):
             is_available=True,
         )
 
+        # Login the normal user for certain tests
+        self.client.login(username="normal_user", password="pass")
+
     def test_time_slots_view(self):
         self.client.login(username="normal_user", password="pass")
         response = self.client.get(reverse("appointments:time_slots"))
@@ -107,3 +110,59 @@ class AppointmentTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "appointments/provider_detail.html")
+
+    def test_add_to_favorites(self):
+        url = reverse("appointments:add_to_favorites", args=[self.provider_profile.id])
+        response = self.client.post(url)
+
+        # Confirm redirect to provider detail
+        self.assertRedirects(
+            response,
+            reverse("appointments:provider_detail", args=[self.provider_profile.id]),
+        )
+
+        # Check that provider is added to favorites
+        self.assertIn(self.provider_profile, self.normal_profile.favorites.all())
+
+    def test_view_favorite_providers(self):
+        self.normal_profile.favorites.add(self.provider_profile)
+
+        url = reverse("appointments:favorite_providers")
+        response = self.client.get(url)
+
+        # Confirm provider is in the favorites context
+        self.assertIn(self.provider_profile, response.context["favorite_providers"])
+
+    def test_remove_from_favorites(self):
+        self.normal_profile.favorites.add(self.provider_profile)
+
+        url = reverse(
+            "appointments:remove_from_favorites", args=[self.provider_profile.id]
+        )
+        response = self.client.post(url)
+
+        # Confirm redirect to provider detail
+        self.assertRedirects(
+            response,
+            reverse("appointments:provider_detail", args=[self.provider_profile.id]),
+        )
+
+        # Check that provider is removed from favorites
+        self.assertNotIn(self.provider_profile, self.normal_profile.favorites.all())
+
+    def test_delete_favorite_provider(self):
+        self.normal_profile.favorites.add(self.provider_profile)
+
+        url = reverse(
+            "appointments:delete_favorite_provider", args=[self.provider_profile.id]
+        )
+        response = self.client.post(url)
+
+        # Confirm redirect to provider detail
+        self.assertRedirects(
+            response,
+            reverse("appointments:favorite_providers"),
+        )
+
+        # Check that provider is removed from favorites
+        self.assertNotIn(self.provider_profile, self.normal_profile.favorites.all())
