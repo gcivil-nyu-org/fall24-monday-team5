@@ -424,6 +424,7 @@ def remove_from_favorites(request, provider_id):
     )
     return redirect("appointments:provider_detail", provider_id=provider_id)
 
+
 def delete_favorite_provider(request, provider_id):
     provider = get_object_or_404(Profile, id=provider_id, role="Provider")
     user_profile = request.user.profile

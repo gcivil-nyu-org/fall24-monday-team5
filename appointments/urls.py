@@ -34,6 +34,14 @@ urlpatterns = [
         views.add_to_favorites,
         name="add_to_favorites",
     ),
-    path("providers/<int:provider_id>/remove_from_favorites/", views.remove_from_favorites, name="remove_from_favorites"),
-    path("providers/<int:provider_id>/delete/", views.delete_favorite_provider, name="delete_favorite_provider"),
+    path(
+        "providers/<int:provider_id>/remove_from_favorites/",
+        views.remove_from_favorites,
+        name="remove_from_favorites",
+    ),
+    path(
+        "providers/<int:provider_id>/delete/",
+        views.delete_favorite_provider,
+        name="delete_favorite_provider",
+    ),
 ]
