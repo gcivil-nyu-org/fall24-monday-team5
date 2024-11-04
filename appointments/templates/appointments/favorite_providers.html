@@ -12,6 +12,8 @@
                         <div class="provider-name">{{ provider.user.get_full_name }}</div>
                         <div class="provider-role">Role: {{ provider.role }}</div>
                     </a>
+                    <br>
+                    <a href="{% url 'appointments:delete_favorite_provider' provider.id %}" class="remove-favorite-btn">Remove from Favorites</a>
                 </li>
             {% endfor %}
         </ul>
@@ -21,6 +23,22 @@
 </div>
 
 <style>
+    .remove-favorite-btn    {
+        background-color: #000;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .remove-favorite-btn:hover {
+        background-color: #333;
+    }
+
     .favorites-container {
         max-width: 800px;
         margin: auto;
