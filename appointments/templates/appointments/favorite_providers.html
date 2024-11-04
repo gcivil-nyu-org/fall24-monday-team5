@@ -8,7 +8,7 @@
         <ul class="favorites-list">
             {% for provider in favorite_providers %}
                 <li class="favorite-item">
-                    <a href="{% url 'appointments:provider_detail' provider.id %}">
+                    <a href="{% url 'appointments:provider_detail' provider.id %}" class="provider-link">
                         <div class="provider-name">{{ provider.user.get_full_name }}</div>
                         <div class="provider-role">Role: {{ provider.role }}</div>
                     </a>
@@ -23,7 +23,7 @@
 </div>
 
 <style>
-    .remove-favorite-btn    {
+    .remove-favorite-btn {
         background-color: #000;
         color: #fff;
         padding: 8px 16px;
@@ -59,6 +59,12 @@
         border-radius: 8px;
         margin-bottom: 10px;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .provider-link {
+        text-decoration: none;
+        color: inherit; /* Inherit color from the parent element */
+        display: block; /* Make the whole area clickable */
     }
 
     .provider-name {
