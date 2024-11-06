@@ -4,7 +4,7 @@
 {#    <h2 class="heading">Meet with Providers</h2>#}
     <div class="provider-cards">
         {% for provider in providers %}
-            <a href="{% url 'appointments:provider_detail' provider.id %}" class="provider-link">
+            <a href="{% url 'providers:provider_detail' provider.id %}" class="provider-link">
                 <div class="provider-card">
                     <!-- Profile Photo on the left side -->
                     <div class="profile-photo">

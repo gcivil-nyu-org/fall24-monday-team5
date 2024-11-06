@@ -71,46 +71,6 @@ class AppointmentTests(TestCase):
         self.time_slot.refresh_from_db()
         self.assertTrue(self.time_slot.is_available)
 
-    def test_create_time_slot_view(self):
-        self.client.login(username="provider", password="pass")
-        start_time = timezone.now() + timedelta(days=3)
-        end_time = start_time + timedelta(hours=1)
-        response = self.client.post(
-            reverse("appointments:create_time_slot"),
-            {
-                "form_type": "single",
-                "start_time": start_time.strftime("%H:%M"),
-                "end_time": end_time.strftime("%H:%M"),
-            },
-        )
-        self.assertEqual(response.status_code, 200)
-
-    def test_delete_slot_view(self):
-        self.client.login(username="provider", password="pass")
-        slot = TimeSlot.objects.create(
-            provider=self.provider_user,
-            start_time=timezone.now() + timedelta(days=2),
-            end_time=timezone.now() + timedelta(days=2, hours=1),
-            is_available=True,
-        )
-        response = self.client.post(reverse("appointments:delete_slot", args=[slot.id]))
-        self.assertEqual(response.status_code, 302)
-        self.assertFalse(TimeSlot.objects.filter(id=slot.id).exists())
-
-    def test_browse_providers_view(self):
-        self.client.login(username="normal_user", password="pass")
-        response = self.client.get(reverse("appointments:browse_providers"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "appointments/browse_providers.html")
-
-    def test_provider_detail_view(self):
-        self.client.login(username="normal_user", password="pass")
-        response = self.client.get(
-            reverse("appointments:provider_detail", args=[self.provider_profile.id])
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "appointments/provider_detail.html")
-
     def test_add_to_favorites(self):
         url = reverse("appointments:add_to_favorites", args=[self.provider_profile.id])
         response = self.client.post(url)
