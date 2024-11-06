@@ -9,7 +9,7 @@
             {% for provider in favorite_providers %}
                 <li class="favorite-item">
                     <a href="{% url 'providers:provider_detail' provider.id %}" class="provider-link">
-                        <div class="provider-name">{{ provider.user.get_full_name }}</div>
+                        <div class="provider-name">{{ provider.get_full_name }}</div>
                         <div class="provider-role">Role: {{ provider.role }}</div>
                     </a>
                     <br>

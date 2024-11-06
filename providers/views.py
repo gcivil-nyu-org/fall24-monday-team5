@@ -14,7 +14,7 @@ from accounts.models import Profile
 @login_required
 def create_time_slot(request):
     user = request.user
-    profile = Profile.objects.get(user=user)
+    profile = request.user
 
     # Ensure only Providers can access this view
     if profile.role != "Provider":
@@ -111,7 +111,7 @@ def browse_providers(request):
 def provider_detail(request, provider_id):
     # Retrieve the provider's profile or return 404 if not found
     provider = get_object_or_404(Profile, id=provider_id, role="Provider")
-    time_slots = TimeSlot.objects.filter(provider=provider.user)
+    time_slots = TimeSlot.objects.filter(provider=provider)
     return render(
         request,
         "providers/provider_detail.html",

@@ -12,8 +12,6 @@ from .forms import AppointmentForm
 from .models import Appointment, TimeSlot
 from accounts.models import Profile
 
-User = get_user_model()
-
 
 # View to display available time slots by date and provider
 @login_required
@@ -22,9 +20,7 @@ def time_slots(request):
     selected_date = request.GET.get("date")
 
     # Filter providers based on Profile role 'Provider'
-    # providers = Profile.objects.filter(role='Provider').select_related('user')
-    provider_user_ids = Profile.objects.filter(role="Provider").values("user_id")
-    providers = User.objects.filter(id__in=Subquery(provider_user_ids))
+    providers = Profile.objects.filter(role="Provider")
 
     # Filter available time slots
     time_slots = TimeSlot.objects.filter(is_available=True)
@@ -56,7 +52,7 @@ def time_slots(request):
 @login_required
 def book_appointment(request, slot_id):
     # Check if the logged-in user is a 'Provider'
-    profile = Profile.objects.get(user=request.user)
+    profile = request.user
     if profile.role == "Provider":
         return redirect(
             "appointments:time_slots"
@@ -96,7 +92,7 @@ def appointment_success(request):
 
 @login_required
 def my_appointments(request):
-    profile = Profile.objects.get(user=request.user)
+    profile = request.user
 
     if profile.role == "Provider":
         # Provider sees all appointments related to their time slots
@@ -140,18 +136,19 @@ def cancel_appointment(request, appointment_id):
 @login_required
 def reschedule_time_slots(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
-    profile = Profile.objects.get(user=request.user)
+    profile = request.user
     selected_provider_id = 0
     providers = get_user_model()
     if profile.role == "User":
         selected_provider_id = request.GET.get("provider")
         # Filter providers based on Profile role 'Provider'
         # providers = Profile.objects.filter(role='Provider').select_related('user')
-        provider_user_ids = Profile.objects.filter(role="Provider").values("user_id")
-        providers = User.objects.filter(id__in=Subquery(provider_user_ids))
+        # provider_user_ids = Profile.objects.filter(role="Provider").values("id")
+        # providers = User.objects.filter(id__in=Subquery(provider_user_ids))
+        providers = Profile.objects.filter(role="Provider")
     if profile.role == "Provider":
         selected_provider_id = appointment.time_slot.provider.id
-        providers = User.objects.filter(id=selected_provider_id)
+        providers = Profile.objects.filter(id=selected_provider_id)
 
     selected_date = request.GET.get("date")
 

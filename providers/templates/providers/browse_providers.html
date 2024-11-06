@@ -8,11 +8,11 @@
                 <div class="provider-card">
                     <!-- Profile Photo on the left side -->
                     <div class="profile-photo">
-                        <img src="{{ provider.profile_photo.url }}" alt="Photo of {{ provider.user.get_full_name }}">
+                        <img src="{{ provider.profile_photo.url }}" alt="Photo of {{ provider.get_full_name }}">
                     </div>
                     <div class="provider-info">
-                        <h3>{{ provider.user.get_full_name }}</h3>
-                        <p>{{ provider.user.email }}</p>
+                        <h3>{{ provider.get_full_name }}</h3>
+                        <p>{{ provider.email }}</p>
                     </div>
                 </div>
             </a>
