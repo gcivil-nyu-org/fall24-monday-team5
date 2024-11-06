@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.shortcuts import redirect
 from django.urls import path, include
-import appointments.views as views
+# import appointments.views as views
 
 urlpatterns = [
     path("", lambda request: redirect("login")),
