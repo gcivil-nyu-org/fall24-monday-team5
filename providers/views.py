@@ -15,6 +15,7 @@ import calendar
 from appointments.forms import TimeSlotForm
 from appointments.models import Appointment, Profile, TimeSlot
 
+
 # Create your views here.
 @login_required
 def create_time_slot(request):
@@ -104,13 +105,13 @@ def create_time_slot(request):
         },
     )
 
+
 @login_required
 def browse_providers(request):
     # Query for all profiles with the role 'Provider'
     providers = Profile.objects.filter(role="Provider")
-    return render(
-        request, "providers/browse_providers.html", {"providers": providers}
-    )
+    return render(request, "providers/browse_providers.html", {"providers": providers})
+
 
 @login_required
 def provider_detail(request, provider_id):

@@ -220,6 +220,7 @@ def update_appointment(request, appointment_id, slot_id):
 
     return render(request, "appointments/update_appointment.html", context)
 
+
 @login_required
 def delete_slot(request, slot_id):
     slot = get_object_or_404(TimeSlot, id=slot_id)

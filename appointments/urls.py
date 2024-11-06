@@ -8,7 +8,9 @@ urlpatterns = [
     path("book/<int:slot_id>/", views.book_appointment, name="book_appointment"),
     path("success/", views.appointment_success, name="appointment_success"),
     path("my-appointments/", views.my_appointments, name="my_appointments"),
-    path("favorites/", views.favorite_providers, name="favorite_providers"), # accounts thing
+    path(
+        "favorites/", views.favorite_providers, name="favorite_providers"
+    ),  # accounts thing
     path(
         "cancel-appointment/<int:appointment_id>/",
         views.cancel_appointment,
@@ -29,15 +31,15 @@ urlpatterns = [
         "providers/<int:provider_id>/add_to_favorites/",
         views.add_to_favorites,
         name="add_to_favorites",
-    ), # profile thing
+    ),  # profile thing
     path(
         "providers/<int:provider_id>/remove_from_favorites/",
         views.remove_from_favorites,
         name="remove_from_favorites",
-    ), # profile thing
+    ),  # profile thing
     path(
         "providers/<int:provider_id>/delete/",
         views.delete_favorite_provider,
         name="delete_favorite_provider",
-    ), # profile thing
+    ),  # profile thing
 ]

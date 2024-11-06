@@ -8,6 +8,7 @@ from appointments.forms import TimeSlotForm
 
 User = get_user_model()
 
+
 class ProviderViewsTest(TestCase):
     def setUp(self):
         # Create test users
