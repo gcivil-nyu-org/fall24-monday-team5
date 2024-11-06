@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Model for Time Slots set by the provider
 class TimeSlot(models.Model):
     provider = models.ForeignKey(
