@@ -1,19 +1,12 @@
-from django.shortcuts import render
-from django.contrib.auth import get_user_model
-from django.db.models import Subquery
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
-from django.utils.dateparse import parse_date
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.shortcuts import render, redirect
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import calendar
 
 from appointments.forms import TimeSlotForm
-from appointments.models import Appointment, Profile, TimeSlot
+from appointments.models import Profile, TimeSlot
 
 
 # Create your views here.

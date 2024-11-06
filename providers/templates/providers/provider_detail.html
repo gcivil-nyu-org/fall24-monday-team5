@@ -25,9 +25,9 @@
         </div>
         <div class="profile-photo">
             {% if provider in request.user.profile.favorites.all %}
-            <a href="{% url 'appointments:remove_from_favorites' provider.id %}" class="remove-favorite-btn">Remove from Favorites</a>
+            <a href="{% url 'client:remove_from_favorites' provider.id %}" class="remove-favorite-btn">Remove from Favorites</a>
             {% else %}
-            <a href="{% url 'appointments:add_to_favorites' provider.id %}" class="favorite-btn">Add to Favorites</a>
+            <a href="{% url 'client:add_to_favorites' provider.id %}" class="favorite-btn">Add to Favorites</a>
             {% endif %}
         </div>
     </div>

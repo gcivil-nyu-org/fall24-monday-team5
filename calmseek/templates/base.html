@@ -42,7 +42,7 @@
                 <ul>
                     <li><a href="{% url 'appointments:my_appointments' %}">My Appointments</a></li>
                     {% if user.profile.role == 'User' %}
-                        <li><a href="{% url 'appointments:favorite_providers' %}">Favorite Providers</a></li>
+                        <li><a href="{% url 'client:favorite_providers' %}">Favorite Providers</a></li>
                     {% endif %}
                     <li><a href="#">Profile</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>

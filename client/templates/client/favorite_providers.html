@@ -13,7 +13,7 @@
                         <div class="provider-role">Role: {{ provider.role }}</div>
                     </a>
                     <br>
-                    <a href="{% url 'appointments:delete_favorite_provider' provider.id %}" class="remove-favorite-btn">Remove from Favorites</a>
+                    <a href="{% url 'client:delete_favorite_provider' provider.id %}" class="remove-favorite-btn">Remove from Favorites</a>
                 </li>
             {% endfor %}
         </ul>

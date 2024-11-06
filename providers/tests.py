@@ -1,10 +1,9 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import timedelta
 from appointments.models import Profile, TimeSlot
-from appointments.forms import TimeSlotForm
 
 User = get_user_model()
 
@@ -41,7 +40,7 @@ class ProviderViewsTest(TestCase):
         start_time = timezone.now() + timedelta(days=3)
         end_time = start_time + timedelta(hours=1)
         response = self.client.post(
-            reverse("appointments:create_time_slot"),
+            reverse("providers:create_time_slot"),
             {
                 "form_type": "single",
                 "start_time": start_time.strftime("%H:%M"),
@@ -64,14 +63,14 @@ class ProviderViewsTest(TestCase):
 
     def test_browse_providers_view(self):
         self.client.login(username="normal_user", password="pass")
-        response = self.client.get(reverse("appointments:browse_providers"))
+        response = self.client.get(reverse("providers:browse_providers"))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "appointments/browse_providers.html")
+        self.assertTemplateUsed(response, "providers/browse_providers.html")
 
     def test_provider_detail_view(self):
         self.client.login(username="normal_user", password="pass")
         response = self.client.get(
-            reverse("appointments:provider_detail", args=[self.provider_profile.id])
+            reverse("providers:provider_detail", args=[self.provider_profile.id])
         )
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "appointments/provider_detail.html")
+        self.assertTemplateUsed(response, "providers/provider_detail.html")

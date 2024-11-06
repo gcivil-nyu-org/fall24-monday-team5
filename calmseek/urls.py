@@ -31,4 +31,5 @@ urlpatterns = [
     path("signup/", include("signup.urls")),
     # path("error/", views.error, name="error"),
     path("providers/", include("providers.urls")),
+    path("client/", include("client.urls")),
 ]
