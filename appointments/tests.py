@@ -4,7 +4,8 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
-from appointments.models import Profile, TimeSlot, Appointment
+from appointments.models import TimeSlot, Appointment
+from accounts.models import Profile
 
 
 User = get_user_model()

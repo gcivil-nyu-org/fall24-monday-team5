@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from appointments.models import Profile
+from accounts.models import Profile
 
 
 # Create your views here.

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from appointments.models import Profile
+from accounts.models import Profile
 from .forms import ProviderSignUpForm, UserSignUpForm
 
 

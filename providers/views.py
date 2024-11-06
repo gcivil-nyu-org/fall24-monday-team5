@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 import calendar
 
 from appointments.forms import TimeSlotForm
-from appointments.models import Profile, TimeSlot
+from appointments.models import TimeSlot
+from accounts.models import Profile
 
 
 # Create your views here.

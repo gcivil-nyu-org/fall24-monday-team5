@@ -9,7 +9,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import AppointmentForm
-from .models import Appointment, TimeSlot, Profile
+from .models import Appointment, TimeSlot
+from accounts.models import Profile
 
 User = get_user_model()
 

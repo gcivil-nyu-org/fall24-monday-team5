@@ -34,6 +34,7 @@ LOGIN_REDIRECT_URL = "/appointments/time_slots"
 # Application definition
 
 INSTALLED_APPS = [
+    "accounts.apps.AccountsConfig",
     "client.apps.ClientConfig",
     "providers.apps.ProvidersConfig",
     "signup.apps.SignupConfig",
