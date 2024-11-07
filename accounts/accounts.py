@@ -4,14 +4,12 @@ from .models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
-
     class Meta:
         model = Profile
         fields = ("email",)
 
 
 class CustomUserChangeForm(UserChangeForm):
-
     class Meta:
         model = Profile
         fields = ("email",)
