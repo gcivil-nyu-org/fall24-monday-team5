@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
 from accounts.models import Profile
 from .forms import ProviderSignUpForm, UserSignUpForm
 
@@ -19,7 +18,7 @@ class ProviderSignUpFormTests(TestCase):
         )
         self.assertTrue(form.is_valid())
         user = form.save()
-        profile = Profile.objects.get(user=user)
+        profile = Profile.objects.get(id=user.id)
         self.assertEqual(profile.role, "Provider")
         self.assertEqual(user.first_name, "Provider")
         self.assertEqual(user.email, "provider@example.com")
@@ -69,7 +68,7 @@ class UserSignUpFormTests(TestCase):
         )
         self.assertTrue(form.is_valid())
         user = form.save()
-        profile = Profile.objects.get(user=user)
+        profile = Profile.objects.get(id=user.id)
         self.assertEqual(profile.role, "User")
         self.assertEqual(user.first_name, "Regular")
         self.assertEqual(user.email, "user@example.com")
@@ -103,7 +102,9 @@ class UserSignUpFormTests(TestCase):
         self.assertIn("password2", form.errors)
 
     def test_user_signup_form_duplicate_username(self):
-        User.objects.create_user(username="regularuser", password="password123")
+        Profile.objects.create_user(
+            username="regularuser", password="password123", email="user@example.com"
+        )
         form = UserSignUpForm(
             data={
                 "username": "regularuser",

@@ -2,18 +2,18 @@ from django.shortcuts import get_object_or_404
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import calendar
 
 from appointments.forms import TimeSlotForm
-from appointments.models import TimeSlot
+from appointments.models import Appointment, TimeSlot
 from accounts.models import Profile
 
 
 # Create your views here.
 @login_required
 def create_time_slot(request):
-    user = request.user
     profile = request.user
 
     # Ensure only Providers can access this view
@@ -117,3 +117,22 @@ def provider_detail(request, provider_id):
         "providers/provider_detail.html",
         {"provider": provider, "time_slots": time_slots},
     )
+
+
+@login_required
+def delete_slot(request, slot_id):
+    slot = get_object_or_404(TimeSlot, id=slot_id)
+
+    # Check if the slot is available
+    if not slot.is_available:
+        # If the slot is not available, find and delete any associated appointments
+        associated_appointments = Appointment.objects.filter(time_slot=slot)
+        associated_appointments.delete()
+        messages.warning(
+            request, "The slot had appointments that have now been removed."
+        )
+
+    # Delete the slot
+    slot.delete()
+    messages.success(request, "Time slot deleted successfully.")
+    return redirect("providers:create_time_slot")

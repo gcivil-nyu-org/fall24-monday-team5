@@ -1,12 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.db.models import Subquery
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.dateparse import parse_date
 from datetime import datetime
 from django.shortcuts import render, redirect
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import AppointmentForm
 from .models import Appointment, TimeSlot
@@ -215,22 +213,3 @@ def update_appointment(request, appointment_id, slot_id):
     }
 
     return render(request, "appointments/update_appointment.html", context)
-
-
-@login_required
-def delete_slot(request, slot_id):
-    slot = get_object_or_404(TimeSlot, id=slot_id)
-
-    # Check if the slot is available
-    if not slot.is_available:
-        # If the slot is not available, find and delete any associated appointments
-        associated_appointments = Appointment.objects.filter(time_slot=slot)
-        associated_appointments.delete()
-        messages.warning(
-            request, "The slot had appointments that have now been removed."
-        )
-
-    # Delete the slot
-    slot.delete()
-    messages.success(request, "Time slot deleted successfully.")
-    return redirect("providers:create_time_slot")

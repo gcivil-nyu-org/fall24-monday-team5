@@ -272,7 +272,7 @@
             "Are you sure you want to delete this time slot?";
 
         if (confirm(message)) {
-            window.location.href = "{% url 'appointments:delete_slot' 0 %}".replace('0', slotId);
+            window.location.href = "{% url 'providers:delete_slot' 0 %}".replace('0', slotId);
         }
     }
 

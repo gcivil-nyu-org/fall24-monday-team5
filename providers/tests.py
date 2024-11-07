@@ -12,18 +12,18 @@ User = get_user_model()
 class ProviderViewsTest(TestCase):
     def setUp(self):
         # Create test users
-        self.provider_user = User.objects.create_user(
-            username="provider", password="pass"
+        self.provider_user = Profile.objects.create_user(
+            username="provider",
+            password="pass",
+            role="Provider",
+            email="testprovider@example.com",
         )
-        self.normal_user = User.objects.create_user(
-            username="normal_user", password="pass"
+        self.normal_user = Profile.objects.create_user(
+            username="normal_user",
+            password="pass",
+            role="User",
+            email="testuser@example.com",
         )
-
-        # Set up profiles
-        self.provider_profile = Profile.objects.create(
-            user=self.provider_user, role="Provider"
-        )
-        self.normal_profile = Profile.objects.create(user=self.normal_user, role="User")
 
         # Set up test time slots
         self.time_slot = TimeSlot.objects.create(
@@ -58,7 +58,7 @@ class ProviderViewsTest(TestCase):
             end_time=timezone.now() + timedelta(days=2, hours=1),
             is_available=True,
         )
-        response = self.client.post(reverse("appointments:delete_slot", args=[slot.id]))
+        response = self.client.post(reverse("providers:delete_slot", args=[slot.id]))
         self.assertEqual(response.status_code, 302)
         self.assertFalse(TimeSlot.objects.filter(id=slot.id).exists())
 
@@ -71,7 +71,7 @@ class ProviderViewsTest(TestCase):
     def test_provider_detail_view(self):
         self.client.login(username="normal_user", password="pass")
         response = self.client.get(
-            reverse("providers:provider_detail", args=[self.provider_profile.id])
+            reverse("providers:provider_detail", args=[self.provider_user.id])
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "providers/provider_detail.html")

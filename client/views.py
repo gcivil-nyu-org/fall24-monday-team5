@@ -12,13 +12,11 @@ def add_to_favorites(request, provider_id):
     user_profile = request.user
 
     if provider in user_profile.favorites.all():
-        print("Already in favorites")
         messages.info(
             request, f"{provider.get_full_name()} is already in your favorites."
         )
     else:
         user_profile.favorites.add(provider)
-        print("Added to favorites")
         messages.success(
             request, f"Added {provider.get_full_name()} to your favorites."
         )
