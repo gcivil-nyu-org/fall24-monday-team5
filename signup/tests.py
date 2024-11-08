@@ -1,6 +1,14 @@
 from django.test import TestCase
+from django.urls import reverse
 from accounts.models import Profile
 from .forms import ProviderSignUpForm, UserSignUpForm
+
+
+class SelectRoleViewTests(TestCase):
+    def test_select_role_get(self):
+        response = self.client.get(reverse("signup:select_role"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "signup/select_role.html")
 
 
 class ProviderSignUpFormTests(TestCase):
@@ -117,3 +125,50 @@ class UserSignUpFormTests(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertIn("username", form.errors)
+
+
+class ProviderSignUpViewTests(TestCase):
+    def test_provider_signup_view_get(self):
+        response = self.client.get(reverse("signup:signup_provider"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "signup/signup_provider.html")
+
+    def test_provider_signup_view_post_missing_credentials(self):
+        response = self.client.post(
+            reverse("signup:signup_provider"),
+            data={
+                "username": "provideruser",
+                "first_name": "Provider",
+                "last_name": "User",
+                "email": "provider@example.com",
+                "password1": "testpassword123",
+                "password2": "testpassword123",
+                # Missing 'credentials'
+            },
+        )
+        form = response.context["form"]
+        self.assertFalse(form.is_valid())
+        self.assertIn("credentials", form.errors)
+
+
+class UserSignUpViewTests(TestCase):
+    def test_user_signup_view_get(self):
+        response = self.client.get(reverse("signup:signup_user"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "signup/signup_user.html")
+
+    def test_user_signup_view_post_missing_email(self):
+        response = self.client.post(
+            reverse("signup:signup_user"),
+            data={
+                "username": "regularuser",
+                "first_name": "Regular",
+                "last_name": "User",
+                "password1": "testpassword123",
+                "password2": "testpassword123",
+                # Missing 'email'
+            },
+        )
+        form = response.context["form"]
+        self.assertFalse(form.is_valid())
+        self.assertIn("email", form.errors)

@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
-from appointments.models import TimeSlot
+from appointments.models import TimeSlot, Appointment
 from accounts.models import Profile
 
 User = get_user_model()
@@ -75,3 +75,25 @@ class ProviderViewsTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "providers/provider_detail.html")
+
+    def test_provider_detail_view_invalid_provider(self):
+        self.client.login(username="normal_user", password="pass")
+        invalid_provider_id = self.provider_user.id + 999
+        response = self.client.get(
+            reverse("providers:provider_detail", args=[invalid_provider_id])
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_slot_with_appointment(self):
+        self.client.login(username="provider", password="pass")
+        appointment = Appointment.objects.create(
+            user=self.normal_user,
+            time_slot=self.time_slot,
+            appointment_type="Checkup",
+        )
+        response = self.client.post(
+            reverse("providers:delete_slot", args=[self.time_slot.id])
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Appointment.objects.filter(id=appointment.id).exists())
+        self.assertFalse(TimeSlot.objects.filter(id=self.time_slot.id).exists())
