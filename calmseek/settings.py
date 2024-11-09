@@ -25,7 +25,11 @@ SECRET_KEY = "django-insecure-pg4z6@qrv-zckxl=j0y$%@s3j%=d^(fj6i07+j)(lhf=^)uex^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["django-env2.eba-hv2zpdfp.us-east-1.elasticbeanstalk.com", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "django-env2.eba-hv2zpdfp.us-east-1.elasticbeanstalk.com",
+    "django-env3.eba-vbtmdwcq.us-east-1.elasticbeanstalk.com",
+    "127.0.0.1",
+]
 
 # temporarily redirecting to booking appointments page after login,
 # later on this will be updated
