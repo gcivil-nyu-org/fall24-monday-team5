@@ -10,12 +10,25 @@
         <h2 class="login-heading">Welcome to CalmSeek</h2>
         <form method="post" class="login-form">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <!-- Username Field -->
+            {{ form.username.label_tag }}
+            {{ form.username }}
+
+            <!-- Password Field with Show Button Inside Input -->
+            <div class="password-container">
+                {{ form.password.label_tag }}
+                <div class="password-input-wrapper">
+                    {{ form.password }}
+                    <button type="button" class="btn-show" onclick="togglePassword()">Show</button>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-black">Login</button>
             <button type="button" class="btn btn-black" onclick="window.location.href='{% url 'signup:select_role' %}'">Sign up</button>
+            <button type="button" class="btn btn-black" onclick="window.location.href='{% url 'signup:password_reset_request' %}'">Reset Password</button>
         </form>
     </div>
-
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
@@ -23,11 +36,11 @@
         .header {
             background-color: #000;
             padding: 15px 0;
-            position: fixed; /* Keep header fixed at the top */
-            width: 100%; /* Ensure it stretches across the page */
+            position: fixed;
+            width: 100%;
             top: 0;
             left: 0;
-            z-index: 1000; /* Ensures it stays above other elements */
+            z-index: 1000;
         }
 
         .container {
@@ -51,7 +64,6 @@
             padding: 40px;
             background-color: #ffffff00;
             border-radius: 12px;
-
             text-align: center;
             font-family: 'Inter', sans-serif;
         }
@@ -63,13 +75,39 @@
             font-weight: 600;
         }
 
-
         .login-form {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
+        .password-container {
+            text-align: center;
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-input-wrapper input {
+            width: 100%;
+            padding-right: 60px; /* Space for the show button */
+        }
+
+        .btn-show {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0;
+        }
 
         .btn-black {
             width: 100%;
@@ -104,4 +142,18 @@
             outline: none;
         }
     </style>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.querySelector('input[name="password"]');
+            const showButton = document.querySelector('.btn-show');
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                showButton.textContent = "Hide";
+            } else {
+                passwordInput.type = "password";
+                showButton.textContent = "Show";
+            }
+        }
+    </script>
 {% endblock %}

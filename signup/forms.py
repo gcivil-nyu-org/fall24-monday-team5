@@ -65,3 +65,7 @@ class UserSignUpForm(UserCreationForm):
             #     user=user, role="User"
             # )  # the role 'User' is case sensitive (as of the moment)
         return user
+
+class PasswordResetRequestForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    email = forms.EmailField()
