@@ -42,6 +42,12 @@ class Provider(models.Model):
     )
     is_activated = models.BooleanField(default=False)
 
+    line1 = models.CharField(max_length=255, default="Unknown Address")
+    line2 = models.CharField(max_length=255, blank=True, default="")
+    city = models.CharField(max_length=100, default="Unknown City")
+    state = models.CharField(max_length=100, default="Unknown State")
+    pincode = models.CharField(max_length=10, default="000000")
+
 
 # this is the model for client users
 class Client(models.Model):

@@ -19,7 +19,17 @@
             <h2 class="provider-name">{{ provider.get_full_name }}</h2>
             <p class="provider-role">Role: {{ provider.role }}</p>
             <p class="facility">Facility: {{ provider.facility|default:"Not Available" }}</p>
-            <p class="location">Location: {{ provider.location|default:"Not Available" }}</p>
+            <p class="location">
+                Location:
+                {% if provider.provider.line1 %}
+                    {{ provider.provider.line1 }} {% if provider.provider.line2 %}, {{ provider.provider.line2 }}{% endif %} 
+                    {% if provider.provider.city %}, {{ provider.provider.city }}{% endif %}
+                    {% if provider.provider.state %}, {{ provider.provider.state }}{% endif %}
+                    {% if provider.provider.zipcode %}, {{ provider.provider.zipcode }}{% endif %}
+                {% else %}
+                    Not Available
+                {% endif %}
+            </p>
             <p class="contact-info">Contact: {{ provider.contact_info|default:"Not Available" }}</p>
             <p class="bio">Bio: {{ provider.bio|default:"No bio available" }}</p>
         </div>

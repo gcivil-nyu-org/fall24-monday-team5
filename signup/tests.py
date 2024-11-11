@@ -22,6 +22,13 @@ class ProviderSignUpFormTests(TestCase):
                 "password1": "testpassword123",
                 "password2": "testpassword123",
                 "credentials": "Certified Professional",
+                "line1": "line 1",
+                "line 2": "Apt A",
+                "city": "Brooklyn",
+                "state": "New York",
+                "pincode": "11220",
+                "phone_number": "99999999",
+                "specialization": "Clinical Psychology",
             }
         )
         self.assertTrue(form.is_valid())
