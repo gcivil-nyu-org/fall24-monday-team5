@@ -29,6 +29,26 @@
                 <span class="profile-label">Bio:</span>
                 <span class="profile-value">{{ user.provider.bio }}</span>
             </div>
+            <div class="profile-item">
+                <span class="profile-label">Line1:</span>
+                <span class="profile-value">{{ user.provider.line1 }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Line2:</span>
+                <span class="profile-value">{{ user.provider.line2 }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">City:</span>
+                <span class="profile-value">{{ user.provider.city }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">State:</span>
+                <span class="profile-value">{{ user.provider.state }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Pincode:</span>
+                <span class="profile-value">{{ user.provider.pincode }}</span>
+            </div>
         {% elif user.role == 'User' %}
             <div class="profile-item">
                 <span class="profile-label">Username:</span>
