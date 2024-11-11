@@ -1,18 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="provider-container">
-{#    <h2 class="heading">Meet with Providers</h2>#}
+    <!-- Filter Form -->
+    <!-- Filter Form -->
+<div class="filter-container">
+    <form method="get" class="filter-form">
+        <div class="filter-group">
+            <label for="specialization">Specialty:</label>
+            <select name="specialization" id="specialization" class="filter-input">
+                <option value="">All Specialties</option>
+                {% for key, value in specialties.items %}
+                    <option value="{{ key }}" {% if request.GET.specialization == key %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Address Filter -->
+        <div class="filter-group">
+            <label for="address">Address:</label>
+            <input
+                type="text"
+                name="address"
+                id="address"
+                class="filter-input"
+                placeholder="Enter street, city, or pincode"
+                value="{{ request.GET.address|default_if_none:'' }}"
+            />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+</div>
+
+    <!-- Provider Cards -->
     <div class="provider-cards">
         {% for provider in providers %}
             <a href="{% url 'providers:provider_detail' provider.id %}" class="provider-link">
                 <div class="provider-card">
-                    <!-- Profile Photo on the left side -->
                     <div class="profile-photo">
                         <img src="{{ provider.profile_photo.url }}" alt="Photo of {{ provider.get_full_name }}">
                     </div>
                     <div class="provider-info">
                         <h3>{{ provider.get_full_name }}</h3>
                         <p>{{ provider.email }}</p>
+                        <p>{{ provider.provider.specialization }}</p> <!-- Display specialization -->
                     </div>
                 </div>
             </a>
@@ -83,6 +114,97 @@
         margin: 8px 0 0;
         color: #555;
         font-size: 1rem;
+    }
+    .filter-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: #f2f2f2;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-form {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-group label {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .filter-input {
+        width: 200px;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #333;
+        background-color: #fff;
+        transition: border-color 0.2s;
+    }
+
+    .filter-input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .filter-button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .filter-button:hover {
+        background-color: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+        .filter-container {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .filter-form {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
+    }
+
+    .btn {
+        flex: 1;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .btn-primary {
+        background-color: rgb(0, 0, 0);
+        color: white;
+        border: none;
+        cursor: pointer;
     }
 </style>
 {% endblock %}

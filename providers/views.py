@@ -5,10 +5,11 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import calendar
+from django.db.models import Q
 
 from appointments.forms import TimeSlotForm
 from appointments.models import Appointment, TimeSlot
-from accounts.models import Profile
+from accounts.models import Profile, Provider
 
 
 # Create your views here.
@@ -102,9 +103,36 @@ def create_time_slot(request):
 
 @login_required
 def browse_providers(request):
-    # Query for all profiles with the role 'Provider'
+    # Get filter criteria from the request
+    specialization = request.GET.get("specialization", "")
+    address_query = request.GET.get(
+        "address", ""
+    ).strip()  # Get address input from request
+
+    # Filter the providers based on selected criteria
     providers = Profile.objects.filter(role="Provider")
-    return render(request, "providers/browse_providers.html", {"providers": providers})
+
+    if specialization:
+        providers = providers.filter(provider__specialization=specialization)
+
+    # Apply address-based filtering
+    if address_query:
+        providers = providers.filter(
+            Q(provider__line1__icontains=address_query)
+            | Q(provider__line2__icontains=address_query)
+            | Q(provider__city__icontains=address_query)
+            | Q(provider__state__icontains=address_query)
+            | Q(provider__pincode__icontains=address_query)
+        )
+
+    # Get distinct values for specialization dropdown options
+    specialties = dict(Provider.MENTAL_HEALTH_SPECIALIZATIONS)
+
+    return render(
+        request,
+        "providers/browse_providers.html",
+        {"providers": providers, "specialties": specialties},
+    )
 
 
 @login_required
