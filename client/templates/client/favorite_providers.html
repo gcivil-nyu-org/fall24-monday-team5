@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="favorites-container">
+    <h2>Your Favorite Providers</h2>
+
+    {% if favorite_providers %}
+        <ul class="favorites-list">
+            {% for provider in favorite_providers %}
+                <li class="favorite-item">
+                    <a href="{% url 'providers:provider_detail' provider.id %}" class="provider-link">
+                        <div class="provider-name">{{ provider.get_full_name }}</div>
+                        <div class="provider-role">Role: {{ provider.role }}</div>
+                    </a>
+                    <br>
+                    <a href="{% url 'client:delete_favorite_provider' provider.id %}" class="remove-favorite-btn">Remove from Favorites</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't added any providers to your favorites yet.</p>
+    {% endif %}
+</div>
+
+<style>
+    .remove-favorite-btn {
+        background-color: #000;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .remove-favorite-btn:hover {
+        background-color: #333;
+    }
+
+    .favorites-container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .favorites-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .favorite-item {
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .provider-link {
+        text-decoration: none;
+        color: inherit; /* Inherit color from the parent element */
+        display: block; /* Make the whole area clickable */
+    }
+
+    .provider-name {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .provider-role {
+        color: #555;
+    }
+</style>
+{% endblock %}

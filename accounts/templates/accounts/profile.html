@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>{{ user.get_full_name }}'s Profile</h1>
+    <div class="profile-details">
+        {% if user.role == 'Provider' %}
+            <div class="profile-item">
+                <span class="profile-label">Username:</span>
+                <span class="profile-value">{{ user.username }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Email:</span>
+                <span class="profile-value">{{ user.email }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Phone Number:</span>
+                <span class="profile-value">{{ user.provider.phone_number }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Specialization:</span>
+                <span class="profile-value">{{ user.provider.specialization }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">License Number:</span>
+                <span class="profile-value">{{ user.provider.license_number }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Bio:</span>
+                <span class="profile-value">{{ user.provider.bio }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Line1:</span>
+                <span class="profile-value">{{ user.provider.line1 }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Line2:</span>
+                <span class="profile-value">{{ user.provider.line2 }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">City:</span>
+                <span class="profile-value">{{ user.provider.city }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">State:</span>
+                <span class="profile-value">{{ user.provider.state }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Pincode:</span>
+                <span class="profile-value">{{ user.provider.pincode }}</span>
+            </div>
+        {% elif user.role == 'User' %}
+            <div class="profile-item">
+                <span class="profile-label">Username:</span>
+                <span class="profile-value">{{ user.username }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Email:</span>
+                <span class="profile-value">{{ user.email }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Phone Number:</span>
+                <span class="profile-value">{{ user.client.phone_number }}</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Edit Button -->
+    <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary edit-btn">Edit Profile</a>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-details {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profile-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-label {
+        width: 150px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .profile-value {
+        flex: 1;
+        color: #555;
+    }
+
+    .edit-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 15px;
+        background-color: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        text-align: center;
+    }
+
+    .edit-btn:hover {
+        background-color: #333;
+    }
+</style>
+{% endblock %}
