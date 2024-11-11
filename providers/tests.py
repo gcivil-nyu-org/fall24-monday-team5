@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
 from appointments.models import TimeSlot, Appointment
-from accounts.models import Profile
+from accounts.models import Profile, Provider
 
 User = get_user_model()
 
@@ -31,6 +31,45 @@ class ProviderViewsTest(TestCase):
             start_time=timezone.now() + timedelta(days=1),
             end_time=timezone.now() + timedelta(days=1, hours=1),
             is_available=True,
+        )
+
+        # Additional providers for filtering tests
+        self.provider_specialist = Profile.objects.create_user(
+            username="specialist_provider",
+            password="pass",
+            role="Provider",
+            email="specialist@example.com",
+        )
+        Provider.objects.create(
+            user=self.provider_specialist,
+            bio="Experienced Therapist",
+            phone_number="1234567890",
+            license_number="LIC12345",
+            specialization="Cognitive Behavioral Therapy",
+            is_activated=True,
+            line1="123 Therapy Lane",
+            city="Therapyville",
+            state="TX",
+            pincode="12345",
+        )
+
+        self.provider_general = Profile.objects.create_user(
+            username="general_provider",
+            password="pass",
+            role="Provider",
+            email="general@example.com",
+        )
+        Provider.objects.create(
+            user=self.provider_general,
+            bio="Experienced General Provider",
+            phone_number="0987654321",
+            license_number="LIC54321",
+            specialization="Clinical Psychology",
+            is_activated=True,
+            line1="456 Wellness St",
+            city="Healthtown",
+            state="CA",
+            pincode="54321",
         )
 
         # Login the normal user for certain tests
@@ -97,3 +136,52 @@ class ProviderViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Appointment.objects.filter(id=appointment.id).exists())
         self.assertFalse(TimeSlot.objects.filter(id=self.time_slot.id).exists())
+
+    def test_browse_providers_with_specialization_filter(self):
+        # Test filtering providers by specialization
+        response = self.client.get(
+            reverse("providers:browse_providers"),
+            {"specialization": "Cognitive Behavioral Therapy"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.provider_specialist, response.context["providers"])
+        self.assertNotIn(self.provider_general, response.context["providers"])
+
+    def test_browse_providers_with_address_filter(self):
+        # Test filtering providers by address
+        response = self.client.get(
+            reverse("providers:browse_providers"), {"address": "Therapyville"}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.provider_specialist, response.context["providers"])
+        self.assertNotIn(self.provider_general, response.context["providers"])
+
+    def test_browse_providers_with_both_filters(self):
+        # Test filtering providers by both specialization and address
+        response = self.client.get(
+            reverse("providers:browse_providers"),
+            {
+                "specialization": "Cognitive Behavioral Therapy",
+                "address": "Therapyville",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.provider_specialist, response.context["providers"])
+        self.assertNotIn(self.provider_general, response.context["providers"])
+
+    def test_browse_providers_no_match_filters(self):
+        # Test filtering with parameters that match no providers
+        response = self.client.get(
+            reverse("providers:browse_providers"),
+            {"specialization": "Pediatric Psychiatry", "address": "Unknown City"},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["providers"]), 0)
+
+    def test_browse_providers_empty_filter(self):
+        response = self.client.get(reverse("providers:browse_providers"))
+        self.assertEqual(response.status_code, 200)
+        providers = response.context["providers"]
+        self.assertIn(self.provider_user, providers)
+        self.assertIn(self.provider_specialist, providers)
+        self.assertIn(self.provider_general, providers)
