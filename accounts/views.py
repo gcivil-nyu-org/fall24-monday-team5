@@ -8,6 +8,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from django.conf import settings
+from .models import Provider, Client
 
 
 @login_required
@@ -123,3 +124,32 @@ def password_reset_sent(request):
 
 def password_reset_complete(request):
     return render(request, "accounts/password_reset_complete.html")
+
+
+@login_required
+def client_dashboard(request):
+    # Check if the user is a client
+    if request.user.role != "User" or not hasattr(request.user, 'client'):
+        return redirect("login")  # Redirect to error page if not a client
+
+    # Fetch client-specific data
+    client_data = Client.objects.get(user=request.user)
+    context = {
+        'client_data': client_data,
+        # Add any additional client-specific data here
+    }
+    return render(request, "accounts/client_dashboard.html", context)
+
+@login_required
+def provider_dashboard(request):
+    # Check if the user is a provider
+    if request.user.role != "Provider" or not hasattr(request.user, 'provider'):
+        return redirect('login')  # Redirect to error page if not a provider
+
+    # Fetch provider-specific data
+    provider_data = Provider.objects.get(user=request.user)
+    context = {
+        'provider_data': provider_data,
+        # Add any additional provider-specific data here
+    }
+    return render(request, 'accounts/provider_dashboard.html', context)

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome, {{ client.profile.username }}</h2>
+<p>Your Health History:</p>
+<p>{{ client.health_history }}</p>
+
+<h3>Upcoming Appointments</h3>
+<ul>
+    <!-- Loop through appointments for the user -->
+    {% for appointment in appointments %}
+        <li>{{ appointment.date }} with {{ appointment.provider.profile.username }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'logout' %}">Logout</a>
+{% endblock %}
