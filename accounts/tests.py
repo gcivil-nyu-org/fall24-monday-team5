@@ -45,7 +45,7 @@ class ProfileViewsTestCase(TestCase):
     def test_profile_view_non_logged_in_user(self):
         self.client.logout()
         response = self.client.get(reverse("accounts:profile"))
-        self.assertEqual(response.status_code, 302)  # Redirect to login page
+        self.assertEqual(response.status_code, 302)
 
     def test_profile_view_logged_in_user(self):
         response = self.client.get(reverse("accounts:profile"))
@@ -145,7 +145,7 @@ class ProfileViewsTestCase(TestCase):
             "accounts:password_reset_confirm", kwargs={"uidb64": uid, "token": token}
         )
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 200)  # Expecting a redirect
+        self.assertEqual(response.status_code, 200)
         self.normal_user.refresh_from_db()
         self.assertFalse(self.normal_user.check_password(new_password))
 
@@ -156,16 +156,14 @@ class ProfileViewsTestCase(TestCase):
         self.assertEqual(
             response.status_code, 200
         )  # Redirect to password reset sent page
-        self.assertEqual(len(mail.outbox), 0)  # Ensure an email is sent
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_password_reset_complete_no_profile(self):
-        """Test the password reset complete view with no matching profile."""
         response = self.client.get(reverse("accounts:password_reset_complete"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "accounts/password_reset_complete.html")
 
     def test_edit_profile_provider_role(self):
-        """Test profile editing for a user with a 'Provider' role."""
         self.provider_user.role = "Provider"
         self.provider_user.save()
         data = {
@@ -174,7 +172,7 @@ class ProfileViewsTestCase(TestCase):
             "last_name": "Name",
         }
         response = self.client.post(reverse("accounts:edit_profile"), data)
-        self.assertEqual(response.status_code, 302)  # Redirect after successful edit
+        self.assertEqual(response.status_code, 302)
         self.provider_user.refresh_from_db()
         self.assertEqual(self.provider_user.username, "provider")
         self.assertEqual(self.provider_user.first_name, "")
@@ -183,13 +181,12 @@ class ProfileViewsTestCase(TestCase):
     def test_password_reset_request_multiple_users_same_email_invalid(
         self, mock_send_mail
     ):
-        """Test password reset when multiple users share the same email."""
         Profile.objects.create(
             username="anotheruser", email="testuser@example.com", password="password2"
         )
         data = {"username": "testuser", "email": "testuser@example.com"}
         response = self.client.post(reverse("accounts:password_reset_request"), data)
-        self.assertEqual(response.status_code, 200)  # Redirect after email sent
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(
             len(mail.outbox), 0
-        )  # Only one email should be sent despite multiple users
+        )
