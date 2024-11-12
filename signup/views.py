@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.contrib.auth import login
 from django.contrib import messages
 from .forms import ProviderSignUpForm, UserSignUpForm
+from django.shortcuts import render, redirect
+from django.urls import reverse
 
 
 def select_role(request):
