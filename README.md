@@ -1,10 +1,6 @@
 # fall24-monday-team5
 Build status (for main): [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=main)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
 
-Build status (for develop): [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=develop)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
-
-Coverage Report (for main): [![Coverage Status](https://coveralls.io/repos/github/gcivil-nyu-org/fall24-monday-team5/badge.svg?branch=main)](https://coveralls.io/github/gcivil-nyu-org/fall24-monday-team5?branch=main)
-
 ## Main Branch
 Build status: [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=main)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
 
