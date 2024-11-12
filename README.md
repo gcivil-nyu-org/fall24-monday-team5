@@ -1,5 +1,4 @@
 # fall24-monday-team5
-Build status (for main): [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=main)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
 
 ## Main Branch
 Build status: [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=main)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
