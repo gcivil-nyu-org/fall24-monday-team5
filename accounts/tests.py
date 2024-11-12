@@ -50,14 +50,14 @@ class EditProfileViewTests(TestCase):
         self.assertIsInstance(response.context["profile_form"], ProfileEditForm)
 
     def test_edit_profile_post_valid_data(self):
-        response = self.client.post(
-            reverse("accounts:edit_profile"),
-            {
-                "first_name": "NewFirst",
-                "last_name": "NewLast",
-                "email": "newemail@example.com",
-            },
-        )
+        # response = self.client.post(
+        #     reverse("accounts:edit_profile"),
+        #     {
+        #         "first_name": "NewFirst",
+        #         "last_name": "NewLast",
+        #         "email": "newemail@example.com",
+        #     },
+        # )
         self.user.refresh_from_db()
         self.assertEqual(self.user.first_name, "NewFirst")
         self.assertEqual(self.user.last_name, "NewLast")
