@@ -62,7 +62,6 @@ class EditProfileViewTests(TestCase):
         self.assertEqual(self.user.first_name, "NewFirst")
         self.assertEqual(self.user.last_name, "NewLast")
         self.assertEqual(self.user.email, "newemail@example.com")
-        print(response)
 
     # def test_edit_profile_provider_form(self):
     #     self.user.role = "Provider"
