@@ -34,12 +34,9 @@ LOGIN_REDIRECT_URL = "/appointments/time_slots"
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< HEAD
-=======
     "accounts.apps.AccountsConfig",
     "client.apps.ClientConfig",
     "providers.apps.ProvidersConfig",
->>>>>>> develop
     "signup.apps.SignupConfig",
     "appointments.apps.AppointmentsConfig",
     "django.contrib.admin",
