@@ -25,7 +25,11 @@ SECRET_KEY = "django-insecure-pg4z6@qrv-zckxl=j0y$%@s3j%=d^(fj6i07+j)(lhf=^)uex^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["django-env2.eba-hv2zpdfp.us-east-1.elasticbeanstalk.com", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "django-env2.eba-hv2zpdfp.us-east-1.elasticbeanstalk.com",
+    "django-env3.eba-vbtmdwcq.us-east-1.elasticbeanstalk.com",
+    "127.0.0.1",
+]
 
 # temporarily redirecting to booking appointments page after login,
 # later on this will be updated
@@ -34,6 +38,9 @@ LOGIN_REDIRECT_URL = "/appointments/time_slots"
 # Application definition
 
 INSTALLED_APPS = [
+    "accounts.apps.AccountsConfig",
+    "client.apps.ClientConfig",
+    "providers.apps.ProvidersConfig",
     "signup.apps.SignupConfig",
     "appointments.apps.AppointmentsConfig",
     "django.contrib.admin",
@@ -127,3 +134,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+AUTH_USER_MODEL = "accounts.Profile"
+
+# settings.py
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "calmseek2024@gmail.com"  # Your email
+EMAIL_HOST_PASSWORD = "aydx wwfy ngbq aabp"  # Your email password for sending
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

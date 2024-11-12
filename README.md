@@ -1,11 +1,18 @@
 # fall24-monday-team5
-Build status (for main): [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=main)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
 
-Build status (for develop): [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=develop)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
+## Main Branch
+Build status: [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=main)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
 
-Coverage Report (for main): [![Coverage Status](https://coveralls.io/repos/github/gcivil-nyu-org/fall24-monday-team5/badge.svg?branch=main)](https://coveralls.io/github/gcivil-nyu-org/fall24-monday-team5?branch=main)
+Coverage Report: [![Coverage Status](https://coveralls.io/repos/github/gcivil-nyu-org/fall24-monday-team5/badge.svg?branch=main)](https://coveralls.io/github/gcivil-nyu-org/fall24-monday-team5?branch=main)
 
-Coverage Report (for develop): [![Coverage Status](https://coveralls.io/repos/github/gcivil-nyu-org/fall24-monday-team5/badge.svg?branch=develop)](https://coveralls.io/github/gcivil-nyu-org/fall24-monday-team5?branch=develop)
+Website Link: [Prod Deployment](http://django-env3.eba-vbtmdwcq.us-east-1.elasticbeanstalk.com/)
+
+## Develop Branch
+Build status: [![Build Status](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5.svg?token=gZFLquVHo7ZPGVRcsxqJ&branch=develop)](https://app.travis-ci.com/gcivil-nyu-org/fall24-monday-team5)
+
+Coverage Report: [![Coverage Status](https://coveralls.io/repos/github/gcivil-nyu-org/fall24-monday-team5/badge.svg?branch=develop)](https://coveralls.io/github/gcivil-nyu-org/fall24-monday-team5?branch=develop)
+
+Website Link: [Develop deployment](http://django-env2.eba-hv2zpdfp.us-east-1.elasticbeanstalk.com/)
 # Calm Seek
 
 Welcome to the project repository! Please follow the guidelines below to maintain consistency and ensure a smooth development process.

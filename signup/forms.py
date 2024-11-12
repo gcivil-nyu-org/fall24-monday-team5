@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from appointments.models import Profile
+from accounts.models import Profile, Provider
 
 
 class ProviderSignUpForm(UserCreationForm):
@@ -12,8 +11,20 @@ class ProviderSignUpForm(UserCreationForm):
         max_length=255, required=True, help_text="Enter your professional credentials"
     )
 
+    # Address fields
+    line1 = forms.CharField(max_length=255, required=True, label="Address Line 1")
+    line2 = forms.CharField(max_length=255, required=False, label="Address Line 2")
+    city = forms.CharField(max_length=100, required=True)
+    state = forms.CharField(max_length=100, required=True)
+    pincode = forms.CharField(max_length=10, required=True)
+
+    specialization = forms.ChoiceField(
+        choices=Provider.MENTAL_HEALTH_SPECIALIZATIONS, required=True
+    )
+    phone_number = forms.CharField(max_length=20, required=True)
+
     class Meta:
-        model = User
+        model = Profile
         fields = (
             "username",
             "first_name",
@@ -28,11 +39,23 @@ class ProviderSignUpForm(UserCreationForm):
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         user.email = self.cleaned_data["email"]
+        user.role = "Provider"
+
         if commit:
             user.save()
-            Profile.objects.create(
-                user=user, role="Provider"
-            )  # the role 'Provider' is case sensitive (as of the moment)
+            # Create the associated Provider object with address fields
+            Provider.objects.create(
+                user=user,
+                # bio=self.cleaned_data.get("credentials"),
+                # phone_number=self.cleaned_data["phone_number"],
+                # =self.cleaned_data["credentials"],
+                specialization=self.cleaned_data["specialization"],
+                line1=self.cleaned_data["line1"],
+                line2=self.cleaned_data.get("line2", ""),
+                city=self.cleaned_data["city"],
+                state=self.cleaned_data["state"],
+                pincode=self.cleaned_data["pincode"],
+            )
         return user
 
 
@@ -42,7 +65,7 @@ class UserSignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=255, required=True)
 
     class Meta:
-        model = User
+        model = Profile
         fields = (
             "username",
             "first_name",
@@ -57,10 +80,11 @@ class UserSignUpForm(UserCreationForm):
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
         user.email = self.cleaned_data["email"]
+        user.role = "User"
 
         if commit:
             user.save()
-            Profile.objects.create(
-                user=user, role="User"
-            )  # the role 'User' is case sensitive (as of the moment)
+            # Profile.objects.create(
+            #     user=user, role="User"
+            # )  # the role 'User' is case sensitive (as of the moment)
         return user
