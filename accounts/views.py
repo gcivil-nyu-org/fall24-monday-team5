@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
+
+from appointments.models import Appointment
 from .forms import ProfileEditForm, ProviderEditForm, PasswordResetRequestForm
 from accounts.models import Profile
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
@@ -129,13 +131,17 @@ def password_reset_complete(request):
 @login_required
 def client_dashboard(request):
     # Check if the user is a client
-    if request.user.role != "User" or not hasattr(request.user, 'client'):
+    if request.user.role != "User":
+        # Instead of redirecting to login, you can render an error page ?
+        # in the error page handle the back to login button or back to home button
         return redirect("login")  # Redirect to error page if not a client
 
     # Fetch client-specific data
-    client_data = Client.objects.get(user=request.user)
+    client_data = get_object_or_404(Client, user=request.user)
+    appointments = Appointment.objects.filter(user=request.user)
     context = {
         'client_data': client_data,
+        'apointments': appointments,
         # Add any additional client-specific data here
     }
     return render(request, "accounts/client_dashboard.html", context)
@@ -143,13 +149,17 @@ def client_dashboard(request):
 @login_required
 def provider_dashboard(request):
     # Check if the user is a provider
-    if request.user.role != "Provider" or not hasattr(request.user, 'provider'):
+    if request.user.role != "Provider":
+        # Instead of redirecting to login, you can render an error page ?
+        # in the error page handle the back to login button or back to home button
         return redirect('login')  # Redirect to error page if not a provider
 
     # Fetch provider-specific data
-    provider_data = Provider.objects.get(user=request.user)
+    provider_data = get_object_or_404(Provider, user=request.user)
+    appointments = Appointment.objects.filter(time_slot__provider=request.user, time_slot__is_available=False)
     context = {
         'provider_data': provider_data,
+        'apointments': appointments,
         # Add any additional provider-specific data here
     }
     return render(request, 'accounts/provider_dashboard.html', context)

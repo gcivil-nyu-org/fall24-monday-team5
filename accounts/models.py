@@ -48,6 +48,9 @@ class Provider(models.Model):
     state = models.CharField(max_length=100, default="Unknown State")
     pincode = models.CharField(max_length=10, default="000000")
 
+    def __str__(self):
+        return f"{self.user.get_username()} - {self.user.role} - {self.specialization}"
+
 
 # this is the model for client users
 class Client(models.Model):
@@ -57,3 +60,6 @@ class Client(models.Model):
     bio = models.TextField()
     phone_number = models.CharField(max_length=20)
     user_label = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"{self.user.get_username()} - {self.user.role} - {self.phone_number}"

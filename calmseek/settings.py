@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
 
 # temporarily redirecting to booking appointments page after login,
 # later on this will be updated
-LOGIN_REDIRECT_URL = "redirect_to_dashboard"
+LOGIN_REDIRECT_URL = "home"
 
 # Application definition
 
