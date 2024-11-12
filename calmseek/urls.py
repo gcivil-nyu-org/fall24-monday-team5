@@ -19,14 +19,25 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.shortcuts import redirect
 from django.urls import path, include
-import appointments.views as views
 
+<<<<<<< HEAD
+=======
+import calmseek.views as views
+
+>>>>>>> develop
 urlpatterns = [
     path("", lambda request: redirect("login")),
     path("appointments/", include("appointments.urls")),
     path("admin/", admin.site.urls),
     path("login/", auth_views.LoginView.as_view(), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+<<<<<<< HEAD
     path("dashboard/", views.dashboard, name="dashboard"),
     path("signup/", include("signup.urls")),
+=======
+    path("signup/", include("signup.urls")),
+    path("error/", views.error, name="error"),
+    path("providers/", include("providers.urls")),
+    path("client/", include("client.urls")),
+>>>>>>> develop
 ]

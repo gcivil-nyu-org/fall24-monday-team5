@@ -16,16 +16,16 @@
             <nav>
                 <a class="nav-title">Home</a>
 
-                {% if user.profile.role == 'User' %}
-                    <a href="{% url 'appointments:browse_providers' %}" class="nav-title">Browse Providers</a>
+                {% if user.role == 'User' %}
+                    <a href="{% url 'providers:browse_providers' %}" class="nav-title">Browse Providers</a>
                 {% endif %}
 
-                {% if user.profile.role == 'User' %}
+                {% if user.role == 'User' %}
                     <a href="{% url 'appointments:time_slots' %}" class="nav-title">Available Slots</a>
                 {% endif %}
 
-                {% if user.profile.role == 'Provider' %}
-                    <a href="{% url 'appointments:create_time_slot' %}" class="nav-title">Set Slots</a>
+                {% if user.role == 'Provider' %}
+                    <a href="{% url 'providers:create_time_slot' %}" class="nav-title">Set Slots</a>
                 {% endif %}
 
                 <a class="nav-title">Service Finder</a>
@@ -41,7 +41,9 @@
             <div class="dropdown" id="dropdownMenu">
                 <ul>
                     <li><a href="{% url 'appointments:my_appointments' %}">My Appointments</a></li>
-                    <li><a href="{% url 'appointments:favorite_providers' %}">Favorite Providers</a></li>
+                    {% if user.role == 'User' %}
+                        <li><a href="{% url 'client:favorite_providers' %}">Favorite Providers</a></li>
+                    {% endif %}
                     <li><a href="#">Profile</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
