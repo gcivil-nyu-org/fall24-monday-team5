@@ -7,8 +7,6 @@ from datetime import timedelta
 from appointments.models import TimeSlot, Appointment
 from accounts.models import Profile
 
-User = get_user_model()
-
 
 class AppointmentTests(TestCase):
     def setUp(self):
