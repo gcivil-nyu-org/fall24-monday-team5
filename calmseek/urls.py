@@ -33,5 +33,5 @@ urlpatterns = [
     path("providers/", include("providers.urls")),
     path("client/", include("client.urls")),
     path("accounts/", include("accounts.urls", namespace="accounts")),
-    path('home/', views.home, name='home'),
+    path("home/", views.home, name="home"),
 ]

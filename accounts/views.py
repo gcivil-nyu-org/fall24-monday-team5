@@ -140,11 +140,12 @@ def client_dashboard(request):
     client_data = get_object_or_404(Client, user=request.user)
     appointments = Appointment.objects.filter(user=request.user)
     context = {
-        'client_data': client_data,
-        'apointments': appointments,
+        "client_data": client_data,
+        "apointments": appointments,
         # Add any additional client-specific data here
     }
     return render(request, "accounts/client_dashboard.html", context)
+
 
 @login_required
 def provider_dashboard(request):
@@ -152,14 +153,16 @@ def provider_dashboard(request):
     if request.user.role != "Provider":
         # Instead of redirecting to login, you can render an error page ?
         # in the error page handle the back to login button or back to home button
-        return redirect('login')  # Redirect to error page if not a provider
+        return redirect("login")  # Redirect to error page if not a provider
 
     # Fetch provider-specific data
     provider_data = get_object_or_404(Provider, user=request.user)
-    appointments = Appointment.objects.filter(time_slot__provider=request.user, time_slot__is_available=False)
+    appointments = Appointment.objects.filter(
+        time_slot__provider=request.user, time_slot__is_available=False
+    )
     context = {
-        'provider_data': provider_data,
-        'apointments': appointments,
+        "provider_data": provider_data,
+        "apointments": appointments,
         # Add any additional provider-specific data here
     }
-    return render(request, 'accounts/provider_dashboard.html', context)
+    return render(request, "accounts/provider_dashboard.html", context)
