@@ -84,7 +84,7 @@ class UserSignUpForm(UserCreationForm):
 
         if commit:
             user.save()
-            # TODO here as we are creating a profile below code similarly we need to create a client
+            # TODO here as we are creating a profile below code similarly we need to create a client # noqa
             # Profile.objects.create(
             #     user=user, role="User"
             # )  # the role 'User' is case sensitive (as of the moment)
