@@ -42,8 +42,8 @@ class LoginViewTest(TestCase):
         self.assertFormError(
             form,
             None,
-            "Please enter a correct username and password. Note that both fields may be case-sensitive.",
-        )  # noqa: E501")
+            "Please enter a correct username and password. Note that both fields may be case-sensitive.", # noqa: E501
+        )
 
     def test_access_protected_page_without_login(self):
         # Test that trying to access a protected page without logging in redirects.

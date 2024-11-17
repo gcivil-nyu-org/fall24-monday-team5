@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import calendar
 from django.db.models import Q
-from django.utils import timezone
 
 from appointments.forms import TimeSlotForm
 from appointments.models import Appointment, TimeSlot
