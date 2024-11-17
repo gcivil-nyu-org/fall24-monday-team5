@@ -18,7 +18,6 @@
         <div class="provider-info">
             <h2 class="provider-name">{{ provider.get_full_name }}</h2>
             <p class="provider-role">Role: {{ provider.role }}</p>
-            <p class="facility">Facility: {{ provider.facility|default:"Not Available" }}</p>
             <p class="location">
                 Location:
                 {% if provider.provider.line1 %}
@@ -30,8 +29,11 @@
                     Not Available
                 {% endif %}
             </p>
-            <p class="contact-info">Contact: {{ provider.contact_info|default:"Not Available" }}</p>
-            <p class="bio">Bio: {{ provider.bio|default:"No bio available" }}</p>
+            <p class="phone-number">Phone: {{ provider.provider.phone_number |default:"Not Available" }}</p>
+            <p class="email">Email: {{ provider.email |default:"Not Available" }}</p>
+
+
+            <p class="bio">Bio: {{ provider.provider.bio|default:"No bio available" }}</p>
         </div>
         <div class="profile-photo">
             {% if provider in request.user.favorites.all %}

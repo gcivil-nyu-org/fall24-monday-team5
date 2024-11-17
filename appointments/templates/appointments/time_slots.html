@@ -35,31 +35,33 @@
         <!-- Time Slots Display -->
         <div class="slots-list">
             <h2 class="heading">Available Time Slots</h2>
-            {% if time_slots %}
-                {% for slot in time_slots %}
-                    <div class="slot-card">
-                        <div class="slot-info">
-                            <p><strong>Provider: {{ slot.provider.get_full_name }}</strong></p>
-                            <p>Date: {{ slot.start_time|date:"m-d-Y" }}</p>
-                            <p>Time: {{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
+            <div class="slots-list-scrollable">
+                {% if time_slots %}
+                    {% for slot in time_slots %}
+                        <div class="slot-card">
+                            <div class="slot-info">
+                                <p><strong>Provider: {{ slot.provider.get_full_name }}</strong></p>
+                                <p>Date: {{ slot.start_time|date:"m-d-Y" }}</p>
+                                <p>Time: {{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
+                            </div>
+                            <a href="{% url 'appointments:book_appointment' slot.id %}" class="btn btn-black">Book Now</a>
                         </div>
-                        <a href="{% url 'appointments:book_appointment' slot.id %}" class="btn btn-black">Book Now</a>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p class="no-slots">No available time slots for the selected date and provider.</p>
-            {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="no-slots">No available time slots for the selected date and provider.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 
-    
     <style>
         /* Slots Container (Wrapper for both Filter and Time Slots sections) */
         .slots-container {
             display: flex;
+            height: 650px;
             justify-content: space-between; /* Ensures space between filter and slots */
-            gap: 20px; /* Reduced space between the two sections */
-            max-width: 1200px; /* Max width for the overall wrapper */
+            gap: 20px;
+            max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
             background-color: #f9f9f9;
@@ -143,6 +145,13 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
+        /* Scrollable Section for Time Slots */
+        .slots-list-scrollable {
+            max-height: 480px; /* Set a fixed height for scrollable area */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px;
+        }
+
         /* Slot Card */
         .slot-card {
             display: flex;
@@ -205,5 +214,4 @@
             }
         }
     </style>
-
 {% endblock %}

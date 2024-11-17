@@ -62,10 +62,11 @@
         </div>
     </div>
 
+
     <!-- My Current Time Slots Section -->
     <div class="current-slots-container">
         <h2 class="heading">My Current Time Slots</h2>
-        <div class="slot-list">
+        <div class="slot-list scrollable-container">
             {% if current_slots.exists %}
                 {% for slot in current_slots %}
                     <div class="slot-card">
@@ -96,6 +97,7 @@
         display: flex;
         justify-content: space-between;
         max-width: 1200px;
+        height: 650px;
         margin: 40px auto;
         gap: 20px;
         padding: 20px;
@@ -201,16 +203,6 @@
         background-color: #333;
     }
 
-    .btn-secondary {
-        background-color: #e0e0e0;
-        color: #333;
-        border: none;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn-secondary:hover {
-        background-color: #ccc;
-    }
 
     .current-slots-container {
         width: 70%;
@@ -262,6 +254,16 @@
         from { opacity: 0; }
         to { opacity: 1; }
     }
+
+    .scrollable-container {
+        max-height: 450px; /* Set a fixed height */
+        overflow-y: auto; /* Enable vertical scrolling */
+        border: 1px solid #ddd; /* Add a border for better visibility */
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
+
 </style>
 
 
