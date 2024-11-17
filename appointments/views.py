@@ -87,6 +87,7 @@ def book_appointment(request):
         {"form": form, "time_slot": time_slot},
     )
 
+
 @login_required
 def appointment_success(request):
     return render(request, "appointments/success.html")
@@ -133,6 +134,7 @@ def cancel_appointment(request, appointment_id):
             return HttpResponseRedirect(reverse("appointments:my_appointments"))
 
     return HttpResponseRedirect(reverse("appointments:my_appointments"))
+
 
 @login_required
 def reschedule_time_slots(request):

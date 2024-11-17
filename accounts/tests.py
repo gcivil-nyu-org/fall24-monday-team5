@@ -23,6 +23,7 @@ class ProfileViewTests(TestCase):
         self.assertTemplateUsed(response, "accounts/profile.html")
         self.assertEqual(response.context["user"], self.user)
 
+
 class EditProfileViewTests(TestCase):
     def setUp(self):
         self.user = Profile.objects.create_user(

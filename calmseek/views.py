@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 
+
 def login_user(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
@@ -20,8 +21,8 @@ def login_user(request):
             messages.error(request, "Invalid username or password.")
     else:
         form = AuthenticationForm()
-
     return render(request, "registration/login.html", {"form": form})
+
 
 def error(request):
     return render(request, "error.html")

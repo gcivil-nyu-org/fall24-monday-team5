@@ -83,9 +83,11 @@ class AppointmentTests(TestCase):
         )
 
         # Make a GET request to load rescheduling options
-        response = self.client.get(
-            reverse("appointments:reschedule_time_slots", args=[appointment.id])
+        response = self.client.post(
+            reverse("appointments:reschedule_time_slots"),
+            {"appointment_id": appointment.id},
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "appointments/appointment_rescheduling.html")
         self.assertContains(
@@ -97,9 +99,7 @@ class AppointmentTests(TestCase):
         self.time_slot.is_available = False
         self.time_slot.save()
 
-        response = self.client.get(
-            reverse("appointments:reschedule_time_slots", args=[self.time_slot.id])
-        )
+        response = self.client.get(reverse("appointments:reschedule_time_slots"))
         self.assertEqual(
             response.status_code, 404
         )  # Should show not found as slot is unavailable
