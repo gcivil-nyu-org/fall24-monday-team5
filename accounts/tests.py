@@ -44,7 +44,7 @@ class EditProfileViewTests(TestCase):
         self.assertIsInstance(response.context["profile_form"], ProfileEditForm)
 
     def test_edit_profile_post_valid_data(self):
-        response = self.client.post(
+        self.client.post(
             reverse("accounts:edit_profile"),
             {
                 "first_name": "NewFirst",
