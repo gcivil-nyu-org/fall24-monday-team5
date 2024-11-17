@@ -36,7 +36,8 @@
                         <!-- Date Selection -->
                         <div class="form-group">
                             <label for="date">Choose Date:</label>
-                            <input type="date" id="date" name="date" value="{{ selected_date }}" min="{{ today }}" class="date-input">
+                            <input type="date" id="date" name="date" value="{{ selected_date }}" min="{{ today }}"
+                                   class="date-input">
                         </div>
 
                         <!-- Provider Selection -->
@@ -57,8 +58,17 @@
                         </div>
 
                         <button type="submit" class="btn btn-black">Filter</button>
-                        <a href="{% url 'appointments:reschedule_time_slots' appointment.id %}" class="clear clear-light">Clear All Filters</a>
+                        <a href="#" class="clear clear-light" id="clearFiltersLink">Clear All Filters</a>
                     </div>
+                </form>
+
+                <form id="clearFiltersForm" method="post"
+                      action="{% url 'appointments:reschedule_time_slots' %}">
+                    {% csrf_token %}
+                    <!-- Keep appointment_id and make date and provider empty -->
+                    <input type="hidden" name="appointment_id" value="{{ appointment.id }}">
+                    <input type="hidden" name="date" value="">
+                    <input type="hidden" name="provider" value="">
                 </form>
             </div>
 
@@ -298,5 +308,18 @@
             }
         }
     </style>
+
+    <script>
+        document.getElementById('clearFiltersLink').addEventListener('click', function (event) {
+            event.preventDefault();  // Prevent the default behavior of the link
+
+            // Clear the values in the form inputs
+            document.querySelector('input[name="date"]').value = '';  // Clear the date field
+            document.querySelector('input[name="provider"]').value = '';  // Clear the provider field
+
+            // Submit the hidden form to reset the filters but keep appointment_id
+            document.getElementById('clearFiltersForm').submit();
+        });
+    </script>
 
 {% endblock %}

@@ -24,7 +24,6 @@ def time_slots(request):
         selected_provider_id = None
         selected_date = None
 
-
     # Filter providers based on Profile role 'Provider'
     providers = Profile.objects.filter(role="Provider")
 
