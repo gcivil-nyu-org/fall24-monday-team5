@@ -1,20 +1,100 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Welcome, {{ provider_data.user.first_name }}</h2>
-<p>Specialty: {{ provider_data.specialization }}</p>
-<p>Bio: {{ provider_data.bio }}</p>
+<div class="container mt-5">
+    <!-- Header Section -->
+    <div class="text-center mb-4">
+        <h2 class="welcome-text">Welcome, {{ provider_data.user.first_name }}!</h2>
+        <p class="specialization">Specialty: {{ provider_data.specialization }}</p>
+        <p class="bio">{{ provider_data.bio|default:"No bio provided." }}</p>
+    </div>
 
-<h3>Your Booked Appointments:</h3>
-<ul>
-    <!-- Loop through clients assigned to the provider -->
-    {% if appointments %}
-        {% for appointment in appointments %}
-            <li>{{ appointment.user.first_name }} {{ appointment.user.last_name }} - Time: {{ appointment.time_slot.start_time | date:"Y-m-d H:i" }} to {{ appointment.time_slot.end_time | date:"Y-m-d H:i" }}</li>
-        {% endfor %}
-    {% else %}
-        <p>You have no appointments at the moment.</p>
-    {% endif %}
-</ul>
+    <!-- Booked Appointments Section -->
+    <div class="appointments-section">
+        <h3 class="section-title">Your Booked Appointments</h3>
+        <div class="card shadow-sm p-3">
+            {% if appointments %}
+                <ul class="list-group">
+                    {% for appointment in appointments %}
+                        <li class="list-group-item">
+                            <div class="appointment-details">
+                                <strong>Client:</strong> {{ appointment.user.first_name }} {{ appointment.user.last_name }}<br>
+                                <strong>Time:</strong> {{ appointment.time_slot.start_time|date:"Y-m-d H:i" }} - {{ appointment.time_slot.end_time|date:"Y-m-d H:i" }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-appointments">You have no appointments at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<style>
+    /* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
 
-<a href="{% url 'logout' %}">Logout</a>
+/* Header Section */
+.welcome-text {
+    font-size: 2.5rem;
+    color: #000;
+    margin-bottom: 0.5rem;
+}
+
+.specialization {
+    font-size: 1.2rem;
+    color: #6c757d;
+    font-weight: bold;
+}
+
+.bio {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* Appointments Section */
+.section-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+.card {
+    border-radius: 10px;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.no-appointments {
+    text-align: center;
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+/* Additional Styling */
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 1.5rem;
+}
+
+</style>
 {% endblock %}

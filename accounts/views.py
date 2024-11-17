@@ -158,11 +158,11 @@ def provider_dashboard(request):
     # Fetch provider-specific data
     provider_data = get_object_or_404(Provider, user=request.user)
     appointments = Appointment.objects.filter(
-        time_slot__provider=request.user, time_slot__is_available=False
+        time_slot__provider=request.user
     )
     context = {
         "provider_data": provider_data,
-        "apointments": appointments,
+        "appointments": appointments,
         # Add any additional provider-specific data here
     }
     return render(request, "accounts/provider_dashboard.html", context)
