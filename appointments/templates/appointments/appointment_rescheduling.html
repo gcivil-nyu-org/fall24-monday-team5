@@ -36,7 +36,7 @@
                         <!-- Date Selection -->
                         <div class="form-group">
                             <label for="date">Choose Date:</label>
-                            <input type="date" id="date" name="date" value="{{ selected_date }}" class="date-input">
+                            <input type="date" id="date" name="date" value="{{ selected_date }}" min="{{ today }}" class="date-input">
                         </div>
 
                         <!-- Provider Selection -->
@@ -57,6 +57,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-black">Filter</button>
+                        <a href="{% url 'appointments:reschedule_time_slots' appointment.id %}" class="clear clear-light">Clear All Filters</a>
                     </div>
                 </form>
             </div>
@@ -174,6 +175,38 @@
             border-color: #000; /* Focus border for inputs */
             outline: none;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* General clear button styling */
+        .clear {
+            display: inline-block;
+            padding: 10px 20px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #dc3545; /* Red button color */
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect for clear button */
+        .clear:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        /* Light variant of the clear button (optional) */
+        .clear-light {
+            background-color: #f8f9fa; /* Light background */
+            color: #000; /* Dark text */
+            border: 1px solid #ccc; /* Border for visibility */
+        }
+
+        .clear-light:hover {
+            background-color: #e2e6ea; /* Slightly darker on hover */
+            border-color: #bbb; /* Darker border */
         }
 
         /* Button Styling */

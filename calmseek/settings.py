@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
 # temporarily redirecting to booking appointments page after login,
 # later on this will be updated
 LOGIN_REDIRECT_URL = "/appointments/time_slots"
+LOGIN_URL = "/login"
 
 # Application definition
 
