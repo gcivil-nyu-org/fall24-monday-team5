@@ -3,7 +3,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.dateparse import parse_date
-from datetime import datetime
+from datetime import date, datetime
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import AppointmentForm
@@ -14,6 +15,7 @@ from accounts.models import Profile
 # View to display available time slots by date and provider
 @login_required
 def time_slots(request):
+    today = timezone.now().date().isoformat()
     selected_provider_id = request.GET.get("provider")
     selected_date = request.GET.get("date")
 
@@ -21,7 +23,7 @@ def time_slots(request):
     providers = Profile.objects.filter(role="Provider")
 
     # Filter available time slots
-    time_slots = TimeSlot.objects.filter(is_available=True)
+    time_slots = TimeSlot.objects.filter(is_available=True, start_time__gte=today)
 
     # Filter by provider if selected
     if selected_provider_id:
@@ -42,6 +44,7 @@ def time_slots(request):
             int(selected_provider_id) if selected_provider_id else None
         ),
         "selected_date": selected_date,
+        "today": today,
     }
     return render(request, "appointments/time_slots.html", context)
 
@@ -91,17 +94,18 @@ def appointment_success(request):
 @login_required
 def my_appointments(request):
     profile = request.user
+    today = timezone.now().date().isoformat()
 
     if profile.role == "Provider":
         # Provider sees all appointments related to their time slots
         provider_appointments = Appointment.objects.filter(
-            time_slot__provider=request.user
+            time_slot__provider=request.user, time_slot__start_time__gte=today
         ).select_related("time_slot")
         context = {"appointments": provider_appointments}
     else:
         # Normal users see only their own appointments
         user_appointments = Appointment.objects.filter(
-            user=request.user
+            user=request.user, time_slot__start_time__gte=today
         ).select_related("time_slot")
         context = {"appointments": user_appointments}
 
@@ -134,15 +138,12 @@ def cancel_appointment(request, appointment_id):
 @login_required
 def reschedule_time_slots(request, appointment_id):
     appointment = get_object_or_404(Appointment, id=appointment_id)
+    today = date.today().isoformat()
     profile = request.user
     selected_provider_id = 0
     providers = get_user_model()
     if profile.role == "User":
         selected_provider_id = request.GET.get("provider")
-        # Filter providers based on Profile role 'Provider'
-        # providers = Profile.objects.filter(role='Provider').select_related('user')
-        # provider_user_ids = Profile.objects.filter(role="Provider").values("id")
-        # providers = User.objects.filter(id__in=Subquery(provider_user_ids))
         providers = Profile.objects.filter(role="Provider")
     if profile.role == "Provider":
         selected_provider_id = appointment.time_slot.provider.id
@@ -151,7 +152,7 @@ def reschedule_time_slots(request, appointment_id):
     selected_date = request.GET.get("date")
 
     # Filter available time slots
-    time_slots = TimeSlot.objects.filter(is_available=True)
+    time_slots = TimeSlot.objects.filter(is_available=True, start_time__gte=today)
 
     # Filter by provider if selected
     if selected_provider_id:
@@ -173,6 +174,7 @@ def reschedule_time_slots(request, appointment_id):
         ),
         "selected_date": selected_date,
         "appointment": appointment,
+        "today": today,
     }
 
     return render(request, "appointments/appointment_rescheduling.html", context)
