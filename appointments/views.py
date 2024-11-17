@@ -15,9 +15,14 @@ from accounts.models import Profile
 # View to display available time slots by date and provider
 @login_required
 def time_slots(request):
-    today = timezone.now().date().isoformat()
-    selected_provider_id = request.GET.get("provider")
-    selected_date = request.GET.get("date")
+    if request.method == "POST":
+        today = timezone.now().date().isoformat()
+        selected_provider_id = request.POST.get("provider")
+        selected_date = request.POST.get("date")
+    else:
+        today = timezone.now().date().isoformat()
+        selected_provider_id = None
+        selected_date = None
 
     # Filter providers based on Profile role 'Provider'
     providers = Profile.objects.filter(role="Provider")
@@ -51,7 +56,7 @@ def time_slots(request):
 
 # View to handle appointment booking
 @login_required
-def book_appointment(request, slot_id):
+def book_appointment(request):
     # Check if the logged-in user is a 'Provider'
     profile = request.user
     if profile.role == "Provider":
@@ -60,6 +65,7 @@ def book_appointment(request, slot_id):
         )  # Redirect provider to their dashboard
 
     # Proceed with appointment booking if user is not a 'Provider'
+    slot_id = request.POST.get("time_slot")
     time_slot = get_object_or_404(TimeSlot, id=slot_id, is_available=True)
 
     if request.method == "POST":
@@ -136,20 +142,21 @@ def cancel_appointment(request, appointment_id):
 
 
 @login_required
-def reschedule_time_slots(request, appointment_id):
+def reschedule_time_slots(request):
+    appointment_id = request.POST.get("appointment_id")
     appointment = get_object_or_404(Appointment, id=appointment_id)
     today = date.today().isoformat()
     profile = request.user
     selected_provider_id = 0
     providers = get_user_model()
     if profile.role == "User":
-        selected_provider_id = request.GET.get("provider")
+        selected_provider_id = request.POST.get("provider")
         providers = Profile.objects.filter(role="Provider")
     if profile.role == "Provider":
         selected_provider_id = appointment.time_slot.provider.id
         providers = Profile.objects.filter(id=selected_provider_id)
 
-    selected_date = request.GET.get("date")
+    selected_date = request.POST.get("date")
 
     # Filter available time slots
     time_slots = TimeSlot.objects.filter(is_available=True, start_time__gte=today)
@@ -181,12 +188,13 @@ def reschedule_time_slots(request, appointment_id):
 
 
 @login_required
-def update_appointment(request, appointment_id, slot_id):
+def update_appointment(request):
+    appointment_id = request.POST.get("appointment_id")
     appointment = get_object_or_404(Appointment, id=appointment_id)
     original_user = appointment.user
+    slot_id = request.POST.get("time_slot")
     new_time_slot = get_object_or_404(TimeSlot, id=slot_id, is_available=True)
     form = AppointmentForm()
-    print(request.method)
 
     if request.method == "POST":
         form = AppointmentForm(request.POST, instance=appointment)

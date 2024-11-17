@@ -23,12 +23,6 @@ class ProfileViewTests(TestCase):
         self.assertTemplateUsed(response, "accounts/profile.html")
         self.assertEqual(response.context["user"], self.user)
 
-    # def test_profile_context_provider(self):
-    #     self.user.role = "Provider"
-    #     self.user.save()
-    #     response = self.client.get(reverse("accounts:profile"))
-    #     self.assertTrue(response.context["is_provider"])
-
 
 class EditProfileViewTests(TestCase):
     def setUp(self):
@@ -63,12 +57,6 @@ class EditProfileViewTests(TestCase):
         self.assertEqual(self.user.last_name, "NewLast")
         self.assertEqual(self.user.email, "newemail@example.com")
         print(response)
-
-    # def test_edit_profile_provider_form(self):
-    #     self.user.role = "Provider"
-    #     self.user.save()
-    #     response = self.client.get(reverse("accounts:edit_profile"))
-    #     self.assertIsInstance(response.context["provider_form"], ProviderEditForm)
 
 
 class PasswordResetRequestViewTests(TestCase):

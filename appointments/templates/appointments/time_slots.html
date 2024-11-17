@@ -5,7 +5,9 @@
             <h2 class="heading">Filter Time Slots</h2>
 
             <!-- Date and Provider Selection Form -->
-            <form method="get" action="{% url 'appointments:time_slots' %}" class="filter-form mb-4">
+            <!-- change method to post to hide the appointment id from website link -->
+            <form method="post" action="{% url 'appointments:time_slots' %}" class="filter-form mb-4">
+                {% csrf_token %}
                 <div class="filter-container">
                     <!-- Date Selection -->
                     <div class="form-group">
@@ -44,7 +46,12 @@
                             <p>Date: {{ slot.start_time|date:"m-d-Y" }}</p>
                             <p>Time: {{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
                         </div>
-                        <a href="{% url 'appointments:book_appointment' slot.id %}" class="btn btn-black">Book Now</a>
+                        <!-- add hidden input to hide the slot id from website link -->
+                        <form method="POST" action="{% url 'appointments:book_appointment' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="time_slot" value="{{ slot.id }}">
+                            <button type="submit" class="btn btn-black">Book Now</button>
+                        </form>
                     </div>
                 {% endfor %}
             {% else %}
@@ -53,7 +60,7 @@
         </div>
     </div>
 
-    
+
     <style>
                 /* Slots Container (Wrapper for both Filter and Time Slots sections) */
         .slots-container {

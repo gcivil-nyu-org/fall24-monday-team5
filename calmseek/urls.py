@@ -16,7 +16,6 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
 from django.shortcuts import redirect
 from django.urls import path, include
 
@@ -26,7 +25,7 @@ urlpatterns = [
     path("", lambda request: redirect("login")),
     path("appointments/", include("appointments.urls")),
     path("admin/", admin.site.urls),
-    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("login/", views.login_user, name="login"),
     path("logout/", views.log_out, name="logout"),
     path("signup/", include("signup.urls")),
     path("error/", views.error, name="error"),
