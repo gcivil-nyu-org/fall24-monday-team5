@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container booking-card">
-    <h2 class="heading">Reschedule Your Appointment</h2>
-    
-    <div class="time-slot">
-        <p><strong>Selected Slot:</strong> {{ time_slot.start_time|date:"H:i" }} to {{ time_slot.end_time|date:"H:i" }}</p>
-    </div>
-    
-    <form method="post" class="appointment-form">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ form.as_p }}
+    <div class="container booking-card">
+        <h2 class="heading">Reschedule Your Appointment</h2>
+
+        <div class="time-slot">
+            <p><strong>Selected Slot:</strong> {{ time_slot.start_time|date:"H:i" }}
+                to {{ time_slot.end_time|date:"H:i" }}</p>
         </div>
-        <button type="submit" class="btn btn-primary">Reschedule Appointment</button>
-    </form>
-</div>
+
+        <form method="post" class="appointment-form">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <!-- add hidden input to hide the slot id from website link -->
+            <input type="hidden" name="time_slot" value="{{ time_slot.id }}">
+            <input type="hidden" name="appointment_id" value="{{ appointment.id }}">
+            <button type="submit" class="btn btn-primary">Reschedule Appointment</button>
+        </form>
+    </div>
 {% endblock %}

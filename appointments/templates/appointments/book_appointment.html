@@ -13,6 +13,8 @@
             <div class="form-group">
                 {{ form.as_p }}
             </div>
+            <!-- add hidden input to hide the slot id from website link -->
+            <input type="hidden" name="time_slot" value="{{ time_slot.id }}">
             <button type="submit" class="btn btn-primary">Confirm Appointment</button>
         </form>
     </div>

@@ -23,6 +23,11 @@ def signup_provider(request):
             login(request, user)
             messages.success(request, "Provider account created successfully!")
             return redirect("/appointments/time_slots")
+        else:
+            # If the form has errors, add them to the messages
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.capitalize()}: {error}")
     else:
         form = ProviderSignUpForm()
     return render(request, "signup/signup_provider.html", {"form": form})
@@ -36,6 +41,11 @@ def signup_user(request):
             login(request, user)
             messages.success(request, "User account created successfully!")
             return redirect("/appointments/time_slots")
+        else:
+            # If the form has errors, add them to the messages
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field.capitalize()}: {error}")
     else:
         form = UserSignUpForm()
     return render(request, "signup/signup_user.html", {"form": form})
