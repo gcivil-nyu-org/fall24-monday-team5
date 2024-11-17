@@ -30,6 +30,19 @@
                     </div>
                 {% endfor %}
             </div>
+        {% else %}
+            <h3>User Information</h3>
+            <div class="form-section">
+                {% for field in client_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="error-message">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
         {% endif %}
 
         <div class="button-group">

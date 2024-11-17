@@ -8,9 +8,6 @@ class ProfileEditForm(forms.ModelForm):
         fields = ["first_name", "last_name", "email"]
 
 
-# 在 forms.py 中
-
-
 class ProviderEditForm(forms.ModelForm):
     class Meta:
         model = Provider
@@ -41,7 +38,11 @@ class ProviderEditForm(forms.ModelForm):
 class ClientEditForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ["phone_number"]
+        fields = ["phone_number", "bio"]
+        widgets = {
+            "phone_number": forms.TextInput(attrs={"class": "form-control"}),
+            "bio": forms.Textarea(attrs={"class": "form-control"}),
+        }
 
 
 class PasswordResetRequestForm(forms.Form):

@@ -23,7 +23,7 @@
             </div>
             <div class="profile-item">
                 <span class="profile-label">License Number:</span>
-                <span class="profile-value">{{ user.provider.license_number }}</span>
+                <span class="profile-value">{{ user.provider.credentials }}</span>
             </div>
             <div class="profile-item">
                 <span class="profile-label">Bio:</span>
@@ -61,6 +61,10 @@
             <div class="profile-item">
                 <span class="profile-label">Phone Number:</span>
                 <span class="profile-value">{{ user.client.phone_number }}</span>
+            </div>
+            <div class="profile-item">
+                <span class="profile-label">Bio:</span>
+                <span class="profile-value">{{ user.client.bio }}</span>
             </div>
         {% endif %}
     </div>

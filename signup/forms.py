@@ -8,7 +8,7 @@ class ProviderSignUpForm(UserCreationForm):
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(max_length=255, required=True)
     credentials = forms.CharField(
-        max_length=255, required=True, help_text="Enter your professional credentials"
+        max_length=20, required=True, help_text="Enter your professional credentials"
     )
 
     # Address fields
@@ -21,6 +21,7 @@ class ProviderSignUpForm(UserCreationForm):
     specialization = forms.ChoiceField(
         choices=Provider.MENTAL_HEALTH_SPECIALIZATIONS, required=True
     )
+    bio = forms.CharField(widget=forms.Textarea, required=True)
     phone_number = forms.CharField(max_length=20, required=True)
 
     class Meta:
@@ -46,9 +47,9 @@ class ProviderSignUpForm(UserCreationForm):
             # Create the associated Provider object with address fields
             Provider.objects.create(
                 user=user,
-                # bio=self.cleaned_data.get("credentials"),
-                # phone_number=self.cleaned_data["phone_number"],
-                # =self.cleaned_data["credentials"],
+                bio=self.cleaned_data.get("bio"),
+                phone_number=self.cleaned_data["phone_number"],
+                license_number=self.cleaned_data["credentials"],
                 specialization=self.cleaned_data["specialization"],
                 line1=self.cleaned_data["line1"],
                 line2=self.cleaned_data.get("line2", ""),

@@ -1,7 +1,12 @@
 from django.contrib.auth.decorators import login_required
 
 from appointments.models import Appointment
-from .forms import ProfileEditForm, ProviderEditForm, PasswordResetRequestForm
+from .forms import (
+    ClientEditForm,
+    ProfileEditForm,
+    ProviderEditForm,
+    PasswordResetRequestForm,
+)
 from accounts.models import Profile
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.mail import send_mail
@@ -25,9 +30,6 @@ def profile(request):
     return render(request, "accounts/profile.html", context)
 
 
-# 在 views.py 中
-
-
 @login_required
 def edit_profile(request):
     user = request.user
@@ -42,18 +44,27 @@ def edit_profile(request):
             if is_provider
             else None
         )
+        client_form = (
+            ClientEditForm(request.POST, instance=user.client)
+            if not is_provider
+            else None
+        )
 
         # Save forms based on validity
-        if profile_form.is_valid() and (not is_provider or provider_form.is_valid()):
+        if is_provider and profile_form.is_valid() and provider_form.is_valid():
             profile_form.save()
-            if is_provider:
-                provider_form.save()
+            provider_form.save()
+            return redirect("accounts:profile")
+        elif not is_provider and profile_form.is_valid() and client_form.is_valid():
+            profile_form.save()
+            client_form.save()
             return redirect("accounts:profile")
     else:
         profile_form = ProfileEditForm(instance=user)
         provider_form = (
             ProviderEditForm(instance=user.provider) if is_provider else None
         )
+        client_form = ClientEditForm(instance=user.client) if not is_provider else None
 
     return render(
         request,
@@ -62,6 +73,7 @@ def edit_profile(request):
             "profile_form": profile_form,
             "provider_form": provider_form,
             "is_provider": is_provider,
+            "client_form": client_form,
         },
     )
 
@@ -135,14 +147,16 @@ def client_dashboard(request):
     if request.user.role != "User":
         return redirect("error")  # Redirect to error page if not a client
 
+    today = timezone.now().date().isoformat()
     # Fetch client-specific data
     client_data = get_object_or_404(Client, user=request.user)
-    appointments = Appointment.objects.filter(user=request.user).select_related(
-        "time_slot"
-    )
+    appointments = Appointment.objects.filter(
+        user=request.user, time_slot__start_time__gte=today
+    ).select_related("time_slot")
+
     context = {
         "client_data": client_data,
-        "apointments": appointments,
+        "appointments": appointments,
         # Add any additional client-specific data here
     }
     return render(request, "accounts/client_dashboard.html", context)
@@ -152,8 +166,6 @@ def client_dashboard(request):
 def provider_dashboard(request):
     # Check if the user is a provider
     if request.user.role != "Provider":
-        # Instead of redirecting to login, you can render an error page ?
-        # in the error page handle the back to login button or back to home button
         return redirect("error")  # Redirect to error page if not a provider
 
     # Filter the slots after today's date
