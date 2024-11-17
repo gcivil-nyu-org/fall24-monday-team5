@@ -16,6 +16,7 @@ def home(request):
         # You can add additional roles if needed or default to a specific dashboard
     return redirect("login")
 
+
 @login_required
 def log_out(request):
     logout(request)

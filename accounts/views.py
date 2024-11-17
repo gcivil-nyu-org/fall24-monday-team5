@@ -136,9 +136,9 @@ def client_dashboard(request):
 
     # Fetch client-specific data
     client_data = get_object_or_404(Client, user=request.user)
-    appointments = Appointment.objects.filter(
-        user=request.user
-    ).select_related("time_slot")
+    appointments = Appointment.objects.filter(user=request.user).select_related(
+        "time_slot"
+    )
     context = {
         "client_data": client_data,
         "apointments": appointments,
@@ -157,9 +157,7 @@ def provider_dashboard(request):
 
     # Fetch provider-specific data
     provider_data = get_object_or_404(Provider, user=request.user)
-    appointments = Appointment.objects.filter(
-        time_slot__provider=request.user
-    )
+    appointments = Appointment.objects.filter(time_slot__provider=request.user)
     context = {
         "provider_data": provider_data,
         "appointments": appointments,
