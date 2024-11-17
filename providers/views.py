@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import calendar
 from django.db.models import Q
-
+from django.core.paginator import Paginator
 from appointments.forms import TimeSlotForm
 from appointments.models import Appointment, TimeSlot
 from accounts.models import Profile, Provider
@@ -110,17 +110,16 @@ def create_time_slot(request):
 def browse_providers(request):
     # Get filter criteria from the request
     specialization = request.GET.get("specialization", "")
-    address_query = request.GET.get(
-        "address", ""
-    ).strip()  # Get address input from request
+    address_query = request.GET.get("address", "").strip()
 
     # Filter the providers based on selected criteria
-    providers = Profile.objects.filter(role="Provider")
+    providers = Profile.objects.filter(role="Provider").select_related(
+        "provider"
+    )  # Use the correct field name
 
     if specialization:
         providers = providers.filter(provider__specialization=specialization)
 
-    # Apply address-based filtering
     if address_query:
         providers = providers.filter(
             Q(provider__line1__icontains=address_query)
@@ -133,10 +132,15 @@ def browse_providers(request):
     # Get distinct values for specialization dropdown options
     specialties = dict(Provider.MENTAL_HEALTH_SPECIALIZATIONS)
 
+    # Add pagination
+    paginator = Paginator(providers, 6)  # Show 6 providers per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(
         request,
         "providers/browse_providers.html",
-        {"providers": providers, "specialties": specialties},
+        {"page_obj": page_obj, "specialties": specialties},
     )
 
 
