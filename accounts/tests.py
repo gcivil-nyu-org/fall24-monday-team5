@@ -28,13 +28,19 @@ class EditProfileViewTests(TestCase):
     def setUp(self):
         # Create a provider user
         self.provider_user = Profile.objects.create_user(
-            username="provider_user", password="password", role="Provider", email="provider@example.com"
+            username="provider_user",
+            password="password",
+            role="Provider",
+            email="provider@example.com",
         )
         self.provider = Provider.objects.create(user=self.provider_user)
 
         # Create a client user
         self.client_user = Profile.objects.create_user(
-            username="client_user", password="password", role="Client", email="client@example.com"
+            username="client_user",
+            password="password",
+            role="Client",
+            email="client@example.com",
         )
         self.clientu = Client.objects.create(user=self.client_user)
 
