@@ -11,55 +11,116 @@
     <!-- Client Information Section -->
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
-            <h5>About You</h5>
+            <h3>About You</h3>
         </div>
         <div class="card-body">
-            <p><strong>Phone Number:</strong> {{ client_data.phone_number }}</p>
-            <p><strong>Bio:</strong> {{ client_data.bio|default:"No bio provided." }}</p>
+            <p class="bio"><strong>Phone Number:</strong> {{ client_data.phone_number }}</p>
+            <p class="bio"><strong>Bio:</strong> {{ client_data.bio|default:"No bio provided." }}</p>
         </div>
     </div>
 
-</div>
-
-<div class="appointments-list">
-    <h2 class="heading">My Appointments</h2>
-
-    {% if appointments %}
-        <div class="slots-list">
-            {% for appointment in appointments %}
-                <div class="slot-card">
-                    <div class="slot-details">
-                        <p><strong>Provider: {{ appointment.time_slot.provider.get_full_name }}</strong></p>
-
-                        <p>Appointment Type: {{ appointment.get_appointment_type_display }}</p>
-                        <p>Start Time: {{ appointment.time_slot.start_time|date:"Y-m-d H:i" }}</p>
-                        <p>End Time: {{ appointment.time_slot.end_time|date:"Y-m-d H:i" }}</p>
-                        <p>Comments: {{ appointment.comments|default:"None" }}</p>
+    <div class="appointments-list">
+        <h2 class="heading">My Appointments</h2>
+    
+        {% if appointments %}
+            <div class="slots-list">
+                {% for appointment in appointments %}
+                    <div class="slot-card">
+                        <div class="slot-details">
+                            <p><strong>Provider: {{ appointment.time_slot.provider.get_full_name }}</strong></p>
+    
+                            <p>Appointment Type: {{ appointment.get_appointment_type_display }}</p>
+                            <p>Start Time: {{ appointment.time_slot.start_time|date:"Y-m-d H:i" }}</p>
+                            <p>End Time: {{ appointment.time_slot.end_time|date:"Y-m-d H:i" }}</p>
+                            <p>Comments: {{ appointment.comments|default:"None" }}</p>
+                        </div>
+    
+                        <div class="slot-actions">
+                            <!-- Cancel Button -->
+                            <form method="post" action="{% url 'appointments:cancel_appointment' appointment.id %}"
+                                  class="cancel-form">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-black"
+                                        onclick="confirmCancel({{ appointment.id }})">Cancel
+                                </button>
+                            </form>
+    
+                            <!-- Reschedule Button -->
+                            <form method="post" action="{% url 'appointments:reschedule_time_slots' appointment.id %}" class="cancel-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-grey">Reschedule</button>
+                            </form>
+                        </div>
                     </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-appointments">You have no appointments at the moment.</p>
+        {% endif %}
+    </div>
 
-                    <div class="slot-actions">
-                        <!-- Cancel Button -->
-                        <form method="post" action="{% url 'appointments:cancel_appointment' appointment.id %}"
-                              class="cancel-form">
-                            {% csrf_token %}
-                            <button type="button" class="btn btn-black"
-                                    onclick="confirmCancel({{ appointment.id }})">Cancel
-                            </button>
-                        </form>
-
-                        <!-- Reschedule Button -->
-                        <form method="post" action="{% url 'appointments:reschedule_time_slots' appointment.id %}" class="cancel-form">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-grey">Reschedule</button>
-                        </form>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="no-appointments">You have no appointments at the moment.</p>
-    {% endif %}
 </div>
+<style>
+    /* General Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    /* Header Section */
+    .welcome-text {
+        font-size: 2.5rem;
+        color: #000;
+        margin-bottom: 0.5rem;
+    }
+
+    .bio {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+
+    /* Appointments Section */
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #495057;
+        margin-bottom: 1rem;
+    }
+
+    .card {
+        border-radius: 10px;
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+    }
+
+    .list-group-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    .no-appointments {
+        text-align: center;
+        color: #6c757d;
+        font-size: 1rem;
+    }
+
+    /* Additional Styling */
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 1.5rem;
+    }
+
+</style>
 
 <script>
     function confirmCancel(appointmentId) {

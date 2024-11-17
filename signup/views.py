@@ -21,8 +21,8 @@ def signup_provider(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "Provider account created successfully!")
-            return redirect("/appointments/time_slots")
+            # messages.success(request, "Provider account created successfully!")
+            return redirect("home")
         else:
             # If the form has errors, add them to the messages
             for field, errors in form.errors.items():
@@ -39,8 +39,8 @@ def signup_user(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "User account created successfully!")
-            return redirect("/appointments/time_slots")
+            # messages.success(request, "User account created successfully!")
+            return redirect("home")
         else:
             # If the form has errors, add them to the messages
             for field, errors in form.errors.items():

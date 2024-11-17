@@ -16,7 +16,7 @@ def login_user(request):
             if user is not None:
                 login(request, user)
                 # should be change into a main page later
-                return redirect("appointments:time_slots")
+                return redirect("home")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -44,8 +44,3 @@ def home(request):
 def log_out(request):
     logout(request)
     return redirect("login")
-
-
-def log_in(request):
-    login(request)
-    return redirect("time_slots")

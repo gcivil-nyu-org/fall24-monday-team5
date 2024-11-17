@@ -56,7 +56,6 @@ class EditProfileViewTests(TestCase):
         self.assertEqual(self.user.first_name, "NewFirst")
         self.assertEqual(self.user.last_name, "NewLast")
         self.assertEqual(self.user.email, "newemail@example.com")
-        print(response)
 
 
 class PasswordResetRequestViewTests(TestCase):

@@ -10,6 +10,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from django.conf import settings
+from django.utils import timezone
 from .models import Provider, Client
 
 
@@ -155,9 +156,14 @@ def provider_dashboard(request):
         # in the error page handle the back to login button or back to home button
         return redirect("error")  # Redirect to error page if not a provider
 
+    # Filter the slots after today's date
+    today = timezone.now().date().isoformat()
+
     # Fetch provider-specific data
     provider_data = get_object_or_404(Provider, user=request.user)
-    appointments = Appointment.objects.filter(time_slot__provider=request.user)
+    appointments = Appointment.objects.filter(
+        time_slot__provider=request.user, time_slot__start_time__gte=today
+    ).select_related("time_slot")
     context = {
         "provider_data": provider_data,
         "appointments": appointments,

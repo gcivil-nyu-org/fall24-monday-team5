@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from accounts.models import Profile, Provider
+from accounts.models import Client, Profile, Provider
 
 
 class ProviderSignUpForm(UserCreationForm):
@@ -63,6 +63,7 @@ class UserSignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(max_length=255, required=True)
+    phone_number = forms.CharField(max_length=20, required=True)
 
     class Meta:
         model = Profile
@@ -84,8 +85,7 @@ class UserSignUpForm(UserCreationForm):
 
         if commit:
             user.save()
-            # TODO here as we are creating a profile below code similarly we need to create a client # noqa
-            # Profile.objects.create(
-            #     user=user, role="User"
-            # )  # the role 'User' is case sensitive (as of the moment)
+            Client.objects.create(
+                user=user, phone_number=self.cleaned_data.get("phone_number")
+            )
         return user
