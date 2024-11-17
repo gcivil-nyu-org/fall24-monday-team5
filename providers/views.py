@@ -8,9 +8,9 @@ from appointments.forms import TimeSlotForm
 from appointments.models import Appointment, TimeSlot
 from django.db.models import Q
 from django.core.paginator import Paginator
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from accounts.models import Profile, Provider
+
 
 # Create your views here.
 @login_required
@@ -108,7 +108,9 @@ def browse_providers(request):
     address_query = request.GET.get("address", "").strip()
 
     # Filter the providers based on selected criteria
-    providers = Profile.objects.filter(role="Provider").select_related("provider")  # Use the correct field name
+    providers = Profile.objects.filter(role="Provider").select_related(
+        "provider"
+    )  # Use the correct field name
 
     if specialization:
         providers = providers.filter(provider__specialization=specialization)
@@ -135,6 +137,7 @@ def browse_providers(request):
         "providers/browse_providers.html",
         {"page_obj": page_obj, "specialties": specialties},
     )
+
 
 @login_required
 def provider_detail(request, provider_id):
@@ -165,5 +168,3 @@ def delete_slot(request, slot_id):
     slot.delete()
     messages.success(request, "Time slot deleted successfully.")
     return redirect("providers:create_time_slot")
-
-
