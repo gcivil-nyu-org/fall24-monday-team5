@@ -132,13 +132,13 @@ def password_reset_complete(request):
 def client_dashboard(request):
     # Check if the user is a client
     if request.user.role != "User":
-        # Instead of redirecting to login, you can render an error page ?
-        # in the error page handle the back to login button or back to home button
-        return redirect("login")  # Redirect to error page if not a client
+        return redirect("error")  # Redirect to error page if not a client
 
     # Fetch client-specific data
     client_data = get_object_or_404(Client, user=request.user)
-    appointments = Appointment.objects.filter(user=request.user)
+    appointments = Appointment.objects.filter(
+        user=request.user
+    ).select_related("time_slot")
     context = {
         "client_data": client_data,
         "apointments": appointments,
@@ -153,7 +153,7 @@ def provider_dashboard(request):
     if request.user.role != "Provider":
         # Instead of redirecting to login, you can render an error page ?
         # in the error page handle the back to login button or back to home button
-        return redirect("login")  # Redirect to error page if not a provider
+        return redirect("error")  # Redirect to error page if not a provider
 
     # Fetch provider-specific data
     provider_data = get_object_or_404(Provider, user=request.user)
