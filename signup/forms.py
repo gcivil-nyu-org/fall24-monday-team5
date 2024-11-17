@@ -63,10 +63,7 @@ class UserSignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(max_length=255, required=True)
-    phno = forms.IntegerField(
-        required=True, help_text="Enter your 10 digit phone number"
-    )
-
+    
     class Meta:
         model = Profile
         fields = (
@@ -87,6 +84,7 @@ class UserSignUpForm(UserCreationForm):
 
         if commit:
             user.save()
+            # TODO here as we are creating a profile below code similarly we need to create a client
             # Profile.objects.create(
             #     user=user, role="User"
             # )  # the role 'User' is case sensitive (as of the moment)
