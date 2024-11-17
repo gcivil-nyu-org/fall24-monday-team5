@@ -3,12 +3,12 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 import calendar
-from appointments.forms import TimeSlotForm
-from appointments.models import Appointment, TimeSlot
 from django.db.models import Q
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
+from appointments.forms import TimeSlotForm
+from appointments.models import Appointment, TimeSlot
 from accounts.models import Profile, Provider
 
 
