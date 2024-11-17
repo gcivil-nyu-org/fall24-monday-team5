@@ -32,8 +32,10 @@
                             </form>
 
                             <!-- Reschedule Button -->
-                            <form method="post" action="{% url 'appointments:reschedule_time_slots' appointment.id %}" class="cancel-form">
+                            <!-- add hidden input to hide the appointment id from website link -->
+                            <form method="post" action="{% url 'appointments:reschedule_time_slots' %}" class="cancel-form">
                                 {% csrf_token %}
+                                <input type="hidden" name="appointment_id" value="{{ appointment.id }}">
                                 <button type="submit" class="btn btn-grey">Reschedule</button>
                             </form>
                         </div>
