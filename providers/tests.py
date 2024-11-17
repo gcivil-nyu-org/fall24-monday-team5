@@ -144,8 +144,10 @@ class ProviderViewsTest(TestCase):
             {"specialization": "Cognitive Behavioral Therapy"},
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.provider_specialist, response.context["page_obj"].object_list)
-        self.assertNotIn(self.provider_general, response.context["page_obj"].object_list)
+        self.assertIn(self.provider_specialist, response.context["page_obj"]
+                      .object_list)
+        self.assertNotIn(self.provider_general, response.context["page_obj"]
+                         .object_list)
 
     def test_browse_providers_with_address_filter(self):
         # Test filtering providers by address
@@ -153,8 +155,10 @@ class ProviderViewsTest(TestCase):
             reverse("providers:browse_providers"), {"address": "Therapyville"}
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.provider_specialist, response.context["page_obj"].object_list)
-        self.assertNotIn(self.provider_general, response.context["page_obj"].object_list)
+        self.assertIn(self.provider_specialist, response.context["page_obj"]
+                      .object_list)
+        self.assertNotIn(self.provider_general, response.context["page_obj"]
+                         .object_list)
 
     def test_browse_providers_with_both_filters(self):
         # Test filtering providers by both specialization and address
@@ -166,8 +170,10 @@ class ProviderViewsTest(TestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.provider_specialist, response.context["page_obj"].object_list)
-        self.assertNotIn(self.provider_general, response.context["page_obj"].object_list)
+        self.assertIn(self.provider_specialist, response.context["page_obj"]
+                      .object_list)
+        self.assertNotIn(self.provider_general, response.context["page_obj"]
+                         .object_list)
 
     def test_browse_providers_no_match_filters(self):
         # Test filtering with parameters that match no providers
