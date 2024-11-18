@@ -40,7 +40,7 @@ class LoginViewTest(TestCase):
         form = response.context.get("form")  # Get the form from the response context
         self.assertIsNotNone(form)  # Ensure the form exists
         self.assertIn(
-            "Please enter a correct username and password. Note that both fields may be case-sensitive.", # noqa
+            "Please enter a correct username and password. Note that both fields may be case-sensitive.",  # noqa
             form.non_field_errors(),
         )
 
