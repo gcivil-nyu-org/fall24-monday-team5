@@ -47,6 +47,9 @@ class Provider(models.Model):
     city = models.CharField(max_length=100, default="Unknown City")
     state = models.CharField(max_length=100, default="Unknown State")
     pincode = models.CharField(max_length=10, default="000000")
+    profile_picture = models.ImageField(
+        upload_to="profile_pictures/", blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.user.get_username()} - {self.user.role} - {self.specialization}"

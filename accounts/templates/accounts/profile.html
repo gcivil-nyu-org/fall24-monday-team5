@@ -1,8 +1,18 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 <div class="profile-container">
-    <h1>{{ user.get_full_name }}'s Profile</h1>
+
+    <!-- Profile Picture Section -->
+    <div class="profile-photo">
+        {% if user.provider.profile_picture %}
+            <img src="{{ MEDIA_URL }}{{ user.provider.profile_picture }}" alt="Photo of {{ user.get_full_name }}">
+        {% else %}
+            <img src="{% static 'profile_pictures/default.png' %}" alt="Default Profile Photo">
+        {% endif %}
+    </div>
+    <h2 class="h2-css">{{ user.get_full_name }}'s Profile</h2>
+
     <div class="profile-details">
         {% if user.role == 'Provider' %}
             <div class="profile-item">
@@ -80,6 +90,24 @@
         padding: 20px;
         background-color: #f9f9f9;
         border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .h2-css {
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    .profile-photo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .profile-photo img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 

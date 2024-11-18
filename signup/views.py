@@ -9,22 +9,22 @@ def select_role(request):
     if request.method == "POST":
         role = request.POST.get("role")
         if role == "provider":
-            return redirect(reverse("signup/signup_provider"))
+            return redirect(reverse("signup:signup_provider"))
         elif role == "user":
-            return redirect(reverse("signup/signup_user"))
+            return redirect(reverse("signup:signup_user"))
     return render(request, "signup/select_role.html")
 
 
 def signup_provider(request):
     if request.method == "POST":
-        form = ProviderSignUpForm(request.POST)
+        form = ProviderSignUpForm(
+            request.POST, request.FILES
+        )  # Handle file upload here
         if form.is_valid():
             user = form.save()
             login(request, user)
-            # messages.success(request, "Provider account created successfully!")
             return redirect("home")
         else:
-            # If the form has errors, add them to the messages
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field.capitalize()}: {error}")
@@ -39,10 +39,8 @@ def signup_user(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            # messages.success(request, "User account created successfully!")
             return redirect("home")
         else:
-            # If the form has errors, add them to the messages
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field.capitalize()}: {error}")

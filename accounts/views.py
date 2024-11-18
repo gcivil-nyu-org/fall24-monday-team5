@@ -26,6 +26,7 @@ def profile(request):
         "user": user,
         "is_provider": hasattr(user, "provider"),
         "is_client": hasattr(user, "client"),
+        "MEDIA_URL": settings.MEDIA_URL,
     }
     return render(request, "accounts/profile.html", context)
 
@@ -40,7 +41,7 @@ def edit_profile(request):
     if request.method == "POST":
         profile_form = ProfileEditForm(request.POST, instance=user)
         provider_form = (
-            ProviderEditForm(request.POST, instance=user.provider)
+            ProviderEditForm(request.POST, request.FILES, instance=user.provider)
             if is_provider
             else None
         )
@@ -74,6 +75,7 @@ def edit_profile(request):
             "provider_form": provider_form,
             "is_provider": is_provider,
             "client_form": client_form,
+            "MEDIA_URL": settings.MEDIA_URL,
         },
     )
 

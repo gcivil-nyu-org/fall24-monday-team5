@@ -7,6 +7,11 @@
         <h2 class="welcome-text">Welcome, {{ provider_data.user.first_name }}!</h2>
         <p class="specialization">Specialty: {{ provider_data.specialization }}</p>
         <p class="bio">{{ provider_data.bio|default:"No bio provided." }}</p>
+        {% if profile.profile_picture %}
+            <img src="{{ provider.profile_picture.url }}" alt="Profile Picture" style="width: 200px; height: 200px;">
+        {% else %}
+            <p>No profile picture uploaded.</p>
+        {% endif %}
     </div>
 
     <!-- Booked Appointments Section -->
@@ -29,6 +34,7 @@
             {% endif %}
         </div>
     </div>
+    
 </div>
 <style>
     /* General Styling */

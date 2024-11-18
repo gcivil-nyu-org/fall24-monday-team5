@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
 <div class="provider-container">
     <!-- Filter Form -->
     <div class="filter-container">
@@ -40,7 +41,12 @@
             <a href="{% url 'providers:provider_detail' provider.id %}" class="provider-link">
                 <div class="provider-card">
                     <div class="profile-photo">
-                        <img src="{{ provider.profile_photo.url }}" alt="Photo of {{ provider.get_full_name }}">
+                        {% if provider.provider.profile_picture %}
+                            <img src="{{ MEDIA_URL }}{{ provider.provider.profile_picture }}" alt="Photo of {{ provider.get_full_name }}">
+                        {% else %}
+                            <img src="{% static 'profile_pictures/default.png' %}" alt="Default Profile Photo">
+                            
+                        {% endif %}
                     </div>
                     <div class="provider-info">
                         <h3>{{ provider.get_full_name }}</h3>
@@ -55,7 +61,6 @@
             </a>
         {% endfor %}
     </div>
-
 
     <div class="pagination">
         {% if page_obj.has_previous %}
@@ -240,6 +245,15 @@
         background-color: #333;
     }
 
+    /* Remove underline from anchor tags */
+    .provider-link {
+        text-decoration: none; /* Remove underline */
+    }
+
+    .provider-link:hover {
+        text-decoration: none; /* Ensure no underline on hover */
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
         .filter-container {
@@ -262,5 +276,22 @@
             height: 100px;
         }
     }
+
+    .profile-photo {
+    flex: 0 0 130px; /* Fixed width for profile photo section */
+    height: 130px; /* Adjust to make it square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .profile-photo img {
+    width: 100%; /* Fill the profile photo container */
+    height: 100%; /* Fill the height */
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 </style>
 {% endblock %}

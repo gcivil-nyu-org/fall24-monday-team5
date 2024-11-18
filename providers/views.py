@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 import calendar
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.conf import settings
+
 from appointments.forms import TimeSlotForm
 from appointments.models import Appointment, TimeSlot
 from accounts.models import Profile, Provider
@@ -140,7 +142,11 @@ def browse_providers(request):
     return render(
         request,
         "providers/browse_providers.html",
-        {"page_obj": page_obj, "specialties": specialties},
+        {
+            "page_obj": page_obj,
+            "specialties": specialties,
+            "MEDIA_URL": settings.MEDIA_URL,
+        },
     )
 
 
@@ -152,7 +158,11 @@ def provider_detail(request, provider_id):
     return render(
         request,
         "providers/provider_detail.html",
-        {"provider": provider, "time_slots": time_slots},
+        {
+            "provider": provider,
+            "time_slots": time_slots,
+            "MEDIA_URL": settings.MEDIA_URL,
+        },
     )
 
 

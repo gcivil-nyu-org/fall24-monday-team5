@@ -21,6 +21,7 @@ class ProviderEditForm(forms.ModelForm):
             "city",
             "state",
             "pincode",
+            "profile_picture",
         ]
         widgets = {
             "specialization": forms.Select(attrs={"class": "form-control"}),
@@ -32,6 +33,7 @@ class ProviderEditForm(forms.ModelForm):
             "city": forms.TextInput(attrs={"class": "form-control"}),
             "state": forms.TextInput(attrs={"class": "form-control"}),
             "pincode": forms.TextInput(attrs={"class": "form-control"}),
+            "profile_picture": forms.FileInput(attrs={"class": "form-control"}),
         }
 
 

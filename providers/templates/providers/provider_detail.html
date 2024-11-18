@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 <div class="provider-detail-container">
     <!-- Back Button aligned with card -->
@@ -10,9 +10,14 @@
     <!-- Provider Info Card -->
     <div class="provider-card">
         <!-- Profile Photo (Square) -->
-        <div class="profile-photo">
-            <img src="{{ provider.profile_photo.url }}" alt="Profile Photo of {{ provider.get_full_name }}">
-        </div>
+            <div class="profile-photo">
+                {% if provider.provider.profile_picture %}
+                    <img src="{{ MEDIA_URL }}{{ provider.provider.profile_picture }}" alt="Photo of {{ provider.get_full_name }}">
+                {% else %}
+                    <img src="{% static 'profile_pictures/default.png' %}" alt="Default Profile Photo">
+                    
+                {% endif %}
+            </div>
 
         <!-- Provider Details -->
         <div class="provider-info">
@@ -205,6 +210,21 @@
     .status {
         font-weight: 600;
         color: #297194;
+    }
+
+    .profile-photo {
+        flex: 0 0 130px; /* Fixed width for profile photo section */
+        height: 100%; /* Full height to match card height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .profile-photo img {
+        width: 100%; /* Fill the profile photo container */
+        height: 100%; /* Full height */
+        border-radius: 8px;
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 </style>
 {% endblock %}

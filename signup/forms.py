@@ -10,6 +10,7 @@ class ProviderSignUpForm(UserCreationForm):
     credentials = forms.CharField(
         max_length=20, required=True, help_text="Enter your professional credentials"
     )
+    profile_picture = forms.ImageField(required=False, label="Upload Profile Picture")
 
     # Address fields
     line1 = forms.CharField(max_length=255, required=True, label="Address Line 1")
@@ -44,7 +45,7 @@ class ProviderSignUpForm(UserCreationForm):
 
         if commit:
             user.save()
-            # Create the associated Provider object with address fields
+            # Create associated Provider object
             Provider.objects.create(
                 user=user,
                 bio=self.cleaned_data.get("bio"),
@@ -56,6 +57,7 @@ class ProviderSignUpForm(UserCreationForm):
                 city=self.cleaned_data["city"],
                 state=self.cleaned_data["state"],
                 pincode=self.cleaned_data["pincode"],
+                profile_picture=self.cleaned_data["profile_picture"],
             )
         return user
 
