@@ -330,7 +330,6 @@ class UpdateAppointmentViewTests(TestCase):
         self.client.login(username="testuser", password="password")
 
     def test_update_appointment_successful(self):
-        """Test that updating an appointment with a valid form and available time slot works."""
         response = self.client.post(
             reverse("appointments:update_appointment"),
             {
