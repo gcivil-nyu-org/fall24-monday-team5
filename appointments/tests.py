@@ -223,31 +223,46 @@ class AppointmentModelTests(TestCase):
         # Check if time slot is correctly updated
         self.assertFalse(appointment.time_slot.is_available)
 
+
 class BookAppointmentViewTest(TestCase):
     def setUp(self):
         # Create a user and a provider
-        self.user = Profile.objects.create_user(username="user", password="password", role="User", email="user@example.com")
-        self.provider = Profile.objects.create_user(username="provider", password="password", role="Provider", email="provider@example.com")
-        
+        self.user = Profile.objects.create_user(
+            username="user", password="password", role="User", email="user@example.com"
+        )
+        self.provider = Profile.objects.create_user(
+            username="provider",
+            password="password",
+            role="Provider",
+            email="provider@example.com",
+        )
+
         # Create a time slot
-        self.time_slot = TimeSlot.objects.create(provider = self.provider, start_time="2024-11-19 10:00", end_time="2024-11-19 11:00", is_available=True)
+        self.time_slot = TimeSlot.objects.create(
+            provider=self.provider,
+            start_time="2024-11-19 10:00",
+            end_time="2024-11-19 11:00",
+            is_available=True,
+        )
 
     def test_redirect_if_provider(self):
         # Log in as a provider
         self.client.login(username="provider", password="password")
-        
+
         response = self.client.get(reverse("appointments:book_appointment"))
-        
+
         # Check if provider is redirected to their dashboard
         self.assertRedirects(response, reverse("appointments:time_slots"))
 
     def test_invalid_form_submission(self):
         # Log in as a user
         self.client.login(username="user", password="password")
-        
+
         # Attempt to book an appointment with invalid data
-        response = self.client.post(reverse("appointments:book_appointment"), {"time_slot": self.time_slot.id})
-        
+        response = self.client.post(
+            reverse("appointments:book_appointment"), {"time_slot": self.time_slot.id}
+        )
+
         # Ensure the form is displayed again with errors
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "appointments/book_appointment.html")
@@ -256,22 +271,22 @@ class BookAppointmentViewTest(TestCase):
     def test_valid_appointment_booking(self):
         # Log in as a user
         self.client.login(username="user", password="password")
-        
+
         # Book an appointment with valid data
         response = self.client.post(
             reverse("appointments:book_appointment"),
-            {"time_slot": self.time_slot.id, "appointment_type": "Consultation"}
+            {"time_slot": self.time_slot.id, "appointment_type": "Consultation"},
         )
-        
+
         # Check if the user is redirected to success page
         self.assertRedirects(response, reverse("appointments:appointment_success"))
-        
+
         # Check if the appointment is created
         self.assertEqual(Appointment.objects.count(), 1)
         appointment = Appointment.objects.first()
         self.assertEqual(appointment.user, self.user)
         self.assertEqual(appointment.time_slot, self.time_slot)
-        
+
         # Ensure the time slot is marked unavailable
         self.time_slot.refresh_from_db()
         self.assertFalse(self.time_slot.is_available)
@@ -280,8 +295,12 @@ class BookAppointmentViewTest(TestCase):
 class UpdateAppointmentViewTests(TestCase):
     def setUp(self):
         # Create a test user
-        self.user = Profile.objects.create_user(username="testuser", password="password", email="test@example")
-        self.provider = Profile.objects.create_user(username="provider", password="password", email="provider@example")
+        self.user = Profile.objects.create_user(
+            username="testuser", password="password", email="test@example"
+        )
+        self.provider = Profile.objects.create_user(
+            username="provider", password="password", email="provider@example"
+        )
 
         # Create initial time slots
         self.time_slot1 = TimeSlot.objects.create(
@@ -289,14 +308,14 @@ class UpdateAppointmentViewTests(TestCase):
             provider=self.provider,
             start_time=datetime(2024, 12, 1, 10, 0),
             end_time=datetime(2024, 12, 1, 11, 0),
-            is_available=True
+            is_available=True,
         )
         self.time_slot2 = TimeSlot.objects.create(
             id=2,
             provider=self.provider,
             start_time=datetime(2024, 12, 1, 11, 0),
             end_time=datetime(2024, 12, 1, 12, 0),
-            is_available=True
+            is_available=True,
         )
 
         # Create an appointment
@@ -304,7 +323,7 @@ class UpdateAppointmentViewTests(TestCase):
             id=1,
             user=self.user,
             time_slot=self.time_slot1,
-            appointment_type="Consultation"
+            appointment_type="Consultation",
         )
 
         # Login the user
@@ -319,7 +338,6 @@ class UpdateAppointmentViewTests(TestCase):
                 "time_slot": self.time_slot2.id,
                 "appointment_type": "Checkup",
             },
-
         )
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse("appointments:appointment_success"))
