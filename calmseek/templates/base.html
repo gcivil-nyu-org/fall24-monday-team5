@@ -14,7 +14,7 @@
         <div class="header-left">
             <h1>CalmSeek</h1>
             <nav>
-                <a class="nav-title">Home</a>
+                <a href ="{% url 'home' %}" class="nav-title">Home</a>
 
                 {% if user.role == 'User' %}
                     <a href="{% url 'providers:browse_providers' %}" class="nav-title">Browse Providers</a>

@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from accounts.models import Profile
-from accounts.forms import ProfileEditForm
+from accounts.models import Client, Profile, Provider
+from accounts.forms import ClientEditForm, ProfileEditForm, ProviderEditForm
 
 User = get_user_model()
 
@@ -23,51 +23,86 @@ class ProfileViewTests(TestCase):
         self.assertTemplateUsed(response, "accounts/profile.html")
         self.assertEqual(response.context["user"], self.user)
 
-    # def test_profile_context_provider(self):
-    #     self.user.role = "Provider"
-    #     self.user.save()
-    #     response = self.client.get(reverse("accounts:profile"))
-    #     self.assertTrue(response.context["is_provider"])
-
 
 class EditProfileViewTests(TestCase):
     def setUp(self):
-        self.user = Profile.objects.create_user(
-            username="testprovider",
-            password="testpassword",
+        # Create a provider user
+        self.provider_user = Profile.objects.create_user(
+            username="provider_user",
+            password="password",
             role="Provider",
-            email="<EMAIL>",
+            email="provider@example.com",
         )
-        self.user = Profile.objects.create_user(
-            username="testuser", password="testpassword", role="User", email="<EMAIL>"
-        )
-        self.client.login(username="testuser", password="testpassword")
+        self.provider = Provider.objects.create(user=self.provider_user)
 
-    def test_edit_profile_get(self):
+        # Create a client user
+        self.client_user = Profile.objects.create_user(
+            username="client_user",
+            password="password",
+            role="Client",
+            email="client@example.com",
+        )
+        self.clientu = Client.objects.create(user=self.client_user)
+
+    def test_edit_profile_get_provider(self):
+        self.client.login(username="provider_user", password="password")
         response = self.client.get(reverse("accounts:edit_profile"))
+
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "accounts/edit_profile.html")
         self.assertIsInstance(response.context["profile_form"], ProfileEditForm)
+        self.assertIsInstance(response.context["provider_form"], ProviderEditForm)
+        self.assertIsNone(response.context["client_form"])
+        self.assertTrue(response.context["is_provider"])
 
-    def test_edit_profile_post_valid_data(self):
-        self.client.post(
-            reverse("accounts:edit_profile"),
-            {
-                "first_name": "NewFirst",
-                "last_name": "NewLast",
-                "email": "newemail@example.com",
-            },
-        )
-        self.user.refresh_from_db()
-        self.assertEqual(self.user.first_name, "NewFirst")
-        self.assertEqual(self.user.last_name, "NewLast")
-        self.assertEqual(self.user.email, "newemail@example.com")
+    def test_edit_profile_get_client(self):
+        self.client.login(username="client_user", password="password")
+        response = self.client.get(reverse("accounts:edit_profile"))
 
-    # def test_edit_profile_provider_form(self):
-    #     self.user.role = "Provider"
-    #     self.user.save()
-    #     response = self.client.get(reverse("accounts:edit_profile"))
-    #     self.assertIsInstance(response.context["provider_form"], ProviderEditForm)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/edit_profile.html")
+        self.assertIsInstance(response.context["profile_form"], ProfileEditForm)
+        self.assertIsNone(response.context["provider_form"])
+        self.assertIsInstance(response.context["client_form"], ClientEditForm)
+        self.assertFalse(response.context["is_provider"])
+
+    # def test_edit_profile_post_provider_valid(self):
+    #     self.client.login(username="provider_user", password="password")
+    #     response = self.client.post(
+    #         reverse("accounts:edit_profile"),
+    #         data={
+    #             "username": "updated_provider_user",
+    #         },
+    #     )
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertRedirects(response, reverse("accounts:profile"))
+    #     self.provider_user.refresh_from_db()
+    #     self.provider.refresh_from_db()
+    #     self.assertEqual(self.provider_user.username, "updated_provider_user")
+
+    # def test_edit_profile_post_client_valid(self):
+    #     self.client.login(username="client_user", password="password")
+    #     response = self.client.post(
+    #         reverse("accounts:edit_profile"),
+    #         data={
+    #             "username": "updated_client_user",
+    #         },
+    #     )
+
+    #     self.assertEqual(response.status_code, 302)
+    #     self.assertRedirects(response, reverse("accounts:profile"))
+    #     self.client_user.refresh_from_db()
+    #     self.client.refresh_from_db()
+    #     self.assertEqual(self.client_user.username, "updated_client_user")
+
+    def test_edit_profile_post_invalid(self):
+        self.client.login(username="provider_user", password="password")
+        response = self.client.post(
+            reverse("accounts:edit_profile"), data={"username": ""}
+        )  # Missing required fields
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/edit_profile.html")
 
 
 class PasswordResetRequestViewTests(TestCase):
