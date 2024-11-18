@@ -16,7 +16,7 @@ def login_user(request):
             if user is not None:
                 login(request, user)
                 # should be change into a main page later
-                return redirect("appointments:time_slots")
+                return redirect("home")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -30,12 +30,17 @@ def error(request):
     return render(request, "error.html")
 
 
+def home(request):
+    if request.user.is_authenticated:
+        if request.user.role == "User":
+            return redirect("accounts:client_dashboard")
+        elif request.user.role == "Provider":
+            return redirect("accounts:provider_dashboard")
+        # You can add additional roles if needed or default to a specific dashboard
+    return redirect("login")
+
+
 @login_required
 def log_out(request):
     logout(request)
     return redirect("login")
-
-
-def log_in(request):
-    login(request)
-    return redirect("time_slots")

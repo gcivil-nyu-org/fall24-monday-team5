@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 import calendar
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.conf import settings
+
 from appointments.forms import TimeSlotForm
 from appointments.models import Appointment, TimeSlot
 from accounts.models import Profile, Provider
@@ -16,10 +18,11 @@ from accounts.models import Profile, Provider
 @login_required
 def create_time_slot(request):
     profile = request.user
+    today = timezone.now().date().isoformat()
 
     # Ensure only Providers can access this view
     if profile.role != "Provider":
-        return redirect("appointments:book_appointment")
+        return redirect("error")
 
     if request.method == "POST":
         form_type = request.POST.get("form_type")
@@ -75,7 +78,9 @@ def create_time_slot(request):
                 # Handle missing data or validation errors
                 error_message = "Please fill in all required fields."
                 form = TimeSlotForm()
-                current_slots = TimeSlot.objects.filter(provider=request.user)
+                current_slots = TimeSlot.objects.filter(
+                    provider=request.user, start_time__gte=today
+                )
                 return render(
                     request,
                     "providers/create_time_slot.html",
@@ -90,7 +95,9 @@ def create_time_slot(request):
         form = TimeSlotForm()
 
     # Fetch current slots for display
-    current_slots = TimeSlot.objects.filter(provider=request.user)
+    current_slots = TimeSlot.objects.filter(
+        provider=request.user, start_time__gte=today
+    )
     return render(
         request,
         "providers/create_time_slot.html",
@@ -135,7 +142,11 @@ def browse_providers(request):
     return render(
         request,
         "providers/browse_providers.html",
-        {"page_obj": page_obj, "specialties": specialties},
+        {
+            "page_obj": page_obj,
+            "specialties": specialties,
+            "MEDIA_URL": settings.MEDIA_URL,
+        },
     )
 
 
@@ -147,7 +158,11 @@ def provider_detail(request, provider_id):
     return render(
         request,
         "providers/provider_detail.html",
-        {"provider": provider, "time_slots": time_slots},
+        {
+            "provider": provider,
+            "time_slots": time_slots,
+            "MEDIA_URL": settings.MEDIA_URL,
+        },
     )
 
 

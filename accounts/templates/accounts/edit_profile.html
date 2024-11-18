@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <div class="edit-profile-container">
     <h2>Edit Profile</h2>
-    <form method="post" class="edit-profile-form">
+    <form method="post" class="edit-profile-form" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="form-section">
@@ -24,10 +25,32 @@
                     <div class="form-group">
                         {{ field.label_tag }}
                         {{ field }}
+                        {% if field.name == "profile_picture" %}
+                            <div class="profile-photo">
+                                {% if user.provider.profile_picture %}
+                                    <img src="{{ MEDIA_URL }}{{ user.provider.profile_picture }}" alt="Current Profile Photo" class="profile-image-preview">
+                                {% else %}
+                                    <img src="{% static 'profile_pictures/default.png' %}" alt="Default Profile Photo" class="profile-image-preview">
+                                {% endif %}
+                            </div>
+                        {% endif %}
                         {% if field.errors %}
                             <div class="error-message">{{ field.errors }}</div>
                         {% endif %}
                     </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h3>User Information</h3>
+            <div class="form-section">
+                {% for field in client_form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                    <div class="error-message">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
                 {% endfor %}
             </div>
         {% endif %}
@@ -86,6 +109,11 @@
         font-size: 1rem;
     }
 
+    .form-group input[type="file"] {
+        padding: 5px;
+        font-size: 1rem;
+    }
+
     .error-message {
         color: red;
         font-size: 0.9rem;
@@ -123,6 +151,19 @@
 
     .btn:hover {
         opacity: 0.9;
+    }
+
+    .profile-photo {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .profile-image-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     /* Responsive adjustments */

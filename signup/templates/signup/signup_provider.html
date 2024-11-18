@@ -1,3 +1,4 @@
+<!-- signup_provider.html -->
 {% block content %}
     <header class="header">
         <div class="logo-container">
@@ -7,7 +8,7 @@
 
     <div class="container signup-provider">
         <h2>Provider Signup</h2>
-        <form method="post" class="appointment-form">
+        <form method="post" class="appointment-form" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 {% for field in form %}
