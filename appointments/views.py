@@ -15,12 +15,11 @@ from accounts.models import Profile
 # View to display available time slots by date and provider
 @login_required
 def time_slots(request):
+    today = timezone.now().date().isoformat()
     if request.method == "POST":
-        today = timezone.now().date().isoformat()
         selected_provider_id = request.POST.get("provider")
         selected_date = request.POST.get("date")
     else:
-        today = timezone.now().date().isoformat()
         selected_provider_id = None
         selected_date = None
 
