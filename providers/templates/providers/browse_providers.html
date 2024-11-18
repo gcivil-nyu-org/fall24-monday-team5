@@ -1,120 +1,96 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
 <div class="provider-container">
     <!-- Filter Form -->
-    <!-- Filter Form -->
-<div class="filter-container">
-    <form method="get" class="filter-form">
-        <div class="filter-group">
-            <label for="specialization">Specialty:</label>
-            <select name="specialization" id="specialization" class="filter-input">
-                <option value="">All Specialties</option>
-                {% for key, value in specialties.items %}
-                    <option value="{{ key }}" {% if request.GET.specialization == key %}selected{% endif %}>{{ value }}</option>
-                {% endfor %}
-            </select>
-        </div>
+    <div class="filter-container">
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <label for="specialization">Specialty:</label>
+                <select name="specialization" id="specialization" class="filter-input">
+                    <option value="">All Specialties</option>
+                    {% for key, value in specialties.items %}
+                        <option value="{{ key }}" {% if request.GET.specialization == key %}selected{% endif %}>
+                            {{ value }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <!-- Address Filter -->
-        <div class="filter-group">
-            <label for="address">Address:</label>
-            <input
-                type="text"
-                name="address"
-                id="address"
-                class="filter-input"
-                placeholder="Enter street, city, or pincode"
-                value="{{ request.GET.address|default_if_none:'' }}"
-            />
-        </div>
+            <!-- Address Filter -->
+            <div class="filter-group">
+                <label for="address">Address:</label>
+                <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    class="filter-input"
+                    placeholder="Enter street, city, or pincode"
+                    value="{{ request.GET.address|default_if_none:'' }}"
+                />
+            </div>
 
-        <button type="submit" class="btn btn-primary">Filter</button>
-    </form>
-</div>
+            <!-- Filter Button -->
+            <button type="submit" class="btn btn-primary filter-btn">Filter</button>
+        </form>
+    </div>
 
     <!-- Provider Cards -->
     <div class="provider-cards">
-        {% for provider in providers %}
+        {% for provider in page_obj %}
             <a href="{% url 'providers:provider_detail' provider.id %}" class="provider-link">
                 <div class="provider-card">
                     <div class="profile-photo">
-                        <img src="{{ provider.profile_photo.url }}" alt="Photo of {{ provider.get_full_name }}">
+                        {% if provider.provider.profile_picture %}
+                            <img src="{{ MEDIA_URL }}{{ provider.provider.profile_picture }}" alt="Photo of {{ provider.get_full_name }}">
+                        {% else %}
+                            <img src="{% static 'profile_pictures/default.png' %}" alt="Default Profile Photo">
+                            
+                        {% endif %}
                     </div>
                     <div class="provider-info">
                         <h3>{{ provider.get_full_name }}</h3>
+                        <p>{{ provider.provider.specialization }}</p>
                         <p>{{ provider.email }}</p>
-                        <p>{{ provider.provider.specialization }}</p> <!-- Display specialization -->
+                        <p>
+                            {{ provider.provider.phone_number }}
+                        </p>
+
                     </div>
                 </div>
             </a>
         {% endfor %}
     </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; Previous</a>
+        {% endif %}
+
+        {% for page in page_obj.paginator.page_range %}
+            <a href="?page={{ page }}" class="page-link {% if page == page_obj.number %}active{% endif %}">{{ page }}</a>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next &raquo;</a>
+        {% endif %}
+    </div>
 </div>
 
 <style>
+    /* Container Styles */
     .provider-container {
+        position: relative;
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px;
-    }
-    .heading {
-        font-size: 2.5rem;
-        text-align: center;
-        margin-bottom: 30px;
-        font-weight: 700;
-        color: #333;
-    }
-    .provider-cards {
+        min-height: 600px; /* Ensures consistent height for layout */
         display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
+        flex-direction: column;
+        justify-content: space-between; /* Cards at the top, pagination at the bottom */
     }
-    .provider-link {
-        text-decoration: none;
-        color: inherit;
-    }
-    .provider-card {
-        display: flex;
-        align-items: center;
-        background-color: #f9f9f9;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 450px; /* Card width remains the same */
-        height: 180px; /* Increased card height */
-        gap: 20px;
-        transition: box-shadow 0.3s ease;
-        text-align: left;
-    }
-    .provider-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-    .profile-photo {
-        flex: 0 0 130px; /* Fixed width for profile photo section */
-        height: 100%; /* Full height to match card height */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .profile-photo img {
-        width: 100%; /* Fill the profile photo container */
-        height: 100%; /* Full height */
-        border-radius: 8px;
-        object-fit: cover;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    .provider-info h3 {
-        margin: 0;
-        font-size: 1.8rem;
-        color: #333;
-    }
-    .provider-info p {
-        margin: 8px 0 0;
-        color: #555;
-        font-size: 1rem;
-    }
+
+    /* Filter Form Styles */
     .filter-container {
         display: flex;
         justify-content: center;
@@ -127,9 +103,8 @@
 
     .filter-form {
         display: flex;
-        align-items: center;
+        align-items: flex-end; /* Align button and inputs properly */
         gap: 15px;
-        flex-wrap: wrap;
         max-width: 100%;
     }
 
@@ -154,7 +129,7 @@
         font-size: 1rem;
         color: #333;
         background-color: #fff;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s ease;
     }
 
     .filter-input:focus {
@@ -162,22 +137,124 @@
         outline: none;
     }
 
-    .filter-button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        font-weight: 600;
-        color: #fff;
-        background-color: #007bff;
+    .filter-btn {
+        background-color: rgb(0, 0, 0);
+        color: white;
         border: none;
-        border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.2s;
+        padding: 8px 10px; /* Smaller padding for a smaller button */
+        border-radius: 5px;
+        font-weight: 600;
+        text-align: center;
+        font-size: 0.9rem; /* Slightly smaller font */
     }
 
-    .filter-button:hover {
+    .filter-btn:hover {
         background-color: #0056b3;
     }
 
+    /* Provider Cards Styles */
+    .provider-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Two cards per row */
+        gap: 20px;
+        flex-grow: 1;
+        align-content: start; /* Align cards to the top of the container */
+        min-height: 480px; /* Space reserved for at least 6 cards */
+    }
+
+    .provider-card {
+        display: flex;
+        align-items: center;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        height: 200px;
+        gap: 15px;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .provider-card:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-photo {
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .profile-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .provider-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 1;
+    }
+
+    .provider-info h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    .provider-info p {
+        margin: 5px 0 0;
+        color: #555;
+        font-size: 1rem;
+    }
+
+    /* Pagination Styles */
+    .pagination {
+        align-self: flex-start;
+        display: flex;
+        gap: 10px;
+        padding-top: 20px;
+    }
+
+    .page-link {
+        padding: 10px 15px;
+        font-size: 1rem;
+        color: white;
+        text-decoration: none;
+        border: 1px solid #000;
+        background-color: black;
+        border-radius: 5px;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .page-link.active {
+        background-color: #555;
+        pointer-events: none;
+    }
+
+    .page-link:hover {
+        background-color: #333;
+    }
+
+    /* Remove underline from anchor tags */
+    .provider-link {
+        text-decoration: none; /* Remove underline */
+    }
+
+    .provider-link:hover {
+        text-decoration: none; /* Ensure no underline on hover */
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
         .filter-container {
             flex-direction: column;
@@ -189,22 +266,32 @@
             align-items: stretch;
             gap: 15px;
         }
+
+        .provider-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-photo {
+            width: 100px;
+            height: 100px;
+        }
     }
 
-    .btn {
-        flex: 1;
-        padding: 10px 15px;
-        border-radius: 5px;
-        text-align: center;
-        text-decoration: none;
-        font-weight: 600;
-    }
+    .profile-photo {
+    flex: 0 0 130px; /* Fixed width for profile photo section */
+    height: 130px; /* Adjust to make it square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .btn-primary {
-        background-color: rgb(0, 0, 0);
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
+    .profile-photo img {
+    width: 100%; /* Fill the profile photo container */
+    height: 100%; /* Fill the height */
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 </style>
 {% endblock %}

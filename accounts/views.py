@@ -1,13 +1,22 @@
 from django.contrib.auth.decorators import login_required
-from .forms import ProfileEditForm, ProviderEditForm, PasswordResetRequestForm
+
+from appointments.models import Appointment
+from .forms import (
+    ClientEditForm,
+    ProfileEditForm,
+    ProviderEditForm,
+    PasswordResetRequestForm,
+)
 from accounts.models import Profile
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.urls import reverse
 from django.conf import settings
+from django.utils import timezone
+from .models import Provider, Client
 
 
 @login_required
@@ -17,11 +26,9 @@ def profile(request):
         "user": user,
         "is_provider": hasattr(user, "provider"),
         "is_client": hasattr(user, "client"),
+        "MEDIA_URL": settings.MEDIA_URL,
     }
     return render(request, "accounts/profile.html", context)
-
-
-# 在 views.py 中
 
 
 @login_required
@@ -34,22 +41,31 @@ def edit_profile(request):
     if request.method == "POST":
         profile_form = ProfileEditForm(request.POST, instance=user)
         provider_form = (
-            ProviderEditForm(request.POST, instance=user.provider)
+            ProviderEditForm(request.POST, request.FILES, instance=user.provider)
             if is_provider
+            else None
+        )
+        client_form = (
+            ClientEditForm(request.POST, instance=user.client)
+            if not is_provider
             else None
         )
 
         # Save forms based on validity
-        if profile_form.is_valid() and (not is_provider or provider_form.is_valid()):
+        if is_provider and profile_form.is_valid() and provider_form.is_valid():
             profile_form.save()
-            if is_provider:
-                provider_form.save()
+            provider_form.save()
+            return redirect("accounts:profile")
+        elif not is_provider and profile_form.is_valid() and client_form.is_valid():
+            profile_form.save()
+            client_form.save()
             return redirect("accounts:profile")
     else:
         profile_form = ProfileEditForm(instance=user)
         provider_form = (
             ProviderEditForm(instance=user.provider) if is_provider else None
         )
+        client_form = ClientEditForm(instance=user.client) if not is_provider else None
 
     return render(
         request,
@@ -58,6 +74,8 @@ def edit_profile(request):
             "profile_form": profile_form,
             "provider_form": provider_form,
             "is_provider": is_provider,
+            "client_form": client_form,
+            "MEDIA_URL": settings.MEDIA_URL,
         },
     )
 
@@ -123,3 +141,46 @@ def password_reset_sent(request):
 
 def password_reset_complete(request):
     return render(request, "accounts/password_reset_complete.html")
+
+
+@login_required
+def client_dashboard(request):
+    # Check if the user is a client
+    if request.user.role != "User":
+        return redirect("error")  # Redirect to error page if not a client
+
+    today = timezone.now().date().isoformat()
+    # Fetch client-specific data
+    client_data = get_object_or_404(Client, user=request.user)
+    appointments = Appointment.objects.filter(
+        user=request.user, time_slot__start_time__gte=today
+    ).select_related("time_slot")
+
+    context = {
+        "client_data": client_data,
+        "appointments": appointments,
+        # Add any additional client-specific data here
+    }
+    return render(request, "accounts/client_dashboard.html", context)
+
+
+@login_required
+def provider_dashboard(request):
+    # Check if the user is a provider
+    if request.user.role != "Provider":
+        return redirect("error")  # Redirect to error page if not a provider
+
+    # Filter the slots after today's date
+    today = timezone.now().date().isoformat()
+
+    # Fetch provider-specific data
+    provider_data = get_object_or_404(Provider, user=request.user)
+    appointments = Appointment.objects.filter(
+        time_slot__provider=request.user, time_slot__start_time__gte=today
+    ).select_related("time_slot")
+    context = {
+        "provider_data": provider_data,
+        "appointments": appointments,
+        # Add any additional provider-specific data here
+    }
+    return render(request, "accounts/provider_dashboard.html", context)

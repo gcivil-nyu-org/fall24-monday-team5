@@ -5,12 +5,14 @@
             <h2 class="heading">Filter Time Slots</h2>
 
             <!-- Date and Provider Selection Form -->
-            <form method="get" action="{% url 'appointments:time_slots' %}" class="filter-form mb-4">
+            <!-- change method to post to hide the appointment id from website link -->
+            <form method="post" action="{% url 'appointments:time_slots' %}" class="filter-form mb-4">
+                {% csrf_token %}
                 <div class="filter-container">
                     <!-- Date Selection -->
                     <div class="form-group">
                         <label for="date">Choose Date:</label>
-                        <input type="date" id="date" name="date" value="{{ selected_date }}" class="date-input">
+                        <input type="date" id="date" name="date" value="{{ selected_date }}" min="{{ today }}" class="date-input">
                     </div>
 
                     <!-- Provider Selection -->
@@ -28,6 +30,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-black">Filter</button>
+                    <a href="{% url 'appointments:time_slots' %}" class="clear clear-light">Clear All Filters</a>
                 </div>
             </form>
         </div>
@@ -35,31 +38,70 @@
         <!-- Time Slots Display -->
         <div class="slots-list">
             <h2 class="heading">Available Time Slots</h2>
-            {% if time_slots %}
-                {% for slot in time_slots %}
-                    <div class="slot-card">
-                        <div class="slot-info">
-                            <p><strong>Provider: {{ slot.provider.get_full_name }}</strong></p>
-                            <p>Date: {{ slot.start_time|date:"m-d-Y" }}</p>
-                            <p>Time: {{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
+            <div class="slots-list-scrollable">
+                {% if time_slots %}
+                    {% for slot in time_slots %}
+                        <div class="slot-card">
+                            <div class="slot-info">
+                                <p><strong>Provider: {{ slot.provider.get_full_name }}</strong></p>
+                                <p>Date: {{ slot.start_time|date:"m-d-Y" }}</p>
+                                <p>Time: {{ slot.start_time|date:"H:i" }} - {{ slot.end_time|date:"H:i" }}</p>
+                            </div>
+                            <!-- add hidden input to hide the slot id from website link -->
+                            <form method="POST" action="{% url 'appointments:book_appointment' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="time_slot" value="{{ slot.id }}">
+                                <button type="submit" class="btn btn-black">Book Now</button>
+                            </form>
                         </div>
-                        <a href="{% url 'appointments:book_appointment' slot.id %}" class="btn btn-black">Book Now</a>
-                    </div>
-                {% endfor %}
-            {% else %}
+                    {% endfor %}
+                {% else %}
                 <p class="no-slots">No available time slots for the selected date and provider.</p>
             {% endif %}
+            </div>
         </div>
     </div>
 
-    
-    <style>
+
+   <style>
+            /* General clear button styling */
+        .clear {
+            
+            padding: 10px 20px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #dc3545; /* Red button color */
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect for clear button */
+        .clear:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        /* Light variant of the clear button (optional) */
+        .clear-light {
+            background-color: #f8f9fa; /* Light background */
+            color: #000; /* Dark text */
+            border: 1px solid #ccc; /* Border for visibility */
+        }
+
+        .clear-light:hover {
+            background-color: #e2e6ea; /* Slightly darker on hover */
+            border-color: #bbb; /* Darker border */
+        }
         /* Slots Container (Wrapper for both Filter and Time Slots sections) */
         .slots-container {
             display: flex;
+            height: 650px;
             justify-content: space-between; /* Ensures space between filter and slots */
-            gap: 20px; /* Reduced space between the two sections */
-            max-width: 1200px; /* Max width for the overall wrapper */
+            gap: 20px;
+            max-width: 1200px;
             margin: 20px auto;
             padding: 20px;
             background-color: #f9f9f9;
@@ -122,6 +164,7 @@
             background-color: #000;
             color: #fff;
             padding: 10px 20px;
+            height: 40px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
@@ -141,6 +184,13 @@
             background-color: #fff;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Scrollable Section for Time Slots */
+        .slots-list-scrollable {
+            max-height: 480px; /* Set a fixed height for scrollable area */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-right: 10px;
         }
 
         /* Slot Card */
@@ -205,5 +255,4 @@
             }
         }
     </style>
-
 {% endblock %}
