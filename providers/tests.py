@@ -197,3 +197,72 @@ class ProviderViewsTest(TestCase):
         self.assertIn(self.provider_user, providers)
         self.assertIn(self.provider_specialist, providers)
         self.assertIn(self.provider_general, providers)
+
+    def test_create_time_slot_single_slot_invalid(self):
+        self.client.login(username="provider", password="pass")
+        response = self.client.post(
+            reverse("providers:create_time_slot"),
+            {
+                "form_type": "single",
+                "start_time": "",  # Missing start time
+                "end_time": "",  # Missing end time
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "This field is required.")
+
+    def test_create_time_slot_recurring(self):
+        self.client.login(username="provider", password="pass")
+        response = self.client.post(
+            reverse("providers:create_time_slot"),
+            {
+                "form_type": "recurring",
+                "start_time": "10:00",
+                "end_time": "11:00",
+                "repeat_days": ["Monday", "Wednesday"],
+                "num_weeks": 2,
+            },
+        )
+        self.assertEqual(response.status_code, 302)  # Should redirect
+        time_slots = TimeSlot.objects.filter(provider=self.provider_user)
+        self.assertEqual(time_slots.count(), 5)  # 2 days per week x 2 weeks
+
+    def test_browse_providers_pagination(self):
+        self.client.login(username="normal_user", password="pass")
+
+        # Create additional providers to exceed one page
+        for i in range(10):
+            Profile.objects.create_user(
+                username=f"provider_{i}",
+                password="pass",
+                role="Provider",
+                email=f"provider_{i}@example.com",
+            )
+
+        response = self.client.get(reverse("providers:browse_providers"), {"page": 2})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["page_obj"].has_previous())
+
+    def test_create_time_slot_unauthorized_access(self):
+        response = self.client.get(reverse("providers:create_time_slot"))
+        self.assertEqual(response.status_code, 302)  # Should redirect to error page
+
+    def test_delete_slot_without_appointments(self):
+        self.client.login(username="provider", password="pass")
+        slot = TimeSlot.objects.create(
+            provider=self.provider_user,
+            start_time=timezone.now() + timedelta(days=3),
+            end_time=timezone.now() + timedelta(days=3, hours=1),
+            is_available=True,
+        )
+        response = self.client.post(reverse("providers:delete_slot", args=[slot.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(TimeSlot.objects.filter(id=slot.id).exists())
+
+    def test_delete_invalid_slot(self):
+        self.client.login(username="provider", password="pass")
+        invalid_slot_id = 99999  # Non-existent ID
+        response = self.client.post(
+            reverse("providers:delete_slot", args=[invalid_slot_id])
+        )
+        self.assertEqual(response.status_code, 404)
