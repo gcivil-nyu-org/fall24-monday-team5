@@ -1,10 +1,11 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate
+from django.contrib.messages import get_messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.cache import never_cache
 
 def login_user(request):
     if request.method == "POST":
@@ -32,6 +33,9 @@ def error(request):
 
 @login_required
 def log_out(request):
+    # Clear Messages on Logout
+    storage = get_messages(request)
+    list(storage)
     logout(request)
     return redirect("login")
 
