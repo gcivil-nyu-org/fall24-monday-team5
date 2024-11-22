@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from accounts.models import Profile
+from accounts.models import Client, Profile
 from .forms import ProviderSignUpForm, UserSignUpForm
 
 
@@ -21,12 +21,13 @@ class ProviderSignUpFormTests(TestCase):
                 "email": "provider@example.com",
                 "password1": "testpassword123",
                 "password2": "testpassword123",
-                "credentials": "Certified Professional",
+                "credentials": "1234567890",
                 "line1": "line 1",
                 "line 2": "Apt A",
                 "city": "Brooklyn",
                 "state": "New York",
                 "pincode": "11220",
+                "bio": "bio",
                 "phone_number": "99999999",
                 "specialization": "Clinical Psychology",
             }
@@ -79,6 +80,7 @@ class UserSignUpFormTests(TestCase):
                 "email": "user@example.com",
                 "password1": "testpassword123",
                 "password2": "testpassword123",
+                "phone_number": "99999999",
             }
         )
         self.assertTrue(form.is_valid())
@@ -87,6 +89,8 @@ class UserSignUpFormTests(TestCase):
         self.assertEqual(profile.role, "User")
         self.assertEqual(user.first_name, "Regular")
         self.assertEqual(user.email, "user@example.com")
+        client = Client.objects.get(user=user)
+        self.assertEqual(client.phone_number, "99999999")
 
     def test_user_signup_form_missing_email(self):
         form = UserSignUpForm(

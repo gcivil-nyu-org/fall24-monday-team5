@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
 
 # temporarily redirecting to booking appointments page after login,
 # later on this will be updated
-LOGIN_REDIRECT_URL = "/appointments/time_slots"
+LOGIN_REDIRECT_URL = "home"
 LOGIN_URL = "/login"
 
 # Application definition
@@ -50,7 +50,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'messaging',
+    'channels'
 ]
+
+ASGI_APPLICATION = 'calmseek.asgi.application'
+WSGI_APPLICATION = 'calmseek.wsgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -128,8 +139,12 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static/css",  # Ensure this points to your static files directory
+    BASE_DIR / "media",
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

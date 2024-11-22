@@ -18,7 +18,8 @@ Including another URLconf
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import path, include
-
+from django.conf import settings
+from django.conf.urls.static import static
 import calmseek.views as views
 
 urlpatterns = [
@@ -32,4 +33,9 @@ urlpatterns = [
     path("providers/", include("providers.urls")),
     path("client/", include("client.urls")),
     path("accounts/", include("accounts.urls", namespace="accounts")),
+    path("home/", views.home, name="home"),
+    path("messaging/", include("messaging.urls", namespace="messaging")),  # Include messaging app URLs
+
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

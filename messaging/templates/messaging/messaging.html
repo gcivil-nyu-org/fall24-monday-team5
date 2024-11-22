@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="messaging-container">
+    <!-- Top Section Toggle -->
+    <div class="view-switch">
+        <a href="?section=chat" class="switch-button {% if section == 'chat' %}active{% endif %}">Chats</a>
+        <a href="?section=contacts" class="switch-button {% if section == 'contacts' %}active{% endif %}">Contacts</a>
+    </div>
+
+    <!-- Main Section -->
+    <div class="main-container">
+        {% if section == "contacts" %}
+        <!-- Contact Section -->
+        <div class="contacts-view">
+            <h3>Friends</h3>
+            <ul>
+                {% for friend in friends %}
+                <li class="contact-item">
+                    {{ friend.friend.username }}
+                    <form method="POST" action="{% url 'messaging:delete_friend' %}" class="contact-action-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="friend_id" value="{{ friend.friend.id }}">
+                        <button type="submit" class="btn btn-small">Delete</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <h3>Friend Requests</h3>
+            <ul>
+                {% for request in friend_requests %}
+                <li class="contact-item">
+                    {{ request.user.username }}
+                    <form method="POST" action="{% url 'messaging:confirm_request' %}" class="contact-action-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="request_id" value="{{ request.id }}">
+                        <button type="submit" class="btn btn-small">Accept</button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <h3>Add Friend</h3>
+            <form method="POST" action="{% url 'messaging:add_friend' %}">
+                {% csrf_token %}
+                <label for="friendSelect">Select a user to add:</label>
+                <select name="friend_id" id="friendSelect" required>
+                    <option value="" disabled selected>Select a user</option>
+                    {% for user in all_users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn">Add</button>
+            </form>
+        </div>
+        {% elif section == "chat" %}
+        <!-- Chat Section -->
+        <div class="chat-content">
+            <div class="chat-list">
+                <ul>
+                    {% for friend in friends %}
+                    <li class="chat-list-item {% if chat_partner and chat_partner.id == friend.friend.id %}active{% endif %}">
+                        <a href="?section=chat&chat_partner={{ friend.friend.id }}">
+                            <div class="chat-info">
+                                <div class="chat-avatar">
+                                    <img src="{% static 'media/profile_pictures/default.png' %}" alt="photo">
+                                </div>
+                                <div class="chat-name">{{ friend.friend.username }}</div>
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="chat-room">
+                {% if chat_partner %}
+                <div class="chat-header">
+                    <div class="chat-title">{{ chat_partner.username }}</div>
+                </div>
+                <div class="chat-messages">
+                    {% for message in messages %}
+                    <div class="message {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+                        <div class="bubble">{{ message.content }}</div>
+                        <div class="timestamp">{{ message.timestamp|date:"H:i" }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <form method="POST" action="{% url 'messaging:send_message' %}" class="chat-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="receiver_id" value="{{ chat_partner.id }}">
+                    <textarea name="content" placeholder="Type your message..." required></textarea>
+                    <button type="submit" class="btn">Send</button>
+                </form>
+                {% else %}
+                <div class="empty-chat">
+                    <p>Select a chat to start messaging.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* General Styling */
+.messaging-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    height: 80vh;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Top Toggle Section */
+.view-switch {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.switch-button {
+    width: 150px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    color: #000000;
+    border: 1px solid #000000;
+    margin: 0 10px;
+    border-radius: 8px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.switch-button.active {
+    background-color: #000000;
+    color: #fff;
+}
+
+/* Contacts View */
+.contacts-view {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.contact-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.contact-action-form button {
+    padding: 5px 10px;
+    background-color: #f44336;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.contact-action-form button:hover {
+    background-color: #c62828;
+}
+
+/* Chat Section */
+.chat-content {
+    display: flex;
+    height: 100%;
+}
+
+.chat-list {
+    width: 25%;
+    border-right: 1px solid #ddd;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.chat-list-item {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.chat-list-item:hover,
+.chat-list-item.active {
+    background-color: #88888850;
+    color: white;
+}
+
+.chat-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.chat-avatar img {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    border: 2px solid #000000;
+}
+
+.chat-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: black;
+}
+
+.chat-name:hover {
+    color: white;
+}
+
+/* Chat Room */
+.chat-room {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f1f1f1;
+    height: 75vh;
+}
+
+.chat-header {
+    padding: 10px 0;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: black; /* Remove blue background */
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.message.sent {
+    justify-content: flex-end;
+}
+
+.bubble {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.message.sent .bubble {
+    background-color: #000000;
+    color: white;
+}
+
+.message.received .bubble {
+    background-color: #e4e6eb;
+    color: black;
+}
+
+.timestamp {
+    font-size: 0.8rem;
+    color: #888;
+    margin-left: 5px;
+}
+
+/* Chat Form */
+.chat-form {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chat-form textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    font-size: 1rem;
+}
+
+.chat-form button {
+    padding: 10px 15px;
+    background-color: #000000;
+    height: 60px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.chat-form button:hover {
+    background-color: #000000;
+}
+</style>
+{% endblock %}
