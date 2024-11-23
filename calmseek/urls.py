@@ -34,8 +34,9 @@ urlpatterns = [
     path("client/", include("client.urls")),
     path("accounts/", include("accounts.urls", namespace="accounts")),
     path("home/", views.home, name="home"),
-    path("messaging/", include("messaging.urls", namespace="messaging")),  # Include messaging app URLs
-
+    path(
+        "messaging/", include("messaging.urls", namespace="messaging")
+    ),  # Include messaging app URLs
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

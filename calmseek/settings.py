@@ -50,16 +50,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'messaging',
-    'channels'
+    "messaging.apps.MessagingConfig",
+    "channels",
 ]
 
-ASGI_APPLICATION = 'calmseek.asgi.application'
-WSGI_APPLICATION = 'calmseek.wsgi.application'
+ASGI_APPLICATION = "calmseek.asgi.application"
+WSGI_APPLICATION = "calmseek.wsgi.application"
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
 
