@@ -1,12 +1,12 @@
 from django.db import models
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from accounts.models import Profile
 
 
 class Contact(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contacts")
-    friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends")
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="contacts")
+    friend = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="friends"
+    )
     is_friend = models.BooleanField(default=False)
 
     def __str__(self):
@@ -15,10 +15,10 @@ class Contact(models.Model):
 
 class Message(models.Model):
     sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="sent_messages"
+        Profile, on_delete=models.CASCADE, related_name="sent_messages"
     )
     receiver = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="received_messages"
+        Profile, on_delete=models.CASCADE, related_name="received_messages"
     )
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
