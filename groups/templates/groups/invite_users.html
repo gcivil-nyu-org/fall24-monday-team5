@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="invite-container">
+        <h1 class="invite-title">Invite Users to <span>{{ group.name }}</span></h1>
+
+        <form method="POST" action="{% url 'groups:send_invitation' group.id %}" class="invite-form">
+            {% csrf_token %}
+            <div class="user-list">
+                {% for user in users %}
+                    <div class="user-item">
+                        <label>
+                            <input type="checkbox" name="users" value="{{ user.id }}" class="user-checkbox">
+                            {{ user.username }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Send Invitations</button>
+        </form>
+
+        <a href="{% url 'groups:group_detail' group.id %}" class="back-link">Back to Group</a>
+    </div>
+
+    <style>
+        .invite-container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .invite-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .invite-title span {
+            color: #000000;
+        }
+
+        .invite-form {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .user-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-item {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-checkbox {
+            margin-right: 10px;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #000000;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #555555;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #000000;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #333333;
+        }
+    </style>
+{% endblock %}
