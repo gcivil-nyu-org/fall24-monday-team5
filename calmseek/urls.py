@@ -38,7 +38,6 @@ urlpatterns = [
         "messaging/", include("messaging.urls", namespace="messaging")
     ),  # Include messaging app URLs
     path("groups/", include("groups.urls", namespace="groups")),
-
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

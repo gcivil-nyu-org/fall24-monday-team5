@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -11,14 +13,26 @@ from .models import Group, GroupMessage, Invitation
 def group_list_view(request):
     groups = Group.objects.filter(members=request.user)
     invitations = Invitation.objects.filter(user=request.user, status="pending")
-    return render(request, "groups/group_list.html", {"groups": groups, "invitations": invitations})
+    return render(
+        request,
+        "groups/group_list.html",
+        {"groups": groups, "invitations": invitations},
+    )
 
 
 @login_required
 def group_detail_view(request, group_id):
     group = get_object_or_404(Group, id=group_id, members=request.user)
     messages = group.messages.all().order_by("timestamp")
-    return render(request, "groups/group_detail.html", {"group": group, "messages": messages, "MEDIA_URL": settings.MEDIA_URL,})
+    return render(
+        request,
+        "groups/group_detail.html",
+        {
+            "group": group,
+            "messages": messages,
+            "MEDIA_URL": settings.MEDIA_URL,
+        },
+    )
 
 
 @login_required
@@ -26,7 +40,9 @@ def create_group_view(request):
     if request.method == "POST":
         name = request.POST.get("name")
         description = request.POST.get("description")
-        group = Group.objects.create(name=name, description=description, created_by=request.user)
+        group = Group.objects.create(
+            name=name, description=description, created_by=request.user
+        )
         group.members.add(request.user)
         return redirect("groups:group_list")
     return render(request, "groups/create_group.html")
@@ -41,15 +57,18 @@ def send_group_message(request, group_id):
         return redirect("groups:group_detail", group_id=group.id)
     return JsonResponse({"status": "error", "message": "Invalid request method."})
 
+
 @login_required
 def invite_users(request, group_id):
     group = get_object_or_404(Group, id=group_id, created_by=request.user)
 
     available_users = Profile.objects.exclude(
-        id__in=group.members.all().values_list('id', flat=True)
-    ).exclude(
-        role__in=["Provider", "Admin"]
-    )
+        id__in=group.members.all().values_list("id", flat=True)
+    ).exclude(role__in=["Provider", "Admin"])
+
+    paginator = Paginator(available_users, 10)  # Show 10 users per page
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     if request.method == "POST":
         user_ids = request.POST.getlist("users")
@@ -59,7 +78,9 @@ def invite_users(request, group_id):
 
         return redirect("groups:group_detail", group_id=group.id)
 
-    return render(request, "groups/invite_users.html", {"group": group, "users": available_users})
+    return render(
+        request, "groups/invite_users.html", {"group": group, "page_obj": page_obj}
+    )
 
 
 @login_required
@@ -76,21 +97,39 @@ def send_invitation(request, group_id):
             # Check if the user is not already a member
             if user in group.members.all():
                 response_messages.append(
-                    {"user": user.username, "status": "error", "message": "User is already a member."})
+                    {
+                        "user": user.username,
+                        "status": "error",
+                        "message": "User is already a member.",
+                    }
+                )
                 continue
 
-            invitation, created = Invitation.objects.get_or_create(group=group, user=user, status='pending')
+            invitation, created = Invitation.objects.get_or_create(
+                group=group, user=user, status="pending"
+            )
 
             if created:
                 response_messages.append(
-                    {"user": user.username, "status": "success", "message": f"Invitation sent to {user.username}."})
+                    {
+                        "user": user.username,
+                        "status": "success",
+                        "message": f"Invitation sent to {user.username}.",
+                    }
+                )
             else:
                 response_messages.append(
-                    {"user": user.username, "status": "error", "message": "Invitation already sent."})
+                    {
+                        "user": user.username,
+                        "status": "error",
+                        "message": "Invitation already sent.",
+                    }
+                )
 
         return redirect("groups:group_detail", group_id=group.id)
 
     return JsonResponse({"status": "error", "message": "Invalid request method."})
+
 
 @login_required
 def respond_to_invitation(request, invitation_id):
@@ -111,3 +150,26 @@ def respond_to_invitation(request, invitation_id):
             return redirect("groups:group_list")
 
     return JsonResponse({"status": "error", "message": "Invalid response."})
+
+
+@login_required
+def delete_group(request, pk):
+    group = get_object_or_404(Group, pk=pk, created_by=request.user)
+    if request.method == "POST":
+        group.delete()
+        messages.success(request, "Group deleted successfully.")
+        return redirect("groups:group_list")
+    else:
+        messages.error(request, "Invalid request.")
+        return redirect("groups:group_list")
+
+
+@login_required
+def quit_group(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+
+    # Ensure only members can quit
+    if request.user in group.members.all():
+        group.members.remove(request.user)
+
+    return redirect("groups:group_list")

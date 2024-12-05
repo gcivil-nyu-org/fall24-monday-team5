@@ -10,6 +10,16 @@ urlpatterns = [
     path("<int:group_id>/send_message/", views.send_group_message, name="send_message"),
     path("group/<int:group_id>/choose_users/", views.invite_users, name="invite_users"),
     path("group/<int:group_id>/invite/", views.send_invitation, name="send_invitation"),
-    path("invitation/<int:invitation_id>/response/", views.respond_to_invitation, name="respond_to_invitation"),
-    path("invitations/respond/<int:invitation_id>/", views.respond_to_invitation, name="respond_to_invitation"),
+    path(
+        "invitation/<int:invitation_id>/response/",
+        views.respond_to_invitation,
+        name="respond_to_invitation",
+    ),
+    path(
+        "invitations/respond/<int:invitation_id>/",
+        views.respond_to_invitation,
+        name="respond_to_invitation",
+    ),
+    path("groups/<int:pk>/delete/", views.delete_group, name="delete_group"),
+    path("quit/<int:group_id>/", views.quit_group, name="quit_group"),
 ]

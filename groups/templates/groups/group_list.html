@@ -1,195 +1,263 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="groups-container">
-    <h1 class="page-title">Your Groups</h1>
+    <div class="groups-container">
+        <h1 class="page-title">Your Groups</h1>
 
-    <div class="your-groups">
-        <ul class="group-list">
-            {% for group in groups %}
-                <li class="group-item">
-                    <a href="{% url 'groups:group_detail' group.id %}" class="group-link">{{ group.name }}</a>
-                </li>
-            {% empty %}
-                <p class="no-groups">You are not a member of any groups yet.</p>
-            {% endfor %}
-        </ul>
-    </div>
+        <div class="your-groups">
+            <ul class="group-list">
+                {% for group in groups %}
+                    <li class="group-item">
+                        <a href="{% url 'groups:group_detail' group.id %}" class="group-link">{{ group.name }}</a>
 
-    {% if request.user.role == "Provider" %}
-        <div class="create-group">
-            <a href="{% url 'groups:create_group' %}" class="btn btn-primary">Create a New Group</a>
-        </div>
-    {% endif %}
-
-    {% if request.user.role == "User" %}
-        <div class="pending-invitations">
-            <h2 class="section-title">Pending Invitations</h2>
-            <ul class="invitation-list">
-                {% for invitation in invitations %}
-                    <li class="invitation-item">
-                        <div class="invitation-info">
-                            <span class="invitation-name">{{ invitation.group.name }}</span>
-                            <p class="invitation-description">{{ invitation.group.description }}</p>
+                        <div class="group-actions">
+                            {% if request.user == group.created_by %}
+                                <form method="POST" action="{% url 'groups:delete_group' group.id %}"
+                                      class="delete-group-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            {% else %}
+                                <form method="POST" action="{% url 'groups:quit_group' group.id %}"
+                                      class="quit-group-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning">Quit</button>
+                                </form>
+                            {% endif %}
                         </div>
-                        <form method="POST" action="{% url 'groups:respond_to_invitation' invitation.id %}" class="invitation-form">
-                            {% csrf_token %}
-                            <button type="submit" name="response" value="accept" class="btn btn-success">Accept</button>
-                            <button type="submit" name="response" value="decline" class="btn btn-danger">Decline</button>
-                        </form>
                     </li>
                 {% empty %}
-                    <p class="no-invitations">You have no pending invitations.</p>
+                    <p class="no-groups">You are not a member of any groups yet.</p>
                 {% endfor %}
             </ul>
         </div>
-    {% endif %}
-</div>
 
-<style>
-    .groups-container {
-        max-width: 800px;
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        font-family: 'Inter', sans-serif;
-    }
+        {% if request.user.role == "Provider" %}
+            <div class="create-group">
+                <a href="{% url 'groups:create_group' %}" class="btn btn-primary">Create a New Group</a>
+            </div>
+        {% endif %}
 
-    .page-title {
-        text-align: center;
-        font-size: 2rem;
-        margin-bottom: 20px;
-        color: #333;
-    }
+        {% if request.user.role == "User" %}
+            <div class="pending-invitations">
+                <h2 class="section-title">Pending Invitations</h2>
+                <ul class="invitation-list">
+                    {% for invitation in invitations %}
+                        <li class="invitation-item">
+                            <div class="invitation-info">
+                                <span class="invitation-name">{{ invitation.group.name }}</span>
+                                <p class="invitation-description">{{ invitation.group.description }}</p>
+                            </div>
+                            <form method="POST" action="{% url 'groups:respond_to_invitation' invitation.id %}"
+                                  class="invitation-form">
+                                {% csrf_token %}
+                                <button type="submit" name="response" value="accept" class="btn btn-success">Accept
+                                </button>
+                                <button type="submit" name="response" value="decline" class="btn btn-danger">Decline
+                                </button>
+                            </form>
+                        </li>
+                    {% empty %}
+                        <p class="no-invitations">You have no pending invitations.</p>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
 
-    .your-groups {
-        margin-bottom: 30px;
-    }
+    <style>
+        .groups-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: 'Inter', sans-serif;
+        }
 
-    .group-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+        .page-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
 
-    .group-item {
-        margin-bottom: 10px;
-        padding: 10px;
-        background-color: #f5f5f5;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: background-color 0.3s ease;
-    }
+        .your-groups {
+            margin-bottom: 30px;
+        }
 
-    .group-item:hover {
-        background-color: #e9ecef;
-    }
+        .group-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
 
-    .group-link {
-        text-decoration: none;
-        color: #000000;
-        font-size: 1.2rem;
-        font-weight: bold;
-    }
+        .group-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
 
-    .group-link:hover {
-        color: #333;
-    }
+        .group-item:hover {
+            background-color: #e9ecef;
+        }
 
-    .no-groups {
-        text-align: center;
-        font-size: 1.2rem;
-        color: #666;
-    }
+        .group-link {
+            text-decoration: none;
+            color: #000000;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
 
-    .create-group {
-        text-align: center;
-        margin-top: 20px;
-    }
+        .group-link:hover {
+            color: #333;
+        }
 
-    .pending-invitations {
-        margin-top: 30px;
-    }
+        .no-groups {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+        }
 
-    .section-title {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-        color: #333;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        text-align: center;
-    }
+        .create-group {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    .invitation-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+        .pending-invitations {
+            margin-top: 30px;
+        }
 
-    .invitation-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        padding: 15px;
-        background-color: #f8f9fa;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
 
-    .invitation-info {
-        flex-grow: 1;
-        margin-right: 15px;
-    }
+        .invitation-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-    .invitation-name {
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #333;
-    }
+        .invitation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-    .invitation-description {
-        font-size: 1rem;
-        color: #555;
-    }
+        .invitation-info {
+            flex-grow: 1;
+            margin-right: 15px;
+        }
 
-    .invitation-form {
-        display: flex;
-        gap: 10px;
-    }
+        .invitation-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
 
-    .btn {
-        padding: 10px 15px;
-        font-size: 1rem;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+        .invitation-description {
+            font-size: 1rem;
+            color: #555;
+        }
 
-    .btn-success {
-        background-color: #000000;
-        color: #fff;
-    }
+        .invitation-form {
+            display: flex;
+            gap: 10px;
+        }
 
-    .btn-success:hover {
-        background-color: #333333;
-    }
+        .btn {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-    .btn-danger {
-        background-color: #dc3545;
-        color: #fff;
-    }
+        .btn-success {
+            background-color: #000000;
+            color: #fff;
+        }
 
-    .btn-danger:hover {
-        background-color: #c82333;
-    }
+        .btn-success:hover {
+            background-color: #333333;
+        }
 
-    .no-invitations {
-        text-align: center;
-        font-size: 1.2rem;
-        color: #666;
-    }
-</style>
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .no-invitations {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-group-form {
+            margin-left: 15px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .group-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .quit-group-form .btn-warning {
+            background-color: lightblue;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .quit-group-form .btn-warning:hover {
+            background-color: #e0a800;
+        }
+    </style>
 {% endblock %}
