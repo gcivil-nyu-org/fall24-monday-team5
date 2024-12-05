@@ -6,4 +6,3 @@ __pycache__/
 !.elasticbeanstalk/*.global.yml
 .se-proj/
 .venv/
-.coverage
