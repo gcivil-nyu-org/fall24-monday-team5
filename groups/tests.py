@@ -142,3 +142,62 @@ class GroupsTests(TestCase):
         self.assertRedirects(response, reverse("groups:group_list"))
         with self.assertRaises(Group.DoesNotExist):
             self.group.refresh_from_db()
+
+    # Test for inviting multiple users
+    def test_send_multiple_invitations_post(self):
+        self.client.login(username="user1-provider", password="password1")
+        new_user1 = Profile.objects.create_user(
+            username="user6-user", password="password6", email="<EMAIL>", role="User"
+        )
+        new_user2 = Profile.objects.create_user(
+            username="user7-user", password="password7", email="<EMAIL>", role="User"
+        )
+        response = self.client.post(
+            reverse("groups:send_invitation", args=[self.group.id]),
+            data={"users": [new_user1.id, new_user2.id]},
+        )
+        self.assertRedirects(
+            response, reverse("groups:group_detail", args=[self.group.id])
+        )
+        self.assertEqual(Invitation.objects.filter(status="pending").count(), 3)
+
+    # Test for declining a non-existent invitation
+    def test_decline_nonexistent_invitation(self):
+        self.client.login(username="user4-user", password="password4")
+        response = self.client.post(
+            reverse("groups:respond_to_invitation", args=[9999]),
+            data={"response": "decline"},
+        )
+        self.assertEqual(response.status_code, 404)
+
+    # Test for non-member trying to send a group message
+    def test_non_member_send_message(self):
+        self.client.login(username="user4-user", password="password4")
+        response = self.client.post(
+            reverse("groups:send_message", args=[self.group.id]),
+            data={"content": "Hello!"},
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(GroupMessage.objects.count(), 0)
+
+    # Test for deleting a group by a non-creator
+    def test_delete_group_by_non_creator(self):
+        self.client.login(username="user2-user", password="password2")
+        response = self.client.post(
+            reverse("groups:delete_group", args=[self.group.id])
+        )
+        self.assertEqual(response.status_code, 404)
+        self.group.refresh_from_db()
+
+    # Test for viewing an invite list as a non-creator
+    def test_invite_users_view_non_creator(self):
+        self.client.login(username="user2-user", password="password2")
+        response = self.client.get(reverse("groups:invite_users", args=[self.group.id]))
+        self.assertEqual(response.status_code, 404)
+
+    # Test for a member quitting a group
+    def test_quit_group_member(self):
+        self.client.login(username="user2-user", password="password2")
+        response = self.client.post(reverse("groups:quit_group", args=[self.group.id]))
+        self.assertRedirects(response, reverse("groups:group_list"))
+        self.assertNotIn(self.user2, self.group.members.all())
