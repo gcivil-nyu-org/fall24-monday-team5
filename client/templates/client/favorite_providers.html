@@ -10,7 +10,6 @@
                 <li class="favorite-item">
                     <a href="{% url 'providers:provider_detail' provider.id %}" class="provider-link">
                         <div class="provider-name">{{ provider.get_full_name }}</div>
-                        <div class="provider-role">Role: {{ provider.role }}</div>
                     </a>
                     <br>
                     <a href="{% url 'client:delete_favorite_provider' provider.id %}" class="remove-favorite-btn">Remove from Favorites</a>

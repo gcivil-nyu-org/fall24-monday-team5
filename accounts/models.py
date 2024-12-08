@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 from .manager import CustomUserManager
 
@@ -11,6 +12,12 @@ class Profile(AbstractUser):
         "self", related_name="favorited_by", blank=True, symmetrical=False
     )
     objects = CustomUserManager()
+
+    username = models.CharField(max_length=20, unique=True)
+
+    def clean(self):
+        if len(self.username) > 20:
+            raise ValidationError("Username cannot exceed 50 characters.")
 
     def __str__(self):
         return f"{self.get_username()} - {self.role}"
@@ -47,9 +54,16 @@ class Provider(models.Model):
     city = models.CharField(max_length=100, default="Unknown City")
     state = models.CharField(max_length=100, default="Unknown State")
     pincode = models.CharField(max_length=10, default="000000")
+    profile_picture = models.ImageField(
+        upload_to="profile_pictures/", blank=True, null=True
+    )
 
     def __str__(self):
-        return f"{self.user.get_username()} - {self.user.role} - {self.specialization}"
+        full_name = self.user.get_username()
+        if len(full_name) > 20:
+            full_name = full_name[:20] + '...' 
+        return f"{full_name} - {self.user.role} - {self.specialization}"
+
 
 
 # this is the model for client users
@@ -62,4 +76,7 @@ class Client(models.Model):
     user_label = models.CharField(max_length=20)
 
     def __str__(self):
-        return f"{self.user.get_username()} - {self.user.role} - {self.phone_number}"
+        full_name = self.user.get_username()
+        if len(full_name) > 20:
+            full_name = full_name[:20] + '...' 
+        return f"{full_name} - {self.user.role} - {self.phone_number}"

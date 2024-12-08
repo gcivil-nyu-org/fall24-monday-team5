@@ -3,12 +3,12 @@ from .models import Profile, Provider, Client
 
 
 class ProfileEditForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=20) 
+    last_name = forms.CharField(max_length=20) 
+
     class Meta:
         model = Profile
         fields = ["first_name", "last_name", "email"]
-
-
-# 在 forms.py 中
 
 
 class ProviderEditForm(forms.ModelForm):
@@ -24,6 +24,7 @@ class ProviderEditForm(forms.ModelForm):
             "city",
             "state",
             "pincode",
+            "profile_picture",
         ]
         widgets = {
             "specialization": forms.Select(attrs={"class": "form-control"}),
@@ -35,13 +36,18 @@ class ProviderEditForm(forms.ModelForm):
             "city": forms.TextInput(attrs={"class": "form-control"}),
             "state": forms.TextInput(attrs={"class": "form-control"}),
             "pincode": forms.TextInput(attrs={"class": "form-control"}),
+            "profile_picture": forms.FileInput(attrs={"class": "form-control"}),
         }
 
 
 class ClientEditForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ["phone_number"]
+        fields = ["phone_number", "bio"]
+        widgets = {
+            "phone_number": forms.TextInput(attrs={"class": "form-control"}),
+            "bio": forms.Textarea(attrs={"class": "form-control"}),
+        }
 
 
 class PasswordResetRequestForm(forms.Form):
