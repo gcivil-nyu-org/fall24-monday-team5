@@ -161,11 +161,19 @@ class ProviderSignUpViewTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn("credentials", form.errors)
 
+    def test_provider_signup_view_get_request(self):
+        response = self.client.get(reverse("signup:signup_provider"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "signup/signup_provider.html")
+
 
 class UserSignUpViewTests(TestCase):
     def test_user_signup_view_get(self):
         response = self.client.get(reverse("signup:signup_user"))
+        form = response.context["form"]
         self.assertEqual(response.status_code, 200)
+        self.assertFalse(form.is_bound)
+        self.assertIsInstance(form, UserSignUpForm)
         self.assertTemplateUsed(response, "signup/signup_user.html")
 
     def test_user_signup_view_post_missing_email(self):
@@ -183,3 +191,8 @@ class UserSignUpViewTests(TestCase):
         form = response.context["form"]
         self.assertFalse(form.is_valid())
         self.assertIn("email", form.errors)
+
+    def test_user_signup_view_get_request(self):
+        response = self.client.get(reverse("signup:signup_user"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "signup/signup_user.html")

@@ -3,6 +3,9 @@ from .models import Profile, Provider, Client
 
 
 class ProfileEditForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
+
     class Meta:
         model = Profile
         fields = ["first_name", "last_name", "email"]
