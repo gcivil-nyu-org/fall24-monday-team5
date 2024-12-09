@@ -61,9 +61,8 @@ class Provider(models.Model):
     def __str__(self):
         full_name = self.user.get_username()
         if len(full_name) > 20:
-            full_name = full_name[:20] + '...' 
+            full_name = full_name[:20] + "..."
         return f"{full_name} - {self.user.role} - {self.specialization}"
-
 
 
 # this is the model for client users
@@ -78,5 +77,5 @@ class Client(models.Model):
     def __str__(self):
         full_name = self.user.get_username()
         if len(full_name) > 20:
-            full_name = full_name[:20] + '...' 
+            full_name = full_name[:20] + "..."
         return f"{full_name} - {self.user.role} - {self.phone_number}"
