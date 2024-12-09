@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="invite-container">
+        <h1 class="invite-title">Invite Users to <span>{{ group.name }}</span></h1>
+
+        <form method="POST" action="{% url 'groups:send_invitation' group.id %}" class="invite-form">
+            {% csrf_token %}
+            <div class="user-list">
+                {% for user in page_obj %}
+                    <div class="user-item">
+                        <label>
+                            <input type="checkbox" name="users" value="{{ user.id }}" class="user-checkbox">
+                            {{ user.username }}
+                        </label>
+                    </div>
+                {% empty %}
+                    <p>No users available to invite.</p>
+                {% endfor %}
+            </div>
+
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Previous</a>
+                {% endif %}
+                <span class="current-page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next</a>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Send Invitations</button>
+                <a href="{% url 'groups:group_detail' group.id %}" class="back-link">Back to Group</a>
+            </div>
+        </form>
+
+    </div>
+
+    <style>
+        .invite-container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .invite-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .invite-title span {
+            color: #000000;
+        }
+
+        .invite-form {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .user-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-item {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-checkbox {
+            margin-right: 10px;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #000000;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #555555;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #000000;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #333333;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-link {
+            padding: 10px 15px;
+            background-color: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .page-link:hover {
+            background-color: #555;
+        }
+
+        .current-page {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .form-actions {
+            margin-top: 40px;
+        }
+
+        .form-actions .btn-primary {
+            padding: 12px 20px;
+        }
+    </style>
+{% endblock %}
