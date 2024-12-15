@@ -10,7 +10,11 @@
             {% for field in profile_form %}
                 <div class="form-group">
                     {{ field.label_tag }}
-                    {{ field }}
+                    {% if field.name == 'first_name' or field.name == 'last_name' %}
+                        <input type="text" name="{{ field.name }}" maxlength="20" value="{{ field.value }}" class="form-control">
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
                     {% if field.errors %}
                         <div class="error-message">{{ field.errors }}</div>
                     {% endif %}
