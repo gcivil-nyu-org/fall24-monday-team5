@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -66,10 +65,6 @@ def invite_users(request, group_id):
         id__in=group.members.all().values_list("id", flat=True)
     ).exclude(role__in=["Provider", "Admin"])
 
-    paginator = Paginator(available_users, 10)  # Show 10 users per page
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
     if request.method == "POST":
         user_ids = request.POST.getlist("users")
         for user_id in user_ids:
@@ -79,7 +74,9 @@ def invite_users(request, group_id):
         return redirect("groups:group_detail", group_id=group.id)
 
     return render(
-        request, "groups/invite_users.html", {"group": group, "page_obj": page_obj}
+        request,
+        "groups/invite_users.html",
+        {"group": group, "available_users": available_users},
     )
 
 
